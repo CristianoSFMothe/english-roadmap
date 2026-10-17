@@ -1,14 +1,16 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { Week } from "@/lib/content";
-import { dayKey } from "@/lib/content";
+import type { RawWeek, Week } from "@/lib/content";
+import { buildWeeks, dayKey, totalsOf } from "@/lib/content";
+import { emptyProfile, sampleProfile, type Profile } from "@/lib/profile";
 import { usePersistentState } from "@/lib/storage";
 import DayDrawer from "./DayDrawer";
 import Flashcards from "./Flashcards";
 import Notes from "./Notes";
+import ProfileForm from "./ProfileForm";
+import Generator, { type GeneratedPlan } from "./Generator";
 
-export type Totals = { days: number; cards: number; minutes: number };
 type Tab = "plan" | "cards" | "notes";
 
 export function Check() {
@@ -26,40 +28,45 @@ export function Check() {
   );
 }
 
-export default function Roadmap({
-  weeks,
-  totals,
-}: {
-  weeks: Week[];
-  totals: Totals;
-}) {
-  const [done, setDone] = usePersistentState<Record<string, boolean>>("done", {});
-  const [known, setKnown] = usePersistentState<Record<string, boolean>>("known", {});
-  const [notes, setNotes] = usePersistentState<Record<string, string>>("notes", {});
-  const [weekN, setWeekN] = usePersistentState<number>("week", 1);
+export default function Roadmap({ sample }: { sample: RawWeek[] }) {
+  const [plan, setPlan] = usePersistentState<GeneratedPlan | null>("plan", null);
+  const [profile, setProfile] = usePersistentState<Profile>("profile", sampleProfile);
+  const [profileSaved, setProfileSaved] = usePersistentState<boolean>("profileSaved", false);
+  const [apiKey, setApiKey] = usePersistentState<string>("apiKey", "");
+  const [accessCode, setAccessCode] = usePersistentState<string>("accessCode", "");
+
+  const planId = plan?.id ?? "sample";
+  const [done, setDone] = usePersistentState<Record<string, boolean>>(`done:${planId}`, {});
+  const [known, setKnown] = usePersistentState<Record<string, boolean>>(`known:${planId}`, {});
+  const [notes, setNotes] = usePersistentState<Record<string, string>>(`notes:${planId}`, {});
+  const [weekN, setWeekN] = usePersistentState<number>(`week:${planId}`, 1);
+
   const [tab, setTab] = useState<Tab>("plan");
   const [openDay, setOpenDay] = useState<number | null>(null);
+  const [showProfile, setShowProfile] = useState(false);
+  const [showGenerator, setShowGenerator] = useState(false);
+
+  const weeks: Week[] = useMemo(
+    () => buildWeeks(plan?.weeks ?? sample),
+    [plan, sample],
+  );
+  const totals = useMemo(() => totalsOf(weeks), [weeks]);
 
   const week = weeks.find((w) => w.n === weekN) ?? weeks[0];
 
   const doneCount = useMemo(
-    () =>
-      weeks.reduce(
-        (sum, w) =>
-          sum + w.days.filter((_, i) => done[dayKey(w.n, i)]).length,
-        0,
-      ),
+    () => weeks.reduce((sum, w) => sum + w.days.filter((_, i) => done[dayKey(w.n, i)]).length, 0),
     [weeks, done],
   );
-
-  const pct = Math.round((doneCount / totals.days) * 100);
   const knownCount = useMemo(
     () => weeks.reduce((s, w) => s + w.cards.filter((c) => known[c.id]).length, 0),
     [weeks, known],
   );
 
+  const pct = totals.days ? Math.round((doneCount / totals.days) * 100) : 0;
   const weekDone = week.days.filter((_, i) => done[dayKey(week.n, i)]).length;
   const weekMinutes = week.days.reduce((s, d) => s + d.minutes, 0);
+  const isSample = !plan;
 
   const toggleDay = (index: number) => {
     const key = dayKey(week.n, index);
@@ -72,17 +79,35 @@ export default function Roadmap({
         <div className="wrap topbar-inner">
           <div className="topbar-row">
             <div className="brand">
-              <span>Trilha de inglês · A1 → B1</span>
-              <strong>QA/SDET · 12 semanas da fase 1</strong>
+              <span>
+                Trilha de inglês · {profile.level} → {profile.target}
+              </span>
+              <strong>
+                {isSample
+                  ? "Plano de exemplo"
+                  : `Meu plano · ${weeks.length} semana${weeks.length > 1 ? "s" : ""}`}
+              </strong>
             </div>
-            <div className="pct">
-              <b>{pct}%</b>
-              <small>
-                {doneCount} de {totals.days} dias
-              </small>
+            <div className="head-actions">
+              <div className="pct">
+                <b>{pct}%</b>
+                <small>
+                  {doneCount} de {totals.days} dias
+                </small>
+              </div>
+              <button className="btn small" onClick={() => setShowProfile(true)}>
+                Meu perfil
+              </button>
             </div>
           </div>
-          <div className="bar" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} aria-label="Progresso geral">
+          <div
+            className="bar"
+            role="progressbar"
+            aria-valuenow={pct}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-label="Progresso geral"
+          >
             <i style={{ width: `${pct}%` }} />
           </div>
           <div className="stats">
@@ -100,6 +125,21 @@ export default function Roadmap({
       </header>
 
       <div className="wrap">
+        {isSample && (
+          <div className="callout">
+            <div>
+              <strong>Este é um plano de exemplo.</strong>
+              <span>
+                Informe seu nível, suas dificuldades, seus objetivos e o que você gosta de
+                assistir, ler e ouvir. A Claude monta um plano inteiro no seu ritmo.
+              </span>
+            </div>
+            <button className="btn primary" onClick={() => setShowProfile(true)}>
+              Montar o meu plano
+            </button>
+          </div>
+        )}
+
         <div className="weeks-rail" role="tablist" aria-label="Semanas">
           {weeks.map((w) => {
             const d = w.days.filter((_, i) => done[dayKey(w.n, i)]).length;
@@ -140,37 +180,24 @@ export default function Roadmap({
             </span>
           </div>
           <h1>{week.theme}</h1>
-          <p className="sub">{week.subtitle}</p>
-          <p className="why">{week.why}</p>
-          <div className="goal">
-            <span>Meta</span>
-            <span>{week.milestone}</span>
-          </div>
+          {week.subtitle && <p className="sub">{week.subtitle}</p>}
+          {week.why && <p className="why">{week.why}</p>}
+          {week.milestone && (
+            <div className="goal">
+              <span>Meta</span>
+              <span>{week.milestone}</span>
+            </div>
+          )}
         </section>
 
         <div className="tabs" role="tablist" aria-label="Conteúdo da semana">
-          <button
-            role="tab"
-            aria-selected={tab === "plan"}
-            className="tab"
-            onClick={() => setTab("plan")}
-          >
+          <button role="tab" aria-selected={tab === "plan"} className="tab" onClick={() => setTab("plan")}>
             Plano da semana
           </button>
-          <button
-            role="tab"
-            aria-selected={tab === "cards"}
-            className="tab"
-            onClick={() => setTab("cards")}
-          >
+          <button role="tab" aria-selected={tab === "cards"} className="tab" onClick={() => setTab("cards")}>
             Flashcards <span className="count">{week.vocabCount}</span>
           </button>
-          <button
-            role="tab"
-            aria-selected={tab === "notes"}
-            className="tab"
-            onClick={() => setTab("notes")}
-          >
+          <button role="tab" aria-selected={tab === "notes"} className="tab" onClick={() => setTab("notes")}>
             Anotações
           </button>
         </div>
@@ -226,18 +253,22 @@ export default function Roadmap({
               <div className="section-title">
                 <h2>Gramática: {week.grammar.topic}</h2>
               </div>
-              <p style={{ fontSize: 13.5, color: "var(--muted)" }}>{week.grammar.why}</p>
+              {week.grammar.why && (
+                <p style={{ fontSize: 13.5, color: "var(--muted)" }}>{week.grammar.why}</p>
+              )}
               <ul className="grammar-examples">
-                {week.grammar.examples.map((ex) => (
-                  <li key={ex} className="en">
+                {week.grammar.examples.map((ex, i) => (
+                  <li key={i} className="en">
                     {ex}
                   </li>
                 ))}
               </ul>
-              <p className="tip">
-                <b>Atenção: </b>
-                {week.grammar.tip}
-              </p>
+              {week.grammar.tip && (
+                <p className="tip">
+                  <b>Atenção: </b>
+                  {week.grammar.tip}
+                </p>
+              )}
             </section>
 
             <section className="card">
@@ -269,49 +300,49 @@ export default function Roadmap({
                 gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
               }}
             >
-              <section className="card">
-                <div className="section-title">
-                  <h2>Recursos da semana</h2>
-                </div>
-                <ul className="res-list">
-                  {week.resources.map((r) => (
-                    <li key={r.name}>
-                      <a href={r.url} target="_blank" rel="noopener noreferrer">
-                        {r.name}
-                      </a>
-                      <span className="what">{r.what}</span>
-                    </li>
-                  ))}
-                </ul>
-              </section>
+              {week.resources.length > 0 && (
+                <section className="card">
+                  <div className="section-title">
+                    <h2>Recursos da semana</h2>
+                  </div>
+                  <ul className="res-list">
+                    {week.resources.map((r, i) => (
+                      <li key={i}>
+                        <a href={r.url} target="_blank" rel="noopener noreferrer">
+                          {r.name}
+                        </a>
+                        <span className="what">{r.what}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
 
-              <section className="card">
-                <div className="section-title">
-                  <h2>Conteúdos para consumir</h2>
-                </div>
-                <ul className="res-list">
-                  {week.content.map((c) => (
-                    <li key={c.name}>
-                      <span>
-                        <span className="kind">{c.kind}</span>
-                        {c.name}
-                      </span>
-                      <span className="what">{c.what}</span>
-                    </li>
-                  ))}
-                </ul>
-              </section>
+              {week.content.length > 0 && (
+                <section className="card">
+                  <div className="section-title">
+                    <h2>Conteúdos para consumir</h2>
+                  </div>
+                  <ul className="res-list">
+                    {week.content.map((c, i) => (
+                      <li key={i}>
+                        <span>
+                          <span className="kind">{c.kind}</span>
+                          {c.name}
+                        </span>
+                        <span className="what">{c.what}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
             </div>
           </div>
         )}
 
         {tab === "cards" && (
           <div className="panel">
-            <Flashcards
-              week={week}
-              known={known}
-              setKnown={setKnown}
-            />
+            <Flashcards week={week} known={known} setKnown={setKnown} />
           </div>
         )}
 
@@ -326,14 +357,29 @@ export default function Roadmap({
             Seu progresso, suas anotações e os flashcards ficam salvos neste navegador.
             Trocar de navegador ou limpar os dados do site apaga o histórico.
           </span>
-          <span>
-            Plano completo, estimativa de tempo e links verificados: o documento
-            &quot;Plano de Inglês A1 → B1 para QA/SDET&quot;.
-          </span>
+          {!isSample && (
+            <span>
+              Plano gerado em{" "}
+              {new Date(plan.createdAt).toLocaleDateString("pt-BR")} a partir do seu perfil.{" "}
+              <button className="linkish" onClick={() => setShowGenerator(true)}>
+                Gerar de novo
+              </button>{" "}
+              ·{" "}
+              <button
+                className="linkish"
+                onClick={() => {
+                  setPlan(null);
+                  setWeekN(1);
+                }}
+              >
+                Voltar ao plano de exemplo
+              </button>
+            </span>
+          )}
         </footer>
       </main>
 
-      {openDay !== null && (
+      {openDay !== null && week.days[openDay] && (
         <DayDrawer
           week={week}
           index={openDay}
@@ -345,6 +391,45 @@ export default function Roadmap({
           }
           onToggle={() => toggleDay(openDay)}
           onClose={() => setOpenDay(null)}
+        />
+      )}
+
+      {showProfile && (
+        <ProfileForm
+          initial={
+            profileSaved
+              ? profile
+              : { ...emptyProfile, level: profile.level, target: profile.target }
+          }
+          onSave={(p) => {
+            setProfile(p);
+            setProfileSaved(true);
+            setShowProfile(false);
+          }}
+          onGenerate={(p) => {
+            setProfile(p);
+            setProfileSaved(true);
+            setShowProfile(false);
+            setShowGenerator(true);
+          }}
+          onClose={() => setShowProfile(false)}
+        />
+      )}
+
+      {showGenerator && (
+        <Generator
+          profile={profile}
+          apiKey={apiKey}
+          setApiKey={setApiKey}
+          accessCode={accessCode}
+          setAccessCode={setAccessCode}
+          onDone={(generated) => {
+            setPlan(generated);
+            setWeekN(1);
+            setTab("plan");
+            setShowGenerator(false);
+          }}
+          onClose={() => setShowGenerator(false)}
         />
       )}
     </>

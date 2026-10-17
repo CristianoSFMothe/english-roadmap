@@ -71,7 +71,7 @@
         "minutes": 25,
         "tasks": [
           { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
-          { "what": "Assistir a uma cena de 2 a 4 min de Friends: primeiro sem legenda, depois com legenda em inglês", "resource": "Friends (streaming) + Language Reactor", "min": 12 },
+          { "what": "Assistir a uma cena de 2 a 4 min de Friends: primeiro sem legenda, depois com legenda em inglês", "resource": "Friends, onde você já assiste + Language Reactor (grátis)", "min": 12 },
           { "what": "Escolher 3 frases inteiras da cena e criar cartões", "resource": "Anki", "min": 8 }
         ],
         "speak": "What happened in this scene? — In this scene, Ross is angry because...",
