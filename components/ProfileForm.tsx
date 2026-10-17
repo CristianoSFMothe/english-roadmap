@@ -48,7 +48,7 @@ export default function ProfileForm({ initial, onSave, onGenerate, onClose }: Pr
         onChange={(e) => set(key, e.target.value as Profile[typeof key])}
         placeholder={placeholder}
         rows={rows}
-        style={{ minHeight: rows * 26 + 18 }}
+        style={{ minHeight: rows * 38 + 54 }}
       />
     </div>
   );

@@ -768,9 +768,10 @@ textarea {
   background: var(--surface-2);
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
-  padding: 10px 12px;
-  resize: vertical;
-  min-height: 84px;
+  padding: 11px 13px;
+  resize: none;
+  min-height: 130px;
+  line-height: 1.5;
   width: 100%;
 }
 

@@ -32,7 +32,7 @@ export default function Notes({
             value={weekNote}
             onChange={(e) => set(`w${week.n}`, e.target.value)}
             placeholder={`Tema: ${week.theme}.\nUma vitória:\nUma dificuldade:\nErro que se repete:`}
-            style={{ minHeight: 140 }}
+            style={{ minHeight: 220 }}
           />
         </div>
       </section>
@@ -57,7 +57,7 @@ export default function Notes({
                   value={notes[key] ?? ""}
                   onChange={(e) => set(key, e.target.value)}
                   placeholder="Dúvidas, palavras novas, frases que você quer decorar"
-                  style={{ minHeight: 64 }}
+                  style={{ minHeight: 130 }}
                 />
               </div>
             );
