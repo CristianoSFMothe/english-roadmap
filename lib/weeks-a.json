@@ -1,0 +1,543 @@
+[
+  {
+    "n": 1,
+    "theme": "Hello, this is me",
+    "subtitle": "Apresentar-se e falar do que você faz",
+    "why": "A primeira coisa que você vai precisar em qualquer reunião, entrevista ou comunidade internacional é se apresentar sem travar. Semana curta de propósito: o objetivo é criar o hábito, não acumular conteúdo.",
+    "grammar": {
+      "topic": "Verbo to be + present simple (I / you / he / she)",
+      "why": "Toda apresentação vive nesses dois blocos: o que você é (I am a QA analyst) e o que você faz (I work at a software company).",
+      "examples": [
+        "I am Cristiano. I am a QA analyst.",
+        "I work at a software company in Brazil.",
+        "She works with me. She tests the backend.",
+        "I am not a developer, but I write automated tests.",
+        "He is from Rio de Janeiro. He lives in Rio too."
+      ],
+      "tip": "Na terceira pessoa (he, she, it) o verbo ganha -s: I work / he works. Esse -s é o erro mais comum do nível A1; marque um cartão só para ele."
+    },
+    "vocab": [
+      {
+        "group": "Apresentação",
+        "items": "my name is=meu nome é; nice to meet you=prazer em conhecer você; I'm from=eu sou de; I live in=eu moro em; how are you?=como vai?; I'm fine, thanks=estou bem, obrigado; and you?=e você?; see you tomorrow=até amanhã; have a good day=tenha um bom dia; welcome=bem-vindo; please=por favor; thank you=obrigado; sorry=desculpe; excuse me=com licença; goodbye=tchau"
+      },
+      {
+        "group": "Trabalho e cargo",
+        "items": "job=emprego; work=trabalho; company=empresa; team=equipe; manager=gestor; colleague=colega de trabalho; QA analyst=analista de qualidade; software=software; developer=desenvolvedor; tester=testador; office=escritório; remote=remoto; home office=trabalho em casa; full-time=tempo integral; career=carreira; experience=experiência; skill=habilidade; to work=trabalhar; to test=testar; to learn=aprender"
+      },
+      {
+        "group": "Dados pessoais",
+        "items": "age=idade; year=ano; city=cidade; country=país; Brazil=Brasil; Brazilian=brasileiro; married=casado; single=solteiro; family=família; wife=esposa; son=filho; daughter=filha; friend=amigo; church=igreja; faith=fé; hobby=passatempo; to like=gostar; to love=amar; favorite=favorito; free time=tempo livre"
+      },
+      {
+        "group": "Números e dias",
+        "items": "one=um; two=dois; three=três; four=quatro; five=cinco; six=seis; seven=sete; eight=oito; nine=nove; ten=dez; twenty=vinte; thirty=trinta; hundred=cem; Monday=segunda-feira; Tuesday=terça-feira; Wednesday=quarta-feira; Thursday=quinta-feira; Friday=sexta-feira; Saturday=sábado; Sunday=domingo; today=hoje; tomorrow=amanhã; yesterday=ontem; week=semana; month=mês"
+      },
+      {
+        "group": "Palavras de ligação",
+        "items": "and=e; but=mas; because=porque; also=também; very=muito; a little=um pouco; every day=todo dia; now=agora; here=aqui; there=lá"
+      }
+    ],
+    "resources": [
+      { "name": "Anki", "url": "https://apps.ankiweb.net/", "what": "Instale e crie o baralho \"English A1\". Máximo de 5 cartões novos por dia." },
+      { "name": "BBC Real Easy English", "url": "https://www.bbc.co.uk/learningenglish/english/features/real-easy-english", "what": "Episódios de ~5 min com transcrição gratuita. Sua fonte de escuta desta semana." },
+      { "name": "News in Levels (nível 1)", "url": "https://www.newsinlevels.com/level/level-1/", "what": "Notícia curta com áudio. Leia ouvindo, depois sem o texto." },
+      { "name": "Teste de nível (3 min)", "url": "https://www.testlanguages.com/", "what": "Faça uma vez e guarde o resultado como seu ponto de partida." },
+      { "name": "YouGlish", "url": "https://youglish.com/", "what": "Ouça uma palavra difícil dita por pessoas reais, com escolha de sotaque." }
+    ],
+    "content": [
+      { "name": "Real Easy English: um episódio sobre nomes ou família", "kind": "Podcast", "what": "Ouça sem texto, depois com a transcrição. Marque 3 blocos." },
+      { "name": "Friends — uma cena curta no apartamento que você já viu", "kind": "Série", "what": "2 a 4 min, com legenda em inglês. Receita da seção de técnicas." },
+      { "name": "\"How Great Is Our God\" (Chris Tomlin)", "kind": "Música", "what": "Refrão curto e repetido. Use o vídeo oficial com letra." },
+      { "name": "Simple English Wikipedia: Rio de Janeiro", "kind": "Leitura", "what": "Leia o primeiro parágrafo e conte em 2 frases o que você entendeu." }
+    ],
+    "milestone": "Falar 45 segundos sobre você (nome, cidade, trabalho, família, fé) sem ler.",
+    "days": [
+      {
+        "label": "Seg",
+        "focus": "Inglês de QA",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Criar o baralho no Anki e os 5 primeiros cartões: my name is, I work at, I'm from, I live in, nice to meet you", "resource": "Anki", "min": 10 },
+          { "what": "Escrever sua apresentação profissional em 4 frases (nome, cargo, empresa, o que você testa)", "resource": "Caderno ou nota do celular", "min": 10 },
+          { "what": "Ler em voz alta as 4 frases, 3 vezes", "resource": "Sua apresentação", "min": 5 }
+        ],
+        "speak": "I am Cristiano. I am a QA analyst. I work at a software company. I test payments and cash management.",
+        "mini": "5 min de cartões + ler a apresentação uma vez."
+      },
+      {
+        "label": "Ter",
+        "focus": "Sitcom",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Assistir a uma cena de 2 a 4 min de Friends: primeiro sem legenda, depois com legenda em inglês", "resource": "Friends (streaming) + Language Reactor", "min": 12 },
+          { "what": "Escolher 3 frases inteiras da cena e criar cartões", "resource": "Anki", "min": 8 }
+        ],
+        "speak": "What happened in this scene? — In this scene, Ross is angry because...",
+        "mini": "Cartões + assistir à cena uma vez, só por prazer."
+      },
+      {
+        "label": "Qua",
+        "focus": "Leitura",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Ler 1 notícia do nível 1 ouvindo o áudio ao mesmo tempo; depois ler sem o áudio", "resource": "News in Levels, nível 1", "min": 12 },
+          { "what": "Resumir a notícia em 2 frases suas, em voz alta", "resource": "Você mesmo", "min": 8 }
+        ],
+        "speak": "This news is about... I think it is interesting because...",
+        "mini": "Cartões + ler a notícia ouvindo o áudio."
+      },
+      {
+        "label": "Qui",
+        "focus": "Música cristã",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Ciclo da música, passos 1 a 4: ouvir sem ler, ouvir lendo a letra no vídeo oficial, marcar 3 blocos, consultar só o que travou", "resource": "\"How Great Is Our God\"", "min": 15 },
+          { "what": "Ler em voz alta duas frases curtas da música", "resource": "A letra no vídeo oficial", "min": 5 }
+        ],
+        "speak": "This song says that God is great. I like this song because it is simple and strong.",
+        "mini": "Cartões + ouvir a música no caminho do trabalho."
+      },
+      {
+        "label": "Sex",
+        "focus": "Fala",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Pronúncia: th (think, this, thanks) e o -s final (works, tests, lives), ouvindo pessoas reais", "resource": "YouGlish", "min": 10 },
+          { "what": "Gravar 30 a 60 s se apresentando. Guarde este áudio: é o seu marco zero", "resource": "Gravador do celular", "min": 10 }
+        ],
+        "speak": "Hi, my name is Cristiano. I am from Rio de Janeiro, Brazil. I work as a QA analyst.",
+        "mini": "Cartões + gravar 30 s."
+      },
+      {
+        "label": "Sáb",
+        "focus": "Lazer com apoio",
+        "minutes": 10,
+        "tasks": [
+          { "what": "Assistir, ouvir ou ler o que você quiser em inglês, sem tarefa e sem anotação", "resource": "Sua escolha", "min": 0 },
+          { "what": "Opcional: revisar cartões", "resource": "Anki", "min": 10 }
+        ],
+        "speak": "Opcional: diga em inglês o nome do que você assistiu e se gostou.",
+        "mini": "Só os cartões, ou nada. Sábado é livre."
+      },
+      {
+        "label": "Dom",
+        "focus": "Revisão e medição",
+        "minutes": 15,
+        "tasks": [
+          { "what": "Fazer o teste de nível de 3 min e anotar o resultado como ponto de partida", "resource": "testlanguages.com", "min": 5 },
+          { "what": "Preencher o registro da semana: dias estudados, minutos, uma vitória, uma dificuldade", "resource": "Seu registro semanal", "min": 5 },
+          { "what": "Escolher a cena, a música e os textos da semana 2", "resource": "Sua playlist do mês", "min": 5 }
+        ],
+        "speak": "Last week I studied five days. It was good.",
+        "mini": "Só preencher o registro."
+      }
+    ]
+  },
+  {
+    "n": 2,
+    "theme": "My day, my routine",
+    "subtitle": "Rotina, horários e frequência",
+    "why": "Rotina é o assunto mais útil do nível A1: aparece em conversa social, em entrevista (\"how does your day look like?\") e no stand-up. E é vocabulário que você usa todos os dias.",
+    "grammar": {
+      "topic": "Present simple + advérbios de frequência + horas",
+      "why": "Falar da rotina exige o presente simples e as palavras de frequência na posição certa: antes do verbo principal, depois do verbo to be.",
+      "examples": [
+        "I usually wake up at six thirty.",
+        "I always check my emails before the stand-up.",
+        "She never works on Sundays.",
+        "We often run the regression suite on Friday.",
+        "I am always tired on Monday morning."
+      ],
+      "tip": "Ordem: always > usually > often > sometimes > rarely > never. Para horas, use at (at 7 a.m.), para dias, on (on Monday), para meses, in (in October)."
+    },
+    "vocab": [
+      {
+        "group": "Rotina do dia",
+        "items": "to wake up=acordar; to get up=levantar-se; to take a shower=tomar banho; to have breakfast=tomar café da manhã; to brush my teeth=escovar os dentes; to get dressed=vestir-se; to leave home=sair de casa; to arrive=chegar; to start work=começar a trabalhar; to have lunch=almoçar; to take a break=fazer uma pausa; to finish work=terminar o trabalho; to go home=ir para casa; to have dinner=jantar; to go to bed=ir para a cama; to sleep=dormir; to rest=descansar; to study=estudar; to pray=orar; to read=ler"
+      },
+      {
+        "group": "Frequência e tempo",
+        "items": "always=sempre; usually=normalmente; often=frequentemente; sometimes=às vezes; rarely=raramente; never=nunca; every morning=toda manhã; every night=toda noite; once a week=uma vez por semana; twice a week=duas vezes por semana; three times a week=três vezes por semana; early=cedo; late=tarde; on time=na hora; in the morning=de manhã; in the afternoon=à tarde; in the evening=à noite; at night=de madrugada ou à noite; weekend=fim de semana; weekday=dia de semana; half an hour=meia hora; quarter past=e quinze; o'clock=em ponto"
+      },
+      {
+        "group": "Casa e cotidiano",
+        "items": "home=casa; kitchen=cozinha; bedroom=quarto; bathroom=banheiro; desk=mesa de trabalho; chair=cadeira; laptop=notebook; coffee=café; breakfast=café da manhã; lunch=almoço; dinner=jantar; water=água; to cook=cozinhar; to clean=limpar; to drive=dirigir; to walk=caminhar; car=carro; bus=ônibus; traffic=trânsito; gym=academia"
+      },
+      {
+        "group": "O dia de trabalho",
+        "items": "meeting=reunião; stand-up=reunião diária; daily=diário; schedule=agenda; deadline=prazo; task=tarefa; to check=verificar; to answer=responder; email=e-mail; message=mensagem; call=ligação ou chamada; busy=ocupado; free=livre; break=pausa; lunch break=horário de almoço; overtime=hora extra; to focus=concentrar-se; to finish=terminar; to plan=planejar; routine=rotina"
+      }
+    ],
+    "resources": [
+      { "name": "BBC Real Easy English", "url": "https://www.bbc.co.uk/learningenglish/english/features/real-easy-english", "what": "Procure um episódio sobre rotina, manhã ou trabalho." },
+      { "name": "News in Levels (nível 1)", "url": "https://www.newsinlevels.com/level/level-1/", "what": "Continue com 1 notícia por dia de estudo." },
+      { "name": "VOA Learning English", "url": "https://learningenglish.voanews.com/", "what": "Áudio em inglês simplificado; escolha pelo tema." },
+      { "name": "Anki", "url": "https://apps.ankiweb.net/", "what": "Agora com cartões de frase inteira, não de palavra solta." }
+    ],
+    "content": [
+      { "name": "Real Easy English: episódio sobre o dia a dia", "kind": "Podcast", "what": "Ouça 2 vezes; na segunda, acompanhe a transcrição." },
+      { "name": "Everybody Hates Chris — a narração em off de uma cena", "kind": "Série", "what": "A narração é clara e explica a cena: ideal para shadowing." },
+      { "name": "\"10,000 Reasons\" (Matt Redman)", "kind": "Música", "what": "Vocabulário de manhã e gratidão; refrão simples." },
+      { "name": "Simple English Wikipedia: Day ou Sleep", "kind": "Leitura", "what": "Leitura extensiva, sem dicionário." }
+    ],
+    "milestone": "Descrever sua rotina em 8 frases, com pelo menos 3 advérbios de frequência e 3 horários.",
+    "days": [
+      {
+        "label": "Seg",
+        "focus": "Inglês de QA",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Escrever sua rotina de trabalho em 6 frases, usando always, usually e sometimes", "resource": "Caderno", "min": 12 },
+          { "what": "Ler em voz alta e gravar 30 s da sua rotina", "resource": "Gravador do celular", "min": 8 }
+        ],
+        "speak": "I usually start work at nine. I always check my tickets first. Sometimes I have meetings in the afternoon.",
+        "mini": "Cartões + 1 frase da rotina em voz alta."
+      },
+      {
+        "label": "Ter",
+        "focus": "Sitcom",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Assistir a uma cena com a narração do Chris; depois fazer shadowing de 4 falas", "resource": "Everybody Hates Chris", "min": 15 },
+          { "what": "Criar 3 cartões com frases da cena", "resource": "Anki", "min": 5 }
+        ],
+        "speak": "Imite a entonação do narrador em uma frase: Every morning, I...",
+        "mini": "Cartões + assistir à cena."
+      },
+      {
+        "label": "Qua",
+        "focus": "Leitura",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Ler 1 notícia ouvindo o áudio, depois 1 artigo curto da Simple Wikipedia sem dicionário", "resource": "News in Levels + Simple English Wikipedia", "min": 14 },
+          { "what": "Escrever 3 frases sobre o que você leu", "resource": "Caderno", "min": 6 }
+        ],
+        "speak": "I read about... The article says that...",
+        "mini": "Cartões + a notícia."
+      },
+      {
+        "label": "Qui",
+        "focus": "Música cristã",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Ciclo da música, passos 1 a 5", "resource": "\"10,000 Reasons\"", "min": 15 },
+          { "what": "Usar 1 bloco da música em uma frase sua sobre o seu dia", "resource": "Você mesmo", "min": 5 }
+        ],
+        "speak": "Every morning I thank God for a new day.",
+        "mini": "Cartões + ouvir a música."
+      },
+      {
+        "label": "Sex",
+        "focus": "Fala",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Pronúncia: pares mínimos ship/sheep e live/leave", "resource": "YouGlish", "min": 10 },
+          { "what": "Gravar 60 s: \"my typical day\"", "resource": "Gravador do celular", "min": 10 }
+        ],
+        "speak": "On a typical day, I wake up at..., I start work at..., and I study English at...",
+        "mini": "Cartões + gravar 30 s."
+      },
+      {
+        "label": "Sáb",
+        "focus": "Lazer com apoio",
+        "minutes": 10,
+        "tasks": [
+          { "what": "Conteúdo livre em inglês, por prazer", "resource": "Sua escolha", "min": 0 },
+          { "what": "Opcional: cartões", "resource": "Anki", "min": 10 }
+        ],
+        "speak": "Opcional.",
+        "mini": "Livre."
+      },
+      {
+        "label": "Dom",
+        "focus": "Revisão e medição",
+        "minutes": 15,
+        "tasks": [
+          { "what": "Ouvir de novo o áudio da sexta-feira passada e o desta semana; anotar uma diferença", "resource": "Suas gravações", "min": 5 },
+          { "what": "Preencher o registro semanal", "resource": "Seu registro", "min": 5 },
+          { "what": "Escolher os conteúdos da semana 3", "resource": "Sua playlist", "min": 5 }
+        ],
+        "speak": "This week was better because...",
+        "mini": "Só o registro."
+      }
+    ]
+  },
+  {
+    "n": 3,
+    "theme": "My team and my tools",
+    "subtitle": "Pessoas, ferramentas e o ambiente de trabalho",
+    "why": "Descrever quem faz o quê e com qual ferramenta é metade das conversas de um time de software. Também é a base para pedir e oferecer ajuda nas semanas seguintes.",
+    "grammar": {
+      "topic": "There is / there are, plurais e possessivos",
+      "why": "Para descrever um time, um ambiente ou um sistema, você precisa dizer o que existe (there is a bug in the report) e de quem é o quê (the developer's branch, our test suite).",
+      "examples": [
+        "There is a bug in the login page.",
+        "There are three testers on my team.",
+        "There aren't any tests for this module.",
+        "Is there a staging environment?",
+        "This is the developer's branch. Our suite runs every night."
+      ],
+      "tip": "There is para singular e incontável, there are para plural. O apóstrofo 's indica posse de pessoa (the manager's decision); para coisas, prefira of (the name of the file)."
+    },
+    "vocab": [
+      {
+        "group": "Pessoas do time",
+        "items": "team=equipe; teammate=colega de equipe; developer=desenvolvedor; backend developer=desenvolvedor de backend; frontend developer=desenvolvedor de frontend; designer=designer; product owner=dono do produto; scrum master=scrum master; tech lead=líder técnico; manager=gestor; stakeholder=parte interessada; client=cliente; user=usuário; support=suporte; analyst=analista; intern=estagiário; to report to=reportar-se a; to work with=trabalhar com; to help=ajudar; to share=compartilhar"
+      },
+      {
+        "group": "Ferramentas e ambientes",
+        "items": "tool=ferramenta; environment=ambiente; staging=homologação; production=produção; local=local; browser=navegador; database=banco de dados; server=servidor; repository=repositório; branch=branch ou ramo; commit=commit; pull request=pull request; pipeline=pipeline; build=build ou compilação; deploy=implantação; release=lançamento; version=versão; ticket=ticket ou chamado; board=quadro; backlog=backlog"
+      },
+      {
+        "group": "Testes: o básico",
+        "items": "test=teste; test case=caso de teste; test plan=plano de teste; test suite=suíte de testes; manual test=teste manual; automated test=teste automatizado; unit test=teste unitário; integration test=teste de integração; end-to-end test=teste de ponta a ponta; regression=regressão; smoke test=teste de fumaça; coverage=cobertura; to run a test=executar um teste; to pass=passar; to fail=falhar; result=resultado; report=relatório; evidence=evidência; screenshot=captura de tela; log=log"
+      },
+      {
+        "group": "Descrever o ambiente",
+        "items": "there is=há (singular); there are=há (plural); some=alguns; any=algum ou nenhum; many=muitos; a few=alguns poucos; all=todos; each=cada; both=ambos; other=outro; same=mesmo; different=diferente; available=disponível; down=fora do ar; slow=lento; stable=estável; unstable=instável; ready=pronto"
+      }
+    ],
+    "resources": [
+      { "name": "ISTQB Glossary", "url": "https://glossary.istqb.org/", "what": "Definição oficial em inglês de cada termo de teste. Consulte 2 termos por semana." },
+      { "name": "Test Automation University", "url": "https://testautomationu.applitools.com/", "what": "Cursos gratuitos com transcrição: assista 10 min por semana com o texto aberto." },
+      { "name": "BBC Office English", "url": "https://www.bbc.co.uk/learningenglish/english/features/office-english", "what": "Inglês de escritório com transcrição." },
+      { "name": "News in Levels (nível 1)", "url": "https://www.newsinlevels.com/level/level-1/", "what": "Mantenha a leitura diária." }
+    ],
+    "content": [
+      { "name": "Office English: um episódio sobre colegas ou reuniões", "kind": "Podcast", "what": "Ouça com a transcrição e marque 5 blocos de escritório." },
+      { "name": "The Big Bang Theory — uma cena cotidiana com Leonard e Penny", "kind": "Série", "what": "Evite as falas científicas do Sheldon por enquanto." },
+      { "name": "\"What a Beautiful Name\" (Hillsong Worship)", "kind": "Música", "what": "Frases curtas; bom para cantar junto." },
+      { "name": "ISTQB Glossary: test case e regression", "kind": "Leitura técnica", "what": "Leia as duas definições em inglês e reescreva com suas palavras." }
+    ],
+    "milestone": "Descrever seu time e suas ferramentas em 10 frases, usando there is / there are e possessivos.",
+    "days": [
+      {
+        "label": "Seg",
+        "focus": "Inglês de QA",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Ouvir 1 episódio de Office English com a transcrição e marcar 5 blocos", "resource": "BBC Office English", "min": 12 },
+          { "what": "Descrever seu time em 5 frases com there is / there are", "resource": "Caderno", "min": 8 }
+        ],
+        "speak": "There are four people on my team. There is one QA analyst: me.",
+        "mini": "Cartões + 1 frase sobre o time."
+      },
+      {
+        "label": "Ter",
+        "focus": "Sitcom",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Cena de The Big Bang Theory: sem legenda, depois com legenda em inglês", "resource": "The Big Bang Theory", "min": 14 },
+          { "what": "Shadowing de 4 falas curtas", "resource": "A mesma cena", "min": 6 }
+        ],
+        "speak": "In this scene, there are two people in the apartment. They talk about...",
+        "mini": "Cartões + assistir à cena."
+      },
+      {
+        "label": "Qua",
+        "focus": "Leitura técnica",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Ler as definições de test case e regression no glossário e reescrever cada uma em 1 frase sua", "resource": "ISTQB Glossary", "min": 12 },
+          { "what": "Ler 1 notícia do nível 1", "resource": "News in Levels", "min": 8 }
+        ],
+        "speak": "A test case is a set of steps with an expected result.",
+        "mini": "Cartões + 1 definição."
+      },
+      {
+        "label": "Qui",
+        "focus": "Música cristã",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Ciclo da música, passos 1 a 5", "resource": "\"What a Beautiful Name\"", "min": 15 },
+          { "what": "Cantar junto um trecho curto, só para soltar a voz", "resource": "A música", "min": 5 }
+        ],
+        "speak": "This song is about the name of Jesus.",
+        "mini": "Cartões + ouvir a música."
+      },
+      {
+        "label": "Sex",
+        "focus": "Fala",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Pronúncia de termos técnicos que você fala errado: deploy, environment, repository, suite", "resource": "YouGlish", "min": 10 },
+          { "what": "Gravar 60 s apresentando seu time e as ferramentas que você usa", "resource": "Gravador do celular", "min": 10 }
+        ],
+        "speak": "I work with two developers. We use Jira for tickets and Playwright for automated tests.",
+        "mini": "Cartões + gravar 30 s."
+      },
+      {
+        "label": "Sáb",
+        "focus": "Lazer com apoio",
+        "minutes": 10,
+        "tasks": [
+          { "what": "Conteúdo livre em inglês, por prazer", "resource": "Sua escolha", "min": 0 },
+          { "what": "Opcional: 10 min de curso com transcrição", "resource": "Test Automation University", "min": 10 }
+        ],
+        "speak": "Opcional.",
+        "mini": "Livre."
+      },
+      {
+        "label": "Dom",
+        "focus": "Revisão e medição",
+        "minutes": 15,
+        "tasks": [
+          { "what": "Revisar os cartões marcados como difíceis e reescrever 2 deles com frases suas", "resource": "Anki", "min": 8 },
+          { "what": "Preencher o registro semanal", "resource": "Seu registro", "min": 4 },
+          { "what": "Escolher os conteúdos da semana 4", "resource": "Sua playlist", "min": 3 }
+        ],
+        "speak": "My difficult words this week were...",
+        "mini": "Só o registro."
+      }
+    ]
+  },
+  {
+    "n": 4,
+    "theme": "Yesterday at work",
+    "subtitle": "O stand-up: ontem, hoje e impedimentos",
+    "why": "O stand-up é o seu primeiro momento de fala real em inglês num time internacional. São três frases por dia, sempre com a mesma estrutura: previsível, treinável e de alto retorno.",
+    "grammar": {
+      "topic": "Past simple (verbos regulares) + going to",
+      "why": "O stand-up é passado (ontem) e futuro próximo (hoje). Os verbos regulares no passado terminam em -ed, e o plano de hoje usa going to.",
+      "examples": [
+        "Yesterday I tested the payment flow.",
+        "I created ten test cases and reported two bugs.",
+        "I didn't finish the regression suite.",
+        "Today I'm going to write automated tests for the login page.",
+        "I'm blocked because the test environment is down."
+      ],
+      "tip": "Em frases negativas e em perguntas, o passado fica no didn't / did e o verbo volta à forma base: I didn't test (não I didn't tested)."
+    },
+    "vocab": [
+      {
+        "group": "Verbos regulares no passado",
+        "items": "tested=testei; created=criei; reported=reportei; checked=verifiquei; finished=terminei; started=comecei; worked=trabalhei; planned=planejei; opened=abri (um ticket); closed=fechei; reviewed=revisei; updated=atualizei; fixed=corrigi; validated=validei; executed=executei; documented=documentei; asked=perguntei; answered=respondi; talked=conversei; helped=ajudei"
+      },
+      {
+        "group": "O stand-up",
+        "items": "yesterday I...=ontem eu...; today I'm going to...=hoje eu vou...; I'm blocked=estou bloqueado; blocker=impedimento; no blockers=nenhum impedimento; in progress=em andamento; done=concluído; to do=a fazer; status=situação; update=atualização; quick question=pergunta rápida; I need help with=preciso de ajuda com; I'm waiting for=estou esperando; I'll follow up=vou acompanhar; by the end of the day=até o fim do dia; priority=prioridade; urgent=urgente; on track=dentro do prazo; delayed=atrasado; next step=próximo passo"
+      },
+      {
+        "group": "Resultados e progresso",
+        "items": "progress=progresso; result=resultado; issue=problema; problem=problema; solution=solução; mistake=erro; success=sucesso; failure=falha; attempt=tentativa; to try=tentar; to solve=resolver; to improve=melhorar; to repeat=repetir; to continue=continuar; to stop=parar; almost=quase; already=já; still=ainda; yet=ainda (em negativas e perguntas); again=de novo"
+      },
+      {
+        "group": "Tempo no passado",
+        "items": "yesterday=ontem; last night=ontem à noite; last week=semana passada; last month=mês passado; two days ago=há dois dias; this morning=hoje de manhã; earlier=mais cedo; before=antes; after=depois; then=então; first=primeiro; next=em seguida; finally=finalmente; during=durante; until=até; since=desde; for two hours=por duas horas; all day=todo o dia; at the end=no fim; recently=recentemente"
+      }
+    ],
+    "resources": [
+      { "name": "BBC Office English", "url": "https://www.bbc.co.uk/learningenglish/english/features/office-english", "what": "Procure episódios sobre reuniões, prazos e pedir ajuda." },
+      { "name": "BBC Real Easy English", "url": "https://www.bbc.co.uk/learningenglish/english/features/real-easy-english", "what": "Mantenha 1 episódio por semana para escuta fácil." },
+      { "name": "News in Levels (nível 1 ou 2)", "url": "https://www.newsinlevels.com/", "what": "Se você está entendendo quase tudo no nível 1, experimente o nível 2." },
+      { "name": "Playwright: documentação", "url": "https://playwright.dev/docs/intro", "what": "Leia a página de instalação em inglês; é técnica e previsível." }
+    ],
+    "content": [
+      { "name": "Office English: um episódio sobre prazos ou organização", "kind": "Podcast", "what": "Com transcrição; marque frases para o seu stand-up." },
+      { "name": "Friends — uma cena de conversa sobre o que aconteceu no dia", "kind": "Série", "what": "Procure cenas em que alguém conta um acontecimento: puro past simple." },
+      { "name": "\"Monster\" (Skillet)", "kind": "Música", "what": "Rock cristão, fala rápida. Use só 2 trechos curtos, não a música toda." },
+      { "name": "Playwright: Installation", "kind": "Leitura técnica", "what": "Leia e repita em voz alta 3 frases de instrução." }
+    ],
+    "milestone": "Gravar um stand-up de 45 segundos em inglês, sem ler, com ontem, hoje e um impedimento.",
+    "days": [
+      {
+        "label": "Seg",
+        "focus": "Inglês de QA",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Escrever o seu stand-up real de hoje em 3 frases, em inglês", "resource": "Caderno", "min": 10 },
+          { "what": "Falar o stand-up em voz alta 3 vezes, sem ler na terceira", "resource": "Você mesmo", "min": 10 }
+        ],
+        "speak": "Yesterday I tested the login page. Today I'm going to write two test cases. No blockers.",
+        "mini": "Cartões + 1 stand-up falado."
+      },
+      {
+        "label": "Ter",
+        "focus": "Sitcom",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Cena de Friends em que alguém conta algo que aconteceu; marcar todos os verbos no passado", "resource": "Friends", "min": 14 },
+          { "what": "Contar a cena em 3 frases no passado, em voz alta", "resource": "Você mesmo", "min": 6 }
+        ],
+        "speak": "She called him, but he didn't answer. Then she went to his apartment.",
+        "mini": "Cartões + assistir à cena."
+      },
+      {
+        "label": "Qua",
+        "focus": "Leitura técnica",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Ler a página de instalação do Playwright e anotar 5 verbos de instrução (install, run, open, choose, update)", "resource": "playwright.dev", "min": 12 },
+          { "what": "Ler 1 notícia", "resource": "News in Levels", "min": 8 }
+        ],
+        "speak": "To install Playwright, you run one command in the terminal.",
+        "mini": "Cartões + a notícia."
+      },
+      {
+        "label": "Qui",
+        "focus": "Música cristã",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Ciclo da música com 2 trechos curtos; o resto é só escuta", "resource": "\"Monster\" (Skillet)", "min": 15 },
+          { "what": "Reutilizar 1 bloco da música numa frase sua", "resource": "Você mesmo", "min": 5 }
+        ],
+        "speak": "This song is fast. I understand two or three lines, and that is enough for now.",
+        "mini": "Cartões + ouvir a música."
+      },
+      {
+        "label": "Sex",
+        "focus": "Fala",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Pronúncia das terminações -ed: tested (/id/), worked (/t/), planned (/d/)", "resource": "YouGlish", "min": 10 },
+          { "what": "Gravar o stand-up de 45 s, sem ler. Compare com a gravação da semana 1", "resource": "Gravador do celular", "min": 10 }
+        ],
+        "speak": "Yesterday I worked on the regression suite. Today I'm going to check two bugs. I'm blocked by the environment.",
+        "mini": "Cartões + gravar 30 s do stand-up."
+      },
+      {
+        "label": "Sáb",
+        "focus": "Lazer com apoio",
+        "minutes": 10,
+        "tasks": [
+          { "what": "Conteúdo livre em inglês, por prazer", "resource": "Sua escolha", "min": 0 },
+          { "what": "Opcional: cartões", "resource": "Anki", "min": 10 }
+        ],
+        "speak": "Opcional.",
+        "mini": "Livre."
+      },
+      {
+        "label": "Dom",
+        "focus": "Teste mensal",
+        "minutes": 30,
+        "tasks": [
+          { "what": "Escuta: ouvir 1 episódio novo de Real Easy English sem transcrição e anotar 5 ideias; conferir depois", "resource": "BBC Real Easy English", "min": 10 },
+          { "what": "Fala: gravar 60 s sobre \"my day and my job\" e comparar com o mês anterior", "resource": "Gravador do celular", "min": 8 },
+          { "what": "Leitura e escrita: 1 notícia do próximo nível + escrever um bug report de 5 linhas em inglês", "resource": "News in Levels + seu modelo de bug report", "min": 12 }
+        ],
+        "speak": "In the last four weeks, I learned to talk about my routine and my work.",
+        "mini": "Só a parte de fala: 60 s gravados."
+      }
+    ]
+  }
+]

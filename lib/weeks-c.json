@@ -1,0 +1,538 @@
+[
+  {
+    "n": 9,
+    "theme": "Opinions and polite disagreement",
+    "subtitle": "Dar opinião, discordar e levantar riscos sem ofender",
+    "why": "Boa parte do valor de um QA está em dizer \"isso é um risco\" de um jeito que o time escute. Em inglês, isso depende de modais: a diferença entre soar arrogante e soar profissional está em duas palavras.",
+    "grammar": {
+      "topic": "Modais: should, could, would, may, might",
+      "why": "Modais tiram o peso da frase. \"You are wrong\" fecha a conversa; \"I think there might be a problem\" abre.",
+      "examples": [
+        "I think we should test this before the release.",
+        "We could use a different approach.",
+        "Would it be possible to postpone the deploy?",
+        "This might cause a problem in production.",
+        "In my opinion, the risk is too high."
+      ],
+      "tip": "Depois de um modal, o verbo fica na forma base e sem to: we should test (não we should to test). Para discordar, comece concordando com algo: \"That makes sense, but...\""
+    },
+    "vocab": [
+      {
+        "group": "Dar opinião",
+        "items": "I think=eu acho; in my opinion=na minha opinião; from my point of view=do meu ponto de vista; it seems to me=parece-me; I believe=eu acredito; I'm not sure=não tenho certeza; I feel that=sinto que; as far as I know=pelo que eu sei; to be honest=para ser sincero; personally=pessoalmente; I'd say=eu diria; it depends=depende; on the one hand=por um lado; on the other hand=por outro lado; overall=no geral; actually=na verdade; of course=claro; definitely=definitivamente; absolutely=com certeza; exactly=exatamente"
+      },
+      {
+        "group": "Concordar e discordar",
+        "items": "I agree=eu concordo; I totally agree=concordo totalmente; that makes sense=isso faz sentido; good point=boa observação; fair enough=é justo; I see your point, but=entendo seu ponto, mas; I'm not sure about that=não tenho certeza disso; I respectfully disagree=discordo respeitosamente; I don't think so=não acho; that's true, however=é verdade, no entanto; let's agree to disagree=vamos concordar em discordar; maybe we should=talvez devêssemos; have you considered=você considerou; what if=e se; I'd suggest=eu sugeriria; another option is=outra opção é; it would be better to=seria melhor; the problem with that is=o problema disso é; on second thought=pensando bem; let's try=vamos tentar"
+      },
+      {
+        "group": "Risco e qualidade",
+        "items": "risk=risco; risky=arriscado; to raise a risk=levantar um risco; concern=preocupação; I'm concerned about=estou preocupado com; impact=impacto; likely=provável; unlikely=improvável; critical=crítico; safe=seguro; unsafe=inseguro; quality=qualidade; trade-off=contrapartida; technical debt=dívida técnica; shortcut=atalho; to postpone=postergar; to double-check=verificar duas vezes; worst case=pior caso; best case=melhor caso; it's worth=vale a pena"
+      },
+      {
+        "group": "Feedback profissional",
+        "items": "feedback=retorno; to give feedback=dar retorno; constructive=construtivo; to point out=apontar; to highlight=destacar; strength=ponto forte; weakness=ponto fraco; improvement=melhoria; to improve=melhorar; suggestion=sugestão; concern=ressalva; to appreciate=valorizar; well done=bom trabalho; thanks for raising this=obrigado por levantar isso; I understand=eu entendo; next time=na próxima vez; lesson learned=lição aprendida; to take into account=levar em conta; to be fair=para ser justo; let me explain=deixe-me explicar"
+      }
+    ],
+    "resources": [
+      { "name": "BBC Office English", "url": "https://www.bbc.co.uk/learningenglish/english/features/office-english", "what": "Procure os episódios sobre feedback, discordar e dizer não." },
+      { "name": "BBC 6 Minute English", "url": "https://www.bbc.co.uk/learningenglish/english/features/6-minute-english", "what": "Os apresentadores dão opinião o tempo todo: ouça as fórmulas." },
+      { "name": "Ministry of Testing Club", "url": "https://club.ministryoftesting.com/about", "what": "Responda a 1 tópico dando sua opinião em 3 frases." },
+      { "name": "News in Levels (nível 2 ou 3)", "url": "https://www.newsinlevels.com/", "what": "Leitura diária; experimente o nível 3." }
+    ],
+    "content": [
+      { "name": "Office English: feedback ou dizer não", "kind": "Podcast", "what": "Marque 10 fórmulas de discordância educada." },
+      { "name": "The Big Bang Theory — uma discussão entre amigos", "kind": "Série", "what": "Observe como eles discordam: nem sempre com educação, e isso também ensina." },
+      { "name": "Ministry of Testing: um tópico polêmico", "kind": "Leitura técnica", "what": "Escreva sua opinião em inglês, 3 frases." },
+      { "name": "\"Who You Say I Am\" (Hillsong Worship)", "kind": "Música", "what": "Identidade e confiança; refrão simples." }
+    ],
+    "milestone": "Discordar de uma decisão técnica em inglês, por escrito e em voz alta, em 5 frases educadas.",
+    "days": [
+      {
+        "label": "Seg",
+        "focus": "Inglês de QA",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Ouvir Office English sobre feedback e marcar 10 fórmulas", "resource": "BBC Office English", "min": 12 },
+          { "what": "Escrever 5 frases levantando um risco real do seu time, com modais", "resource": "Caderno", "min": 8 }
+        ],
+        "speak": "I think we should run the regression suite first. This might cause a problem in production.",
+        "mini": "Cartões + 1 frase de risco."
+      },
+      {
+        "label": "Ter",
+        "focus": "Sitcom",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Cena de discussão com legenda em inglês; anotar as frases de discordância", "resource": "The Big Bang Theory", "min": 14 },
+          { "what": "Shadowing de 4 falas", "resource": "A mesma cena", "min": 6 }
+        ],
+        "speak": "I see your point, but I don't agree.",
+        "mini": "Cartões + assistir à cena."
+      },
+      {
+        "label": "Qua",
+        "focus": "Escrita em público",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Responder a 1 tópico do fórum com a sua opinião, em 3 frases", "resource": "Ministry of Testing Club", "min": 14 },
+          { "what": "Ler 1 notícia", "resource": "News in Levels", "min": 6 }
+        ],
+        "speak": "In my opinion, manual testing is still necessary for this kind of feature.",
+        "mini": "Cartões + ler o tópico."
+      },
+      {
+        "label": "Qui",
+        "focus": "Música cristã",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Ciclo da música, passos 1 a 6", "resource": "\"Who You Say I Am\"", "min": 15 },
+          { "what": "Reutilizar 1 bloco numa frase sua", "resource": "Você mesmo", "min": 5 }
+        ],
+        "speak": "I am not perfect, but I am learning every day.",
+        "mini": "Cartões + ouvir a música."
+      },
+      {
+        "label": "Sex",
+        "focus": "Fala",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Pedir ao Claude um debate curto: ele defende subir sem testar, você levanta os riscos", "resource": "Claude", "min": 12 },
+          { "what": "Gravar 60 s defendendo uma posição técnica", "resource": "Gravador do celular", "min": 8 }
+        ],
+        "speak": "That makes sense, but I'm concerned about the payment flow. Could we test it first?",
+        "mini": "Cartões + 2 frases de opinião."
+      },
+      {
+        "label": "Sáb",
+        "focus": "Lazer com apoio",
+        "minutes": 10,
+        "tasks": [
+          { "what": "Conteúdo livre em inglês, por prazer", "resource": "Sua escolha", "min": 0 },
+          { "what": "Opcional: cartões", "resource": "Anki", "min": 10 }
+        ],
+        "speak": "Opcional.",
+        "mini": "Livre."
+      },
+      {
+        "label": "Dom",
+        "focus": "Revisão e medição",
+        "minutes": 15,
+        "tasks": [
+          { "what": "Escolher 6 fórmulas de opinião e discordância para usar na próxima reunião", "resource": "Anki", "min": 8 },
+          { "what": "Preencher o registro semanal", "resource": "Seu registro", "min": 4 },
+          { "what": "Escolher os conteúdos da semana 10", "resource": "Sua playlist", "min": 3 }
+        ],
+        "speak": "Next week I will use these phrases in a real meeting.",
+        "mini": "Só o registro."
+      }
+    ]
+  },
+  {
+    "n": 10,
+    "theme": "Telling a story",
+    "subtitle": "Contar o que aconteceu: filmes, séries e a sua história",
+    "why": "Contar histórias é o que faz uma conversa social fluir, e é o que uma entrevista pede quando diz \"tell me about a time when...\". Aqui o inglês começa a soar natural, não só funcional.",
+    "grammar": {
+      "topic": "Past continuous x past simple",
+      "why": "Uma história tem fundo (what was happening) e eventos (what happened). O inglês separa os dois com clareza.",
+      "examples": [
+        "I was testing the report when the environment went down.",
+        "While we were deploying, the pipeline failed.",
+        "They were arguing when he arrived.",
+        "I wasn't paying attention, so I missed the bug.",
+        "What were you doing when it happened?"
+      ],
+      "tip": "Use when + past simple para o evento e while + past continuous para o fundo. É a estrutura mais útil para relatar incidentes."
+    },
+    "vocab": [
+      {
+        "group": "Estrutura da narrativa",
+        "items": "once=uma vez; one day=um dia; at first=no começo; suddenly=de repente; immediately=imediatamente; meanwhile=enquanto isso; after that=depois disso; later=mais tarde; in the end=no final; finally=finalmente; because of that=por causa disso; as a result=como resultado; luckily=felizmente; unfortunately=infelizmente; surprisingly=surpreendentemente; it turned out that=acabou que; the next thing I knew=a próxima coisa que eu soube; to be about to=estar a ponto de; to end up=acabar; so far=até agora"
+      },
+      {
+        "group": "Filmes e séries",
+        "items": "plot=trama; scene=cena; character=personagem; main character=personagem principal; hero=herói; villain=vilão; episode=episódio; season=temporada; series=série; movie=filme; trailer=trailer; soundtrack=trilha sonora; subtitle=legenda; dubbed=dublado; spoiler=spoiler; ending=final; sequel=continuação; to be based on=ser baseado em; to take place=acontecer; to play a role=interpretar um papel"
+      },
+      {
+        "group": "Gêneros e reações",
+        "items": "science fiction=ficção científica; action=ação; thriller=suspense; fantasy=fantasia; drama=drama; comedy=comédia; documentary=documentário; historical=histórico; mythology=mitologia; anime=anime; exciting=empolgante; boring=chato; scary=assustador; funny=engraçado; sad=triste; surprising=surpreendente; confusing=confuso; amazing=incrível; predictable=previsível; worth watching=vale a pena assistir"
+      },
+      {
+        "group": "Relatar um incidente",
+        "items": "incident=incidente; outage=indisponibilidade; downtime=tempo fora do ar; to go down=cair; to come back=voltar; alert=alerta; to notice=notar; to realize=perceber; to investigate=investigar; timeline=linha do tempo; postmortem=análise pós-incidente; lesson=lição; to recover=recuperar; backup=cópia de segurança; rollback=reversão; hotfix=correção urgente; to escalate=escalar; on call=de plantão; customer=cliente; complaint=reclamação"
+      }
+    ],
+    "resources": [
+      { "name": "BBC Learning English Stories", "url": "https://www.bbc.co.uk/learningenglish", "what": "O site tem séries de histórias narradas; procure a seção de stories." },
+      { "name": "Project Gutenberg", "url": "https://www.gutenberg.org/", "what": "Livros de domínio público. Leia só trechos; a linguagem é antiga." },
+      { "name": "LibriVox", "url": "https://librivox.org", "what": "Áudio de domínio público para ler e ouvir ao mesmo tempo." },
+      { "name": "Simple English Wikipedia: mitologia", "url": "https://simple.wikipedia.org/wiki/Greek_mythology", "what": "Histórias que você já conhece, em inglês simples." }
+    ],
+    "content": [
+      { "name": "Um resumo de saga de One Piece ou Dragon Ball em inglês", "kind": "Anime", "what": "Você já conhece a história: sobra atenção para o inglês." },
+      { "name": "The Lord of the Rings — uma cena calma no Condado", "kind": "Filme", "what": "Diálogo pausado, com legenda em inglês." },
+      { "name": "Simple English Wikipedia: Greek mythology", "kind": "Leitura", "what": "Leia e conte uma história em 5 frases no passado." },
+      { "name": "\"Goodness of God\" (Bethel Music)", "kind": "Música", "what": "Narrativa pessoal em primeira pessoa: ideal para esta semana." }
+    ],
+    "milestone": "Contar uma história de 2 minutos (um incidente no trabalho ou o enredo de um filme) usando past simple e past continuous.",
+    "days": [
+      {
+        "label": "Seg",
+        "focus": "Inglês de QA",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Escrever o relato de um incidente real do seu trabalho em 8 frases, com when e while", "resource": "Caderno", "min": 13 },
+          { "what": "Contar o relato em voz alta, sem ler", "resource": "Você mesmo", "min": 7 }
+        ],
+        "speak": "I was running the suite when the environment went down. While we were waiting, I tested manually.",
+        "mini": "Cartões + 2 frases do relato."
+      },
+      {
+        "label": "Ter",
+        "focus": "Anime",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Assistir a um resumo de saga em inglês, com legenda", "resource": "Resumo de One Piece ou Dragon Ball", "min": 14 },
+          { "what": "Responder em voz alta: who is the main character? what did he want? what happened?", "resource": "Você mesmo", "min": 6 }
+        ],
+        "speak": "He wanted to find the treasure, so he started a journey with his friends.",
+        "mini": "Cartões + assistir ao resumo."
+      },
+      {
+        "label": "Qua",
+        "focus": "Leitura",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Ler sobre um mito grego e reescrever a história em 5 frases suas", "resource": "Simple English Wikipedia", "min": 14 },
+          { "what": "Ler em voz alta o seu texto", "resource": "Seu texto", "min": 6 }
+        ],
+        "speak": "A long time ago, there was a king who wanted to be immortal.",
+        "mini": "Cartões + ler o artigo."
+      },
+      {
+        "label": "Qui",
+        "focus": "Música cristã",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Ciclo da música, passos 1 a 7", "resource": "\"Goodness of God\"", "min": 15 },
+          { "what": "Contar em 3 frases, no passado, algo pelo qual você é grato", "resource": "Você mesmo", "min": 5 }
+        ],
+        "speak": "Last year was difficult, but God helped me and I learned a lot.",
+        "mini": "Cartões + ouvir a música."
+      },
+      {
+        "label": "Sex",
+        "focus": "Fala",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Pronúncia das formas contraídas: wasn't, weren't, didn't, I was gonna", "resource": "YouGlish", "min": 10 },
+          { "what": "Gravar 2 min contando uma história: um incidente ou um filme", "resource": "Gravador do celular", "min": 10 }
+        ],
+        "speak": "Let me tell you what happened last month. We were preparing the release when...",
+        "mini": "Cartões + gravar 45 s de história."
+      },
+      {
+        "label": "Sáb",
+        "focus": "Lazer com apoio",
+        "minutes": 10,
+        "tasks": [
+          { "what": "Um filme inteiro em inglês com legenda em inglês, se você estiver com vontade. Sem tarefa", "resource": "Sua escolha", "min": 0 },
+          { "what": "Opcional: cartões", "resource": "Anki", "min": 10 }
+        ],
+        "speak": "Opcional.",
+        "mini": "Livre."
+      },
+      {
+        "label": "Dom",
+        "focus": "Revisão e medição",
+        "minutes": 15,
+        "tasks": [
+          { "what": "Ouvir a sua história gravada e anotar 3 erros para virar cartão", "resource": "Sua gravação", "min": 8 },
+          { "what": "Preencher o registro semanal", "resource": "Seu registro", "min": 4 },
+          { "what": "Escolher os conteúdos da semana 11", "resource": "Sua playlist", "min": 3 }
+        ],
+        "speak": "My three mistakes were...",
+        "mini": "Só o registro."
+      }
+    ]
+  },
+  {
+    "n": 11,
+    "theme": "Comparing tools and options",
+    "subtitle": "Comparar, escolher e justificar uma decisão técnica",
+    "why": "Escolher entre Playwright e Cypress, entre testar manual ou automatizar, entre subir hoje ou amanhã: comparar é o que um QA sênior faz em inglês toda semana.",
+    "grammar": {
+      "topic": "Comparativos e superlativos",
+      "why": "Comparar exige -er/-est para palavras curtas e more/most para longas, mais as formas irregulares (good/better/best).",
+      "examples": [
+        "Playwright is faster than Selenium for our tests.",
+        "This is the most important test in the suite.",
+        "Manual testing is more expensive than automation in the long run.",
+        "The new pipeline is better, but it isn't as stable as the old one.",
+        "This approach is less risky than that one."
+      ],
+      "tip": "as ... as para igualdade (as fast as), not as ... as para inferioridade. Com than, nunca use that: faster than, não faster that."
+    },
+    "vocab": [
+      {
+        "group": "Comparar",
+        "items": "better=melhor; worse=pior; best=o melhor; worst=o pior; faster=mais rápido; slower=mais lento; easier=mais fácil; harder=mais difícil; cheaper=mais barato; more expensive=mais caro; bigger=maior; smaller=menor; simpler=mais simples; more complex=mais complexo; more reliable=mais confiável; less risky=menos arriscado; as good as=tão bom quanto; not as fast as=não tão rápido quanto; similar to=semelhante a; the same as=igual a"
+      },
+      {
+        "group": "Avaliar uma ferramenta",
+        "items": "feature=funcionalidade; advantage=vantagem; disadvantage=desvantagem; pros and cons=prós e contras; benefit=benefício; limitation=limitação; performance=desempenho; speed=velocidade; stability=estabilidade; reliability=confiabilidade; maintenance=manutenção; learning curve=curva de aprendizado; documentation=documentação; community=comunidade; support=suporte; cost=custo; free=gratuito; open source=código aberto; license=licença; integration=integração"
+      },
+      {
+        "group": "Decidir e justificar",
+        "items": "to choose=escolher; choice=escolha; to compare=comparar; comparison=comparação; option=opção; alternative=alternativa; criteria=critérios; to evaluate=avaliar; to recommend=recomendar; recommendation=recomendação; because of=por causa de; due to=devido a; therefore=portanto; that's why=por isso; the main reason=o motivo principal; in terms of=em termos de; compared to=comparado a; instead of=em vez de; rather than=em lugar de; it makes sense to=faz sentido"
+      },
+      {
+        "group": "Automação: termos do dia",
+        "items": "framework=framework; locator=localizador; selector=seletor; assertion=asserção; fixture=fixture; mock=simulação; stub=stub; flaky test=teste instável; parallel execution=execução paralela; headless=sem interface; CI pipeline=pipeline de integração contínua; to trigger=disparar; to retry=tentar de novo; timeout=tempo limite; test report=relatório de testes; screenshot on failure=captura em caso de falha; trace=rastreamento; to debug=depurar; code review=revisão de código; refactor=refatorar"
+      }
+    ],
+    "resources": [
+      { "name": "Playwright: documentação", "url": "https://playwright.dev/docs/intro", "what": "Leia a página Best Practices: inglês técnico claro e útil." },
+      { "name": "Test Automation University", "url": "https://testautomationu.applitools.com/", "what": "Compare dois cursos de ferramentas diferentes." },
+      { "name": "BBC 6 Minute English", "url": "https://www.bbc.co.uk/learningenglish/english/features/6-minute-english", "what": "Ouça 1 episódio sem transcrição primeiro." },
+      { "name": "Ministry of Testing Club", "url": "https://club.ministryoftesting.com/about", "what": "Procure um tópico de comparação de ferramentas." }
+    ],
+    "content": [
+      { "name": "Playwright: Best Practices", "kind": "Leitura técnica", "what": "Marque 10 frases de recomendação (you should, prefer, avoid)." },
+      { "name": "Entrevista com um ator ou diretor sobre dois filmes", "kind": "Vídeo", "what": "Comparações naturais em fala real." },
+      { "name": "Game of Thrones — um vídeo de comparação de personagens", "kind": "Série", "what": "Use vídeos de resumo, não as cenas: a fala é mais clara." },
+      { "name": "\"Living Hope\" (Phil Wickham)", "kind": "Música", "what": "Narrativa com contraste antes e depois." }
+    ],
+    "milestone": "Escrever e apresentar uma comparação de 2 ferramentas em 10 frases, com uma recomendação final justificada.",
+    "days": [
+      {
+        "label": "Seg",
+        "focus": "Inglês de QA",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Ler Best Practices do Playwright e marcar 10 frases de recomendação", "resource": "playwright.dev", "min": 12 },
+          { "what": "Escrever uma comparação de 2 ferramentas que você usa, em 6 frases", "resource": "Caderno", "min": 8 }
+        ],
+        "speak": "Playwright is faster and easier to maintain than our old framework.",
+        "mini": "Cartões + 1 frase de comparação."
+      },
+      {
+        "label": "Ter",
+        "focus": "Série",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Vídeo de comparação de personagens de Game of Thrones, com legenda", "resource": "Vídeo de resumo", "min": 14 },
+          { "what": "Comparar dois personagens em 3 frases", "resource": "Você mesmo", "min": 6 }
+        ],
+        "speak": "He is stronger than his brother, but his brother is smarter.",
+        "mini": "Cartões + assistir ao vídeo."
+      },
+      {
+        "label": "Qua",
+        "focus": "Leitura técnica",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Ler um tópico de comparação de ferramentas no fórum e anotar os critérios usados", "resource": "Ministry of Testing Club", "min": 14 },
+          { "what": "Ler 1 notícia", "resource": "News in Levels", "min": 6 }
+        ],
+        "speak": "They compared the tools in terms of speed, cost and community support.",
+        "mini": "Cartões + ler o tópico."
+      },
+      {
+        "label": "Qui",
+        "focus": "Música cristã",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Ciclo da música, passos 1 a 7", "resource": "\"Living Hope\"", "min": 15 },
+          { "what": "Reutilizar 1 bloco numa frase de comparação sua", "resource": "Você mesmo", "min": 5 }
+        ],
+        "speak": "My life today is better than it was before.",
+        "mini": "Cartões + ouvir a música."
+      },
+      {
+        "label": "Sex",
+        "focus": "Fala",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Pronúncia: than x then, worse x worst, easier, reliable", "resource": "YouGlish", "min": 10 },
+          { "what": "Gravar 2 min apresentando sua comparação com recomendação final", "resource": "Gravador do celular", "min": 10 }
+        ],
+        "speak": "In my opinion, we should choose Playwright, because it is faster and the documentation is better.",
+        "mini": "Cartões + gravar 45 s."
+      },
+      {
+        "label": "Sáb",
+        "focus": "Lazer com apoio",
+        "minutes": 10,
+        "tasks": [
+          { "what": "Conteúdo livre em inglês, por prazer", "resource": "Sua escolha", "min": 0 },
+          { "what": "Opcional: cartões", "resource": "Anki", "min": 10 }
+        ],
+        "speak": "Opcional.",
+        "mini": "Livre."
+      },
+      {
+        "label": "Dom",
+        "focus": "Revisão e medição",
+        "minutes": 15,
+        "tasks": [
+          { "what": "Revisar os cartões de automação e marcar os 5 termos que você usaria numa entrevista", "resource": "Anki", "min": 8 },
+          { "what": "Preencher o registro semanal", "resource": "Seu registro", "min": 4 },
+          { "what": "Preparar a semana 12: revise as perguntas de entrevista", "resource": "Seu plano", "min": 3 }
+        ],
+        "speak": "Next week is about interviews. I am almost ready.",
+        "mini": "Só o registro."
+      }
+    ]
+  },
+  {
+    "n": 12,
+    "theme": "Interview and career",
+    "subtitle": "Falar da sua experiência e buscar oportunidades",
+    "why": "Fecha o ciclo: todo o vocabulário das 11 semanas anteriores aparece numa entrevista. Esta semana junta tudo numa simulação real, que é o seu portão de saída da fase 1.",
+    "grammar": {
+      "topic": "Present perfect: experiência de vida",
+      "why": "Entrevista pede o present perfect: \"I have worked with QA since 2022\", \"Have you ever used Playwright?\". É o tempo da experiência acumulada, sem data fechada.",
+      "examples": [
+        "I have worked as a QA analyst since 2022.",
+        "I have tested web and backend applications.",
+        "Have you ever automated tests with Playwright?",
+        "I haven't worked with mobile testing yet.",
+        "I've been in this company for two years."
+      ],
+      "tip": "since + ponto no tempo (since 2022), for + duração (for two years). Com data fechada, volte ao past simple: I joined the company in 2024."
+    },
+    "vocab": [
+      {
+        "group": "Experiência profissional",
+        "items": "experience=experiência; background=formação e trajetória; resume=currículo; CV=currículo; cover letter=carta de apresentação; portfolio=portfólio; degree=diploma; to graduate=formar-se; certification=certificação; course=curso; to specialize in=especializar-se em; years of experience=anos de experiência; previous job=emprego anterior; current role=cargo atual; responsibility=responsabilidade; achievement=conquista; to be responsible for=ser responsável por; to be in charge of=estar encarregado de; to lead=liderar; to grow=crescer"
+      },
+      {
+        "group": "Entrevista",
+        "items": "interview=entrevista; job interview=entrevista de emprego; interviewer=entrevistador; candidate=candidato; position=vaga; opening=vaga aberta; to apply=candidatar-se; application=candidatura; hiring process=processo seletivo; technical test=teste técnico; take-home task=desafio para casa; soft skills=habilidades comportamentais; hard skills=habilidades técnicas; strength=ponto forte; weakness=ponto fraco; salary expectation=pretensão salarial; notice period=aviso prévio; offer=proposta; to accept=aceitar; to negotiate=negociar"
+      },
+      {
+        "group": "Perguntas clássicas",
+        "items": "tell me about yourself=fale sobre você; why this company?=por que esta empresa?; what are your strengths?=quais são seus pontos fortes?; tell me about a time when=conte sobre uma vez em que; how do you handle pressure?=como você lida com pressão?; where do you see yourself=onde você se vê; what do you do when=o que você faz quando; do you have any questions?=você tem perguntas?; walk me through=me conduza por; give me an example=me dê um exemplo; what would you do if=o que você faria se; how do you prioritize=como você prioriza"
+      },
+      {
+        "group": "Trabalho internacional",
+        "items": "remote work=trabalho remoto; time zone=fuso horário; overlap hours=horas em comum; contract=contrato; full-time=tempo integral; part-time=meio período; freelance=freelance; relocation=mudança de país; visa=visto; English level=nível de inglês; fluent=fluente; intermediate=intermediário; async communication=comunicação assíncrona; distributed team=time distribuído; onboarding=integração; probation period=período de experiência; benefits=benefícios; payment in dollars=pagamento em dólares; invoice=nota ou fatura; to onboard=integrar"
+      }
+    ],
+    "resources": [
+      { "name": "Claude (simulação de entrevista)", "url": "https://claude.ai", "what": "Peça: \"faça uma entrevista de QA em inglês, nível B1, e corrija minhas respostas\"." },
+      { "name": "BBC Office English", "url": "https://www.bbc.co.uk/learningenglish/english/features/office-english", "what": "Procure episódios sobre carreira e desenvolvimento." },
+      { "name": "Ministry of Testing", "url": "https://www.ministryoftesting.com/go-pro", "what": "Conta gratuita; leia descrições de vagas internacionais em inglês." },
+      { "name": "BBC 6 Minute English", "url": "https://www.bbc.co.uk/learningenglish/english/features/6-minute-english", "what": "Mantenha 1 episódio por semana, agora sem transcrição na primeira escuta." }
+    ],
+    "content": [
+      { "name": "3 descrições de vaga de QA em inglês", "kind": "Leitura técnica", "what": "Marque os requisitos repetidos: é o seu mapa de estudo do B2." },
+      { "name": "Office English: carreira e desenvolvimento", "kind": "Podcast", "what": "Marque frases para falar de evolução profissional." },
+      { "name": "Uma entrevista com um profissional de tecnologia no YouTube", "kind": "Vídeo", "what": "Observe como ele estrutura as respostas: situação, ação, resultado." },
+      { "name": "\"I Speak Jesus\" (Charity Gayle)", "kind": "Música", "what": "Frases curtas, muito repetidas; boa para encerrar o ciclo." }
+    ],
+    "milestone": "Fazer uma entrevista simulada de 15 minutos em inglês e cumprir a checklist do B1. Se você travar em 2 ou mais perguntas, repita a semana antes de seguir.",
+    "days": [
+      {
+        "label": "Seg",
+        "focus": "Inglês de QA",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Escrever a sua resposta para \"tell me about yourself\" em 8 frases, com present perfect", "resource": "Caderno", "min": 12 },
+          { "what": "Falar a resposta 3 vezes; na terceira, sem ler", "resource": "Você mesmo", "min": 8 }
+        ],
+        "speak": "I'm a QA analyst with four years of experience. I have worked with manual and automated testing.",
+        "mini": "Cartões + falar a apresentação uma vez."
+      },
+      {
+        "label": "Ter",
+        "focus": "Vagas reais",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Ler 3 descrições de vaga de QA em inglês e listar os requisitos repetidos", "resource": "Ministry of Testing ou sites de vagas", "min": 14 },
+          { "what": "Escrever 3 frases dizendo quais requisitos você já cumpre", "resource": "Caderno", "min": 6 }
+        ],
+        "speak": "I have experience with test automation, and I have used CI pipelines.",
+        "mini": "Cartões + ler 1 vaga."
+      },
+      {
+        "label": "Qua",
+        "focus": "Resposta estruturada",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Montar 3 histórias no formato situação, ação, resultado: um bug crítico, um conflito com dev, uma melhoria que você propôs", "resource": "Caderno", "min": 14 },
+          { "what": "Contar 1 delas em voz alta", "resource": "Você mesmo", "min": 6 }
+        ],
+        "speak": "Once, we found a critical bug one day before the release. I tested the fix and we released on time.",
+        "mini": "Cartões + 1 história em 3 frases."
+      },
+      {
+        "label": "Qui",
+        "focus": "Música cristã",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Ciclo da música, passos 1 a 7", "resource": "\"I Speak Jesus\"", "min": 15 },
+          { "what": "Dizer em 3 frases o que mudou no seu inglês em 12 semanas", "resource": "Você mesmo", "min": 5 }
+        ],
+        "speak": "Twelve weeks ago I couldn't talk about my job in English. Now I can.",
+        "mini": "Cartões + ouvir a música."
+      },
+      {
+        "label": "Sex",
+        "focus": "Entrevista simulada",
+        "minutes": 30,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Entrevista simulada de 15 min com o Claude: 5 perguntas técnicas e 3 comportamentais", "resource": "Claude", "min": 15 },
+          { "what": "Gravar a sua resposta para \"tell me about yourself\" e comparar com a gravação da semana 1", "resource": "Gravador do celular", "min": 10 }
+        ],
+        "speak": "Thank you for the opportunity. Do you have any questions for me about my experience?",
+        "mini": "Cartões + 3 perguntas respondidas."
+      },
+      {
+        "label": "Sáb",
+        "focus": "Lazer com apoio",
+        "minutes": 10,
+        "tasks": [
+          { "what": "Conteúdo livre em inglês, por prazer. Você merece", "resource": "Sua escolha", "min": 0 },
+          { "what": "Opcional: cartões", "resource": "Anki", "min": 10 }
+        ],
+        "speak": "Opcional.",
+        "mini": "Livre."
+      },
+      {
+        "label": "Dom",
+        "focus": "Fechamento do ciclo",
+        "minutes": 30,
+        "tasks": [
+          { "what": "Rodar a checklist do B1 do plano e marcar o que você já cumpre", "resource": "Checklist do B1", "min": 10 },
+          { "what": "Ouvir a gravação da semana 1 e a da semana 12, em sequência", "resource": "Suas gravações", "min": 8 },
+          { "what": "Decidir o próximo ciclo: repetir uma semana fraca, ou seguir para o bloco A2 sólido (semanas 13 a 24)", "resource": "Seu plano", "min": 12 }
+        ],
+        "speak": "This is my progress after three months. My next goal is B1 in conversation.",
+        "mini": "Só ouvir as duas gravações."
+      }
+    ]
+  }
+]

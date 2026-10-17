@@ -1,0 +1,546 @@
+[
+  {
+    "n": 5,
+    "theme": "Describing a bug",
+    "subtitle": "Explicar um problema do começo ao fim",
+    "why": "Descrever um defeito com clareza é a habilidade central do seu trabalho. Em inglês, isso tem estrutura fixa: passos, resultado esperado, resultado obtido. Dominar isso vale mais que mil palavras soltas.",
+    "grammar": {
+      "topic": "Past simple irregular + can / can't",
+      "why": "Relatar um bug exige verbos irregulares no passado (I saw, I got, I went) e a ideia de capacidade ou impossibilidade (I can't reproduce it).",
+      "examples": [
+        "I saw an error message on the payment screen.",
+        "The page took ten seconds to load.",
+        "I got a 500 error when I clicked Save.",
+        "I can't reproduce the bug on Chrome, but I can reproduce it on Firefox.",
+        "The system didn't show the correct balance."
+      ],
+      "tip": "Irregulares mais usados no seu dia: see/saw, get/got, go/went, take/took, find/found, run/ran, write/wrote, come/came, give/gave, make/made."
+    },
+    "vocab": [
+      {
+        "group": "Verbos irregulares úteis",
+        "items": "see/saw=ver/vi; get/got=obter/obtive; go/went=ir/fui; take/took=levar/levei; find/found=encontrar/encontrei; run/ran=executar/executei; write/wrote=escrever/escrevi; come/came=vir/vim; give/gave=dar/dei; make/made=fazer/fiz; do/did=fazer/fiz; have/had=ter/tive; send/sent=enviar/enviei; break/broke=quebrar/quebrei; choose/chose=escolher/escolhi; begin/began=começar/comecei; think/thought=pensar/pensei; tell/told=contar/contei; read/read=ler/li; show/showed=mostrar/mostrei"
+      },
+      {
+        "group": "Anatomia do bug report",
+        "items": "bug=defeito; defect=defeito; title=título; description=descrição; steps to reproduce=passos para reproduzir; expected result=resultado esperado; actual result=resultado obtido; severity=severidade; priority=prioridade; attachment=anexo; environment=ambiente; precondition=pré-condição; to reproduce=reproduzir; reproducible=reproduzível; intermittent=intermitente; workaround=solução alternativa; root cause=causa raiz; impact=impacto; to assign=atribuir; to close=fechar"
+      },
+      {
+        "group": "O que deu errado",
+        "items": "error=erro; error message=mensagem de erro; crash=travamento; to crash=travar; to freeze=congelar; to hang=parar de responder; blank page=página em branco; broken link=link quebrado; wrong value=valor errado; missing field=campo faltando; duplicate=duplicado; timeout=tempo esgotado; slow=lento; unexpected=inesperado; incorrect=incorreto; empty=vazio; invalid=inválido; unavailable=indisponível; to fail=falhar; to behave=comportar-se"
+      },
+      {
+        "group": "Telas e ações do usuário",
+        "items": "screen=tela; page=página; button=botão; field=campo; form=formulário; menu=menu; dropdown=lista suspensa; checkbox=caixa de seleção; link=link; tab=aba; to click=clicar; to type=digitar; to select=selecionar; to submit=enviar; to log in=entrar; to log out=sair; to refresh=atualizar; to scroll=rolar; to open=abrir; to close=fechar"
+      },
+      {
+        "group": "Severidade e julgamento",
+        "items": "critical=crítico; high=alto; medium=médio; low=baixo; minor=pequeno; major=grave; blocker=bloqueante; nice to have=desejável; edge case=caso extremo; happy path=caminho felizisto; risk=risco; side effect=efeito colateral"
+      }
+    ],
+    "resources": [
+      { "name": "Playwright: issues no GitHub", "url": "https://github.com/microsoft/playwright", "what": "Abra a aba Issues e leia 1 relato por semana: inglês real de bug report." },
+      { "name": "ISTQB Glossary", "url": "https://glossary.istqb.org/", "what": "Consulte defect, failure, error e severity: são diferentes em inglês técnico." },
+      { "name": "BBC 6 Minute English", "url": "https://www.bbc.co.uk/learningenglish/english/features/6-minute-english", "what": "Comece a experimentar: ouça com a transcrição aberta." },
+      { "name": "News in Levels (nível 2)", "url": "https://www.newsinlevels.com/level/level-2/", "what": "Suba de nível se o nível 1 está fácil." }
+    ],
+    "content": [
+      { "name": "Uma issue real do Playwright no GitHub", "kind": "Leitura técnica", "what": "Marque a estrutura: título, passos, esperado, obtido." },
+      { "name": "The Martian — um vídeo-diário do Watney", "kind": "Filme", "what": "Monólogo que descreve um problema e a solução, passo a passo. Tem palavrões: escolha o trecho." },
+      { "name": "Friends — uma cena de confusão ou mal-entendido", "kind": "Série", "what": "Pratique contar o que deu errado, em 3 frases." },
+      { "name": "\"Scream\" (Skillet)", "kind": "Música", "what": "Single de 2026. Use 2 trechos; o resto é escuta." }
+    ],
+    "milestone": "Escrever um bug report completo em inglês, sem tradutor, e explicá-lo em voz alta em 90 segundos.",
+    "days": [
+      {
+        "label": "Seg",
+        "focus": "Inglês de QA",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Ler 1 issue do Playwright e marcar as 5 partes do bug report", "resource": "GitHub do Playwright", "min": 12 },
+          { "what": "Escrever um bug report real do seu trabalho em inglês, usando o modelo", "resource": "Seu modelo de bug report", "min": 8 }
+        ],
+        "speak": "I found a bug in the payment screen. When I click Save, I get a 500 error.",
+        "mini": "Cartões + ler o título e os passos de uma issue."
+      },
+      {
+        "label": "Ter",
+        "focus": "Filme",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Assistir a um vídeo-diário de The Martian com legenda em inglês; marcar como ele descreve o problema", "resource": "The Martian", "min": 14 },
+          { "what": "Shadowing de 3 falas", "resource": "O mesmo trecho", "min": 6 }
+        ],
+        "speak": "The problem is simple: I have a bug and I need to solve it.",
+        "mini": "Cartões + assistir ao trecho."
+      },
+      {
+        "label": "Qua",
+        "focus": "Leitura",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Ler as definições de error, defect e failure no glossário e anotar a diferença em 3 frases", "resource": "ISTQB Glossary", "min": 12 },
+          { "what": "Ler 1 notícia do nível 2", "resource": "News in Levels", "min": 8 }
+        ],
+        "speak": "A person makes an error, the error creates a defect, and the defect can cause a failure.",
+        "mini": "Cartões + 1 definição."
+      },
+      {
+        "label": "Qui",
+        "focus": "Música cristã",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Ciclo da música com 2 trechos curtos", "resource": "\"Scream\" (Skillet)", "min": 15 },
+          { "what": "Usar 1 bloco em uma frase sua", "resource": "Você mesmo", "min": 5 }
+        ],
+        "speak": "I listen to this song when I need energy to work.",
+        "mini": "Cartões + ouvir a música."
+      },
+      {
+        "label": "Sex",
+        "focus": "Fala",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Pronúncia dos irregulares: saw, got, went, took, found, ran", "resource": "YouGlish", "min": 10 },
+          { "what": "Gravar 90 s explicando um bug real: passos, esperado, obtido", "resource": "Gravador do celular", "min": 10 }
+        ],
+        "speak": "First I logged in. Then I opened the report. The total was wrong: it showed zero.",
+        "mini": "Cartões + gravar 30 s."
+      },
+      {
+        "label": "Sáb",
+        "focus": "Lazer com apoio",
+        "minutes": 10,
+        "tasks": [
+          { "what": "Conteúdo livre em inglês, por prazer", "resource": "Sua escolha", "min": 0 },
+          { "what": "Opcional: cartões", "resource": "Anki", "min": 10 }
+        ],
+        "speak": "Opcional.",
+        "mini": "Livre."
+      },
+      {
+        "label": "Dom",
+        "focus": "Revisão e medição",
+        "minutes": 15,
+        "tasks": [
+          { "what": "Reler seu bug report e corrigir 3 erros que você mesmo encontrar", "resource": "Seu texto de segunda", "min": 8 },
+          { "what": "Preencher o registro semanal", "resource": "Seu registro", "min": 4 },
+          { "what": "Escolher os conteúdos da semana 6", "resource": "Sua playlist", "min": 3 }
+        ],
+        "speak": "My bug report is clear now.",
+        "mini": "Só o registro."
+      }
+    ]
+  },
+  {
+    "n": 6,
+    "theme": "Asking for help",
+    "subtitle": "Perguntar, pedir ajuda e confirmar o que você entendeu",
+    "why": "Quem fala um inglês intermediário não entende tudo: ele pede esclarecimento com naturalidade. Essa é a semana que mais reduz o medo de reunião, porque você aprende a continuar a conversa mesmo sem entender tudo.",
+    "grammar": {
+      "topic": "Perguntas: do / does / did + palavras WH",
+      "why": "Perguntar em inglês exige um verbo auxiliar antes do sujeito. Sem isso, a frase soa quebrada e a resposta vem confusa.",
+      "examples": [
+        "Do you have time to help me?",
+        "Does the test run on staging?",
+        "Did you deploy the fix yesterday?",
+        "What do you mean by \"acceptance criteria\"?",
+        "Could you repeat that, please? I didn't catch the last part."
+      ],
+      "tip": "Em perguntas com do/does/did, o verbo principal fica na forma base: Did you test it? (não Did you tested it?). Could you...? é mais educado que Can you...?"
+    },
+    "vocab": [
+      {
+        "group": "Palavras de pergunta",
+        "items": "what=o que; who=quem; where=onde; when=quando; why=por que; how=como; which=qual; how much=quanto (incontável); how many=quantos; how long=quanto tempo; how often=com que frequência; what for=para quê; what about=e sobre; whose=de quem; what time=a que horas"
+      },
+      {
+        "group": "Pedir ajuda e esclarecimento",
+        "items": "can you help me?=você pode me ajudar?; could you help me?=você poderia me ajudar?; I need help with=preciso de ajuda com; could you repeat that?=você poderia repetir?; could you speak slower?=você poderia falar mais devagar?; I didn't catch that=não peguei isso; sorry, I don't understand=desculpe, não entendi; what do you mean?=o que você quer dizer?; do you mean...?=você quer dizer...?; let me check=deixe-me verificar; I'm not sure=não tenho certeza; correct me if I'm wrong=corrija-me se eu estiver errado; does that make sense?=isso faz sentido?; just to confirm=só para confirmar; in other words=em outras palavras; for example=por exemplo; one moment, please=um momento, por favor; I'll get back to you=eu te retorno; thanks for your help=obrigado pela ajuda; no problem=sem problema"
+      },
+      {
+        "group": "Reuniões e combinados",
+        "items": "agenda=pauta; to schedule=agendar; to reschedule=reagendar; to join a call=entrar numa chamada; to share your screen=compartilhar a tela; you're on mute=você está no mudo; can you hear me?=você me ouve?; the connection is bad=a conexão está ruim; let's move on=vamos seguir; let's discuss=vamos discutir; to agree=concordar; to decide=decidir; decision=decisão; to clarify=esclarecer; to confirm=confirmar; to explain=explicar; to suggest=sugerir; to add=acrescentar; to summarize=resumir; action item=ação definida"
+      },
+      {
+        "group": "Critérios e requisitos",
+        "items": "requirement=requisito; acceptance criteria=critérios de aceite; specification=especificação; documentation=documentação; user story=história de usuário; scope=escopo; out of scope=fora do escopo; assumption=premissa; constraint=restrição; dependency=dependência; to approve=aprovar; to reject=rejeitar; feedback=retorno; review=revisão; to validate=validar; expected behavior=comportamento esperado; rule=regra; condition=condição; input=entrada; output=saída"
+      }
+    ],
+    "resources": [
+      { "name": "BBC Office English", "url": "https://www.bbc.co.uk/learningenglish/english/features/office-english", "what": "Procure os episódios sobre pedir ajuda, mal-entendidos e esclarecimentos." },
+      { "name": "Ministry of Testing Club", "url": "https://club.ministryoftesting.com/about", "what": "Crie a conta gratuita e leia 1 tópico. Escrever em público treina o texto de verdade." },
+      { "name": "BBC 6 Minute English", "url": "https://www.bbc.co.uk/learningenglish/english/features/6-minute-english", "what": "1 episódio com transcrição." },
+      { "name": "News in Levels (nível 2)", "url": "https://www.newsinlevels.com/level/level-2/", "what": "Leitura diária." }
+    ],
+    "content": [
+      { "name": "Office English: mal-entendidos ou pedir ajuda", "kind": "Podcast", "what": "Marque 8 frases de esclarecimento e transforme em cartões." },
+      { "name": "The Big Bang Theory — uma cena em que alguém não entende o outro", "kind": "Série", "what": "Observe como as pessoas pedem repetição." },
+      { "name": "Ministry of Testing: um tópico do fórum", "kind": "Leitura técnica", "what": "Leia e escreva 2 frases de resposta em inglês." },
+      { "name": "\"Way Maker\" (versão em inglês)", "kind": "Música", "what": "Refrão simples e muito repetido." }
+    ],
+    "milestone": "Participar de uma conversa de 5 minutos pedindo esclarecimento ao menos 3 vezes, sem mudar para o português.",
+    "days": [
+      {
+        "label": "Seg",
+        "focus": "Inglês de QA",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Ouvir 1 Office English sobre esclarecimentos e marcar 8 frases", "resource": "BBC Office English", "min": 12 },
+          { "what": "Escrever 5 perguntas que você faria sobre um requisito pouco claro", "resource": "Caderno", "min": 8 }
+        ],
+        "speak": "Could you clarify the acceptance criteria? Just to confirm: the user can pay with two cards?",
+        "mini": "Cartões + 1 pergunta em voz alta."
+      },
+      {
+        "label": "Ter",
+        "focus": "Sitcom",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Cena com mal-entendido; anotar como os personagens pedem repetição", "resource": "The Big Bang Theory", "min": 14 },
+          { "what": "Shadowing de 4 falas de pergunta", "resource": "A mesma cena", "min": 6 }
+        ],
+        "speak": "Wait, what do you mean? I don't understand.",
+        "mini": "Cartões + assistir à cena."
+      },
+      {
+        "label": "Qua",
+        "focus": "Escrita em público",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Ler 1 tópico do fórum de testers e escrever uma resposta de 2 a 3 frases em inglês", "resource": "Ministry of Testing Club", "min": 14 },
+          { "what": "Ler 1 notícia", "resource": "News in Levels", "min": 6 }
+        ],
+        "speak": "In my team, we test this manually. How do you do it?",
+        "mini": "Cartões + ler o tópico, sem responder."
+      },
+      {
+        "label": "Qui",
+        "focus": "Música cristã",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Ciclo da música, passos 1 a 6", "resource": "\"Way Maker\"", "min": 15 },
+          { "what": "Cantar junto o refrão", "resource": "A música", "min": 5 }
+        ],
+        "speak": "I pray before I start my day.",
+        "mini": "Cartões + ouvir a música."
+      },
+      {
+        "label": "Sex",
+        "focus": "Fala",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Pedir ao Claude um diálogo curto: você é QA e precisa esclarecer um requisito; responda por escrito e depois em voz alta", "resource": "Claude", "min": 12 },
+          { "what": "Gravar 60 s com 3 perguntas suas", "resource": "Gravador do celular", "min": 8 }
+        ],
+        "speak": "Could you repeat that, please? Do you mean the report or the dashboard?",
+        "mini": "Cartões + 2 perguntas em voz alta."
+      },
+      {
+        "label": "Sáb",
+        "focus": "Lazer com apoio",
+        "minutes": 10,
+        "tasks": [
+          { "what": "Conteúdo livre em inglês, por prazer", "resource": "Sua escolha", "min": 0 },
+          { "what": "Opcional: cartões", "resource": "Anki", "min": 10 }
+        ],
+        "speak": "Opcional.",
+        "mini": "Livre."
+      },
+      {
+        "label": "Dom",
+        "focus": "Revisão e medição",
+        "minutes": 15,
+        "tasks": [
+          { "what": "Escolher as 10 frases de esclarecimento que você mais usaria e decorar 5", "resource": "Anki", "min": 8 },
+          { "what": "Preencher o registro semanal", "resource": "Seu registro", "min": 4 },
+          { "what": "Escolher os conteúdos da semana 7", "resource": "Sua playlist", "min": 3 }
+        ],
+        "speak": "My five favorite phrases this week are...",
+        "mini": "Só o registro."
+      }
+    ]
+  },
+  {
+    "n": 7,
+    "theme": "Money and numbers",
+    "subtitle": "Valores, pagamentos e conciliação: o seu domínio",
+    "why": "Você trabalha com cash management. Esse vocabulário é o que diferencia um QA genérico de um QA que entende o negócio, e é exatamente o que uma vaga internacional da área vai perguntar.",
+    "grammar": {
+      "topic": "Contáveis e incontáveis + much / many / a lot of + números grandes",
+      "why": "Money é incontável em inglês (much money, não many money), mas payments são contáveis. Errar isso é imediatamente perceptível.",
+      "examples": [
+        "How much money is in the account?",
+        "How many payments failed yesterday?",
+        "There isn't much information in the log.",
+        "We processed a lot of transactions last month.",
+        "The total is one million, two hundred thousand reais."
+      ],
+      "tip": "Incontáveis comuns na sua área: money, information, data, cash, feedback, software, work. Nenhum deles aceita plural com -s nem the many."
+    },
+    "vocab": [
+      {
+        "group": "Dinheiro e contas",
+        "items": "money=dinheiro; cash=dinheiro em espécie; cash flow=fluxo de caixa; account=conta; bank account=conta bancária; balance=saldo; bank statement=extrato bancário; deposit=depósito; withdrawal=saque; transfer=transferência; transaction=transação; payment=pagamento; receipt=recibo; invoice=fatura; bill=conta a pagar; amount=valor; total=total; fee=taxa; interest=juros; currency=moeda"
+      },
+      {
+        "group": "Conciliação e processos",
+        "items": "reconciliation=conciliação; to reconcile=conciliar; to match=corresponder; mismatch=divergência; discrepancy=discrepância; to credit=creditar; to debit=debitar; debit=débito; credit=crédito; due date=data de vencimento; overdue=em atraso; pending=pendente; approved=aprovado; declined=recusado; refund=reembolso; chargeback=contestação; installment=parcela; to settle=liquidar; settlement=liquidação; ledger=livro contábil"
+      },
+      {
+        "group": "Números e medidas",
+        "items": "zero=zero; hundred=cem; thousand=mil; million=milhão; billion=bilhão; decimal=decimal; point=ponto (decimal); percent=por cento; percentage=porcentagem; rate=taxa; average=média; to increase=aumentar; to decrease=diminuir; to add up=somar; to calculate=calcular; to round=arredondar; value=valor; number=número; sum=soma; difference=diferença"
+      },
+      {
+        "group": "Quantificadores",
+        "items": "much=muito (incontável); many=muitos; a lot of=muito ou muitos; a few=alguns; a little=um pouco; some=algum; any=qualquer ou nenhum; enough=suficiente; too much=demais; less=menos; more=mais; most=a maioria; several=vários; each=cada; per=por; at least=pelo menos; up to=até; about=cerca de; almost=quase; exactly=exatamente"
+      },
+      {
+        "group": "Testar dinheiro",
+        "items": "test data=dados de teste; edge case=caso extremo; negative value=valor negativo; decimal places=casas decimais; rounding error=erro de arredondamento; currency format=formato de moeda; exchange rate=taxa de câmbio; limit=limite; threshold=limiar; to validate=validar"
+      }
+    ],
+    "resources": [
+      { "name": "News in Levels (nível 2)", "url": "https://www.newsinlevels.com/level/level-2/", "what": "Procure notícias de economia e negócios: vocabulário de dinheiro em contexto." },
+      { "name": "BBC 6 Minute English", "url": "https://www.bbc.co.uk/learningenglish/english/features/6-minute-english", "what": "Episódios sobre dinheiro e trabalho aparecem com frequência." },
+      { "name": "Simple English Wikipedia: Money", "url": "https://simple.wikipedia.org/wiki/Money", "what": "Artigo em vocabulário básico sobre o conceito." },
+      { "name": "YouGlish", "url": "https://youglish.com/", "what": "Pronúncia de balance, receipt (o p é muda), invoice, currency." }
+    ],
+    "content": [
+      { "name": "Uma notícia de economia no nível 2", "kind": "Leitura", "what": "Marque todos os números e leia-os em voz alta." },
+      { "name": "6 Minute English sobre dinheiro ou consumo", "kind": "Podcast", "what": "Com transcrição; marque 5 blocos." },
+      { "name": "Apollo 13 — uma cena de equipe resolvendo um problema com números", "kind": "Filme", "what": "Vocabulário técnico de equipe sob pressão." },
+      { "name": "\"Great Are You Lord\" (All Sons & Daughters)", "kind": "Música", "what": "Ritmo lento, frases curtas." }
+    ],
+    "milestone": "Explicar em inglês, em 2 minutos, o que o seu produto faz e qual problema de dinheiro ele resolve.",
+    "days": [
+      {
+        "label": "Seg",
+        "focus": "Inglês de QA",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Montar o glossário do seu produto: 15 termos do seu dia em cash management, em inglês", "resource": "Caderno + ISTQB Glossary", "min": 12 },
+          { "what": "Escrever 3 casos de teste de valores (negativo, zero, limite) em inglês", "resource": "Caderno", "min": 8 }
+        ],
+        "speak": "This test checks what happens when the user sends a negative amount.",
+        "mini": "Cartões + 3 termos do glossário."
+      },
+      {
+        "label": "Ter",
+        "focus": "Filme",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Cena de Apollo 13 com legenda em inglês: equipe resolvendo um problema", "resource": "Apollo 13", "min": 14 },
+          { "what": "Shadowing de 3 falas", "resource": "A mesma cena", "min": 6 }
+        ],
+        "speak": "We have a problem. Let's check the numbers again.",
+        "mini": "Cartões + assistir à cena."
+      },
+      {
+        "label": "Qua",
+        "focus": "Leitura",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Ler 1 notícia de economia e ler todos os números em voz alta", "resource": "News in Levels, nível 2", "min": 12 },
+          { "what": "Ler o artigo Money na Simple English Wikipedia", "resource": "Simple English Wikipedia", "min": 8 }
+        ],
+        "speak": "The company lost two million dollars in three months.",
+        "mini": "Cartões + a notícia."
+      },
+      {
+        "label": "Qui",
+        "focus": "Música cristã",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Ciclo da música, passos 1 a 6", "resource": "\"Great Are You Lord\"", "min": 15 },
+          { "what": "Reutilizar 1 bloco numa frase sua", "resource": "Você mesmo", "min": 5 }
+        ],
+        "speak": "I listen to worship music when I work.",
+        "mini": "Cartões + ouvir a música."
+      },
+      {
+        "label": "Sex",
+        "focus": "Fala",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Pronúncia: receipt, balance, invoice, currency, thousand", "resource": "YouGlish", "min": 10 },
+          { "what": "Gravar 2 min explicando o seu produto e o problema que ele resolve", "resource": "Gravador do celular", "min": 10 }
+        ],
+        "speak": "I work on a cash management product. It helps companies control payments and bank statements.",
+        "mini": "Cartões + gravar 30 s sobre o produto."
+      },
+      {
+        "label": "Sáb",
+        "focus": "Lazer com apoio",
+        "minutes": 10,
+        "tasks": [
+          { "what": "Conteúdo livre em inglês, por prazer", "resource": "Sua escolha", "min": 0 },
+          { "what": "Opcional: cartões", "resource": "Anki", "min": 10 }
+        ],
+        "speak": "Opcional.",
+        "mini": "Livre."
+      },
+      {
+        "label": "Dom",
+        "focus": "Revisão e medição",
+        "minutes": 15,
+        "tasks": [
+          { "what": "Revisar o glossário do produto e marcar os 5 termos mais importantes", "resource": "Seu glossário", "min": 8 },
+          { "what": "Preencher o registro semanal", "resource": "Seu registro", "min": 4 },
+          { "what": "Escolher os conteúdos da semana 8", "resource": "Sua playlist", "min": 3 }
+        ],
+        "speak": "The five most important words in my job are...",
+        "mini": "Só o registro."
+      }
+    ]
+  },
+  {
+    "n": 8,
+    "theme": "Plans and the sprint",
+    "subtitle": "Planejar a sprint, a semana e o fim de semana",
+    "why": "Planejamento é conversa de futuro, e o inglês tem três formas diferentes para isso. Saber escolher entre elas faz você soar natural em planning, refinement e conversa de corredor.",
+    "grammar": {
+      "topic": "Going to / will / present continuous para futuro",
+      "why": "going to é plano decidido, will é decisão na hora ou previsão, present continuous é compromisso agendado.",
+      "examples": [
+        "I'm going to automate these tests this sprint.",
+        "I think the suite will fail again.",
+        "I'm meeting the product owner tomorrow at ten.",
+        "If the environment is stable, we'll release on Friday.",
+        "I won't have time to finish it today."
+      ],
+      "tip": "Em reunião, use I'm going to... para o que já está no seu plano e I'll... quando você decide na hora: \"I'll check that and get back to you.\""
+    },
+    "vocab": [
+      {
+        "group": "Sprint e planejamento",
+        "items": "sprint=sprint; sprint planning=planejamento da sprint; refinement=refinamento; retrospective=retrospectiva; backlog=backlog; estimate=estimativa; to estimate=estimar; story point=ponto de história; capacity=capacidade; workload=carga de trabalho; milestone=marco; roadmap=plano de evolução; goal=objetivo; scope=escopo; to prioritize=priorizar; to postpone=postergar; to split=dividir; commitment=compromisso; delivery=entrega; to deliver=entregar"
+      },
+      {
+        "group": "Falar do futuro",
+        "items": "going to=vai (plano); will=irá; won't=não irá; next week=semana que vem; next month=mês que vem; next sprint=próxima sprint; soon=em breve; later=mais tarde; tonight=hoje à noite; in two days=em dois dias; by Friday=até sexta; this afternoon=esta tarde; the day after tomorrow=depois de amanhã; schedule=cronograma; plan=plano; to plan=planejar; to expect=esperar; to intend=pretender; probably=provavelmente; maybe=talvez"
+      },
+      {
+        "group": "Combinar e negociar prazos",
+        "items": "deadline=prazo; on time=em dia; ahead of schedule=adiantado; behind schedule=atrasado; to meet a deadline=cumprir o prazo; to miss a deadline=perder o prazo; to extend=estender; to move=mover; available=disponível; busy=ocupado; free slot=horário livre; to book=reservar; to cancel=cancelar; it depends on=depende de; as soon as possible=o quanto antes; if possible=se possível; let's say=digamos; I'd rather=eu preferiria; that works for me=isso funciona para mim; it doesn't work for me=não funciona para mim"
+      },
+      {
+        "group": "Fim de semana e vida pessoal",
+        "items": "weekend plans=planos de fim de semana; to rest=descansar; to travel=viajar; to visit=visitar; church service=culto; to meet friends=encontrar amigos; to watch a movie=assistir a um filme; to play=jogar; to cook=cozinhar; to go out=sair; to stay home=ficar em casa; holiday=feriado; vacation=férias; day off=dia de folga; to take a day off=tirar um dia de folga; birthday=aniversário; to celebrate=celebrar; family time=tempo com a família; to relax=relaxar; to study=estudar"
+      }
+    ],
+    "resources": [
+      { "name": "BBC Office English", "url": "https://www.bbc.co.uk/learningenglish/english/features/office-english", "what": "Episódios sobre prazos, metas e organização de reuniões." },
+      { "name": "Test Automation University", "url": "https://testautomationu.applitools.com/", "what": "Comece um curso curto com transcrição; 10 min por sessão." },
+      { "name": "BBC 6 Minute English", "url": "https://www.bbc.co.uk/learningenglish/english/features/6-minute-english", "what": "1 episódio por semana, com transcrição." },
+      { "name": "News in Levels (nível 2)", "url": "https://www.newsinlevels.com/level/level-2/", "what": "Leitura diária." }
+    ],
+    "content": [
+      { "name": "Office English: prazos e logística", "kind": "Podcast", "what": "Marque frases de negociação de prazo." },
+      { "name": "The Rings of Power — 2 min de diálogo com legenda", "kind": "Série", "what": "Fala formal e clara; descreva quem quer o quê." },
+      { "name": "Test Automation University: primeira aula de um curso", "kind": "Curso", "what": "Assista com a transcrição e anote 5 termos." },
+      { "name": "\"Build My Life\" (Housefires)", "kind": "Música", "what": "Vocabulário de construir e seguir." }
+    ],
+    "milestone": "Conduzir sua parte de um planning fictício: 10 frases sobre o que você vai testar na próxima sprint e por quê.",
+    "days": [
+      {
+        "label": "Seg",
+        "focus": "Inglês de QA",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Escrever seu plano de testes da próxima sprint em 6 frases com going to e will", "resource": "Caderno", "min": 12 },
+          { "what": "Ler em voz alta e gravar 45 s", "resource": "Gravador do celular", "min": 8 }
+        ],
+        "speak": "This sprint I'm going to automate the login tests. I think it will take three days.",
+        "mini": "Cartões + 1 frase de plano."
+      },
+      {
+        "label": "Ter",
+        "focus": "Série",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "2 min de diálogo de The Rings of Power com legenda em inglês", "resource": "The Rings of Power", "min": 14 },
+          { "what": "Descrever em 3 frases o que cada personagem quer", "resource": "Você mesmo", "min": 6 }
+        ],
+        "speak": "He is going to travel because he wants to find the truth.",
+        "mini": "Cartões + assistir ao trecho."
+      },
+      {
+        "label": "Qua",
+        "focus": "Curso técnico",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Assistir a 10 min de aula com a transcrição aberta e anotar 5 termos", "resource": "Test Automation University", "min": 14 },
+          { "what": "Ler 1 notícia", "resource": "News in Levels", "min": 6 }
+        ],
+        "speak": "In this lesson, I learned how to structure a test project.",
+        "mini": "Cartões + 5 min de aula."
+      },
+      {
+        "label": "Qui",
+        "focus": "Música cristã",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Ciclo da música, passos 1 a 6", "resource": "\"Build My Life\"", "min": 15 },
+          { "what": "Reutilizar 1 bloco numa frase sobre os seus planos", "resource": "Você mesmo", "min": 5 }
+        ],
+        "speak": "I want to build my career with patience.",
+        "mini": "Cartões + ouvir a música."
+      },
+      {
+        "label": "Sex",
+        "focus": "Fala",
+        "minutes": 25,
+        "tasks": [
+          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
+          { "what": "Pedir ao Claude um planning simulado: ele é o product owner, você é o QA", "resource": "Claude", "min": 12 },
+          { "what": "Gravar 60 s com seus planos da semana e do fim de semana", "resource": "Gravador do celular", "min": 8 }
+        ],
+        "speak": "Next week I'm going to finish the regression suite. On Saturday I'm going to rest with my family.",
+        "mini": "Cartões + 2 frases de plano."
+      },
+      {
+        "label": "Sáb",
+        "focus": "Lazer com apoio",
+        "minutes": 10,
+        "tasks": [
+          { "what": "Conteúdo livre em inglês, por prazer", "resource": "Sua escolha", "min": 0 },
+          { "what": "Opcional: cartões", "resource": "Anki", "min": 10 }
+        ],
+        "speak": "Opcional.",
+        "mini": "Livre."
+      },
+      {
+        "label": "Dom",
+        "focus": "Teste mensal",
+        "minutes": 30,
+        "tasks": [
+          { "what": "Escuta: 1 episódio novo de 6 Minute English sem transcrição; anotar 5 ideias e conferir", "resource": "BBC 6 Minute English", "min": 10 },
+          { "what": "Fala: gravar 90 s sobre \"my day and my job\" e comparar com o mês 1", "resource": "Gravador do celular", "min": 8 },
+          { "what": "Escrita: um e-mail de 120 palavras pedindo esclarecimento sobre um requisito", "resource": "Caderno", "min": 12 }
+        ],
+        "speak": "Two months ago I couldn't do this. Now I can.",
+        "mini": "Só a gravação de 90 s."
+      }
+    ]
+  }
+]
