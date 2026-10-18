@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import { headers } from "next/headers";
-import { auth, authConfigured } from "@/lib/auth";
+import { allowedUser } from "@/lib/access";
 import {
   clearActivePlan,
   loadUserData,
@@ -15,9 +14,8 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 async function userId(): Promise<string | null> {
-  if (!authConfigured) return null;
-  const session = await auth.api.getSession({ headers: await headers() });
-  return session?.user?.id ?? null;
+  const user = await allowedUser();
+  return user?.id ?? null;
 }
 
 export async function GET() {

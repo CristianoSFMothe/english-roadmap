@@ -81,6 +81,18 @@ entre aparelhos, e pode jogar o plano no Google Agenda.
 3. `BETTER_AUTH_SECRET`: `openssl rand -base64 32`.
 4. `BETTER_AUTH_URL`: a URL pública do app.
 
+### Deixar o app só para você
+
+`ALLOWED_EMAILS` aceita uma lista separada por vírgula. Com ela preenchida:
+
+- só essas contas Google viram usuário (as outras são recusadas no login);
+- as rotas de dados e de agenda respondem 401 para qualquer outra conta;
+- a chave da Anthropic do servidor só é usada por uma conta autorizada ou por quem
+  souber o `APP_ACCESS_CODE`.
+
+Quem chegar ao site sem conta continua vendo o plano de exemplo e pode gerar o próprio
+plano com a **própria** chave da Anthropic, sem tocar na sua.
+
 O escopo `calendar.events` é sensível para o Google: em modo **Testing** funciona para os
 usuários de teste cadastrados; abrir ao público exige a verificação do Google.
 

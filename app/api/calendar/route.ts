@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { headers } from "next/headers";
-import { auth, authConfigured } from "@/lib/auth";
+import { allowedUser } from "@/lib/access";
+import { authConfigured } from "@/lib/auth";
 import { googleAccessToken, recordCalendarExport } from "@/lib/server-data";
 import type { Day, RawWeek } from "@/lib/weeks";
 
@@ -70,9 +70,13 @@ export async function POST(request: Request) {
   if (!authConfigured) {
     return NextResponse.json({ error: "Login não configurado neste site." }, { status: 400 });
   }
-  const session = await auth.api.getSession({ headers: await headers() });
-  const user = session?.user;
-  if (!user) return NextResponse.json({ error: "Entre na sua conta." }, { status: 401 });
+  const user = await allowedUser();
+  if (!user) {
+    return NextResponse.json(
+      { error: "Entre com uma conta autorizada." },
+      { status: 401 },
+    );
+  }
 
   let body: Body;
   try {

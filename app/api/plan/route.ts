@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { clampProfile, type Profile } from "@/lib/profile";
 import { extractJson, normalizeOutline, normalizeWeek, type OutlineItem } from "@/lib/normalize";
 import { outlineMessage, systemPrompt, weekMessage } from "@/lib/prompt";
+import { accessRestricted, allowedUser } from "@/lib/access";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -9,12 +10,17 @@ export const maxDuration = 60;
 const API_URL = "https://api.anthropic.com/v1/messages";
 const DEFAULT_MODEL = process.env.ANTHROPIC_MODEL || "claude-sonnet-5-5";
 
-/** Diz ao app se o servidor já tem uma chave configurada e se exige código de acesso. */
+/** Diz ao app como a geração está liberada: chave do servidor, código ou conta. */
 export async function GET() {
+  const user = await allowedUser();
   return NextResponse.json({
     serverKey: Boolean(process.env.ANTHROPIC_API_KEY),
-    requiresCode: Boolean(process.env.ANTHROPIC_API_KEY && process.env.APP_ACCESS_CODE),
+    requiresCode: Boolean(
+      process.env.ANTHROPIC_API_KEY && process.env.APP_ACCESS_CODE && !user,
+    ),
     allowOwnKey: process.env.ALLOW_VISITOR_KEY !== "false",
+    signedIn: Boolean(user),
+    restricted: accessRestricted,
     model: DEFAULT_MODEL,
   });
 }
@@ -95,9 +101,18 @@ export async function POST(request: Request) {
   if (visitorKey && allowOwnKey) {
     key = visitorKey;
   } else if (serverKey) {
+    // A chave do servidor é liberada para quem entrou com conta autorizada
+    // ou para quem souber o código de acesso.
     const expected = process.env.APP_ACCESS_CODE;
-    if (expected && body.accessCode !== expected) {
-      return fail("Código de acesso incorreto.", 403);
+    const user = await allowedUser();
+    const codigoConfere = Boolean(expected) && body.accessCode === expected;
+    if (!user && !codigoConfere) {
+      return fail(
+        expected
+          ? "Entre com a conta autorizada ou informe o código de acesso."
+          : "Entre com a conta autorizada para gerar o plano.",
+        403,
+      );
     }
     key = serverKey;
   }

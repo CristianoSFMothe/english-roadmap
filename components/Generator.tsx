@@ -16,6 +16,8 @@ type Config = {
   serverKey: boolean;
   requiresCode: boolean;
   allowOwnKey: boolean;
+  signedIn?: boolean;
+  restricted?: boolean;
   model: string;
 };
 
@@ -57,6 +59,7 @@ export default function Generator({
 
   const needsKey = config ? !config.serverKey && config.allowOwnKey : false;
   const canStart = config ? config.serverKey || apiKey.trim().length > 10 : false;
+  const semConta = Boolean(config?.serverKey && config?.restricted && !config?.signedIn);
 
   const call = async (payload: Record<string, unknown>) => {
     const res = await fetch("/api/plan", {
@@ -167,6 +170,15 @@ export default function Generator({
               placeholder="código combinado com o dono do site"
               autoComplete="off"
             />
+          </div>
+        )}
+
+        {semConta && (
+          <div className="tip" style={{ background: "var(--warn-soft)" }}>
+            <b>Este site é de uso pessoal. </b>
+            Entre com a conta autorizada (botão no topo) ou informe o código de acesso
+            para gerar com a chave do dono. Com a sua própria chave da Anthropic, a
+            geração funciona sem login.
           </div>
         )}
 

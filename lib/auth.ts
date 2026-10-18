@@ -44,6 +44,21 @@ export const auth = betterAuth({
     expiresIn: 60 * 60 * 24 * 30,
     updateAge: 60 * 60 * 24,
   },
+  databaseHooks: {
+    user: {
+      create: {
+        // Com ALLOWED_EMAILS preenchida, só essas contas viram usuário.
+        before: async (user) => {
+          const lista = (process.env.ALLOWED_EMAILS ?? "")
+            .split(",")
+            .map((e) => e.trim().toLowerCase())
+            .filter(Boolean);
+          if (!lista.length) return;
+          if (!user.email || !lista.includes(user.email.toLowerCase())) return false;
+        },
+      },
+    },
+  },
   user: {
     deleteUser: { enabled: false },
   },
