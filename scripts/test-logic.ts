@@ -2,6 +2,8 @@ import { extractJson, normalizeOutline, normalizeWeek } from "../lib/normalize.t
 import { buildWeeks } from "../lib/weeks.ts";
 import { systemPrompt, outlineMessage, weekMessage } from "../lib/prompt.ts";
 import { sampleProfile, clampProfile } from "../lib/profile.ts";
+import { normalizeQuestions, normalizeResult } from "../lib/lesson-normalize.ts";
+import { lessonSystemPrompt, lessonUserPrompt, ORDEM, TOTAL_QUESTOES } from "../lib/lesson-prompt.ts";
 
 let failures = 0;
 const check = (name: string, fn: () => void) => {
@@ -78,6 +80,49 @@ check("mensagem da semana carrega minutos e dias do perfil", () => {
   const m = weekMessage(p, { n: 1, theme: "T", subtitle: "s", why: "w", grammarTopic: "g", milestone: "m" }, ["1. T"]);
   if (!m.includes("5 dias de estudo")) throw new Error("dias por semana ausente");
   if (!m.includes("20 minutos")) throw new Error("minutos ausentes");
+});
+
+const licaoBruta = (n: number) =>
+  JSON.stringify(
+    Array.from({ length: n }, (_, i) => ({
+      id: "x",
+      difficulty: ["fácil", "facil", "média", "media", "difícil"][i] ?? "media",
+      type: "tradução",
+      prompt: `Traduza a frase ${i + 1}`,
+      content: `frase ${i + 1}`,
+      expected: `sentence ${i + 1}`,
+    })),
+  );
+
+check("licao com 5 questoes, ids e dificuldades normalizadas", () => {
+  const qs = normalizeQuestions(extractJson("Segue a lição:\n```json\n" + licaoBruta(5) + "\n```"), ORDEM);
+  if (qs.length !== TOTAL_QUESTOES) throw new Error("deveria ter 5 questoes");
+  if (qs[0].id !== "q1" || qs[4].id !== "q5") throw new Error("ids fora de ordem");
+  const mix = qs.map((q) => q.difficulty).join(",");
+  if (mix !== "facil,facil,media,media,dificil") throw new Error("mix errado: " + mix);
+});
+
+check("licao incompleta e recusada", () => {
+  let threw = false;
+  try { normalizeQuestions(extractJson(licaoBruta(3)), ORDEM); } catch { threw = true; }
+  if (!threw) throw new Error("deveria lancar erro");
+});
+
+check("correcao em portugues ou ingles vira Result", () => {
+  const r = normalizeResult(extractJson('{"correct": false, "feedback": "Faltou o auxiliar.", "correction": "Do you like it?", "tip": "Use do em perguntas."}'));
+  if (r.correct) throw new Error("deveria ser incorreto");
+  if (!r.correction.startsWith("Do you")) throw new Error("correcao perdida");
+  const pt = normalizeResult(extractJson('{"correto": true, "comentario": "Boa.", "correcao": "I work as a QA.", "dica": ""}'));
+  if (!pt.correct || !pt.feedback) throw new Error("campos em portugues ignorados");
+});
+
+check("prompt da licao pede 5 questoes e cita o tema da semana", () => {
+  const s = lessonSystemPrompt(p);
+  if (!s.includes("A1")) throw new Error("nivel ausente");
+  if (!s.includes("ESCREVENDO")) throw new Error("regra de escrita ausente");
+  const u = lessonUserPrompt({ level: "A1", tema: "Daily routine", gramatica: "present simple", data: "2026-10-17" });
+  if (!u.includes("5 questões")) throw new Error("quantidade ausente");
+  if (!u.includes("Daily routine")) throw new Error("tema ausente");
 });
 
 console.log(failures === 0 ? "\nTodos os testes passaram." : `\n${failures} falha(s).`);

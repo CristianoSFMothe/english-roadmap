@@ -7,6 +7,7 @@ import { emptyProfile, sampleProfile, type Profile } from "@/lib/profile";
 import { usePersistentState } from "@/lib/storage";
 import DayDrawer from "./DayDrawer";
 import Flashcards from "./Flashcards";
+import Lessons from "./Lessons";
 import Notes from "./Notes";
 import ProfileForm from "./ProfileForm";
 import Generator, { type GeneratedPlan } from "./Generator";
@@ -14,7 +15,7 @@ import AuthBar from "./AuthBar";
 import CalendarExport from "./CalendarExport";
 import { useSession } from "@/lib/auth-client";
 
-type Tab = "plan" | "cards" | "notes";
+type Tab = "plan" | "lesson" | "cards" | "notes";
 
 export function Check() {
   return (
@@ -305,6 +306,9 @@ export default function Roadmap({
           <button role="tab" aria-selected={tab === "plan"} className="tab" onClick={() => setTab("plan")}>
             Plano da semana
           </button>
+          <button role="tab" aria-selected={tab === "lesson"} className="tab" onClick={() => setTab("lesson")}>
+            Lição do dia
+          </button>
           <button role="tab" aria-selected={tab === "cards"} className="tab" onClick={() => setTab("cards")}>
             Flashcards <span className="count">{week.vocabCount}</span>
           </button>
@@ -449,6 +453,15 @@ export default function Roadmap({
               )}
             </div>
           </div>
+        )}
+
+        {tab === "lesson" && (
+          <Lessons
+            week={week}
+            apiKey={apiKey}
+            accessCode={accessCode}
+            signedIn={Boolean(userId)}
+          />
         )}
 
         {tab === "cards" && (

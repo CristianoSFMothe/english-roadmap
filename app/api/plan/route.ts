@@ -3,12 +3,10 @@ import { clampProfile, type Profile } from "@/lib/profile";
 import { extractJson, normalizeOutline, normalizeWeek, type OutlineItem } from "@/lib/normalize";
 import { outlineMessage, systemPrompt, weekMessage } from "@/lib/prompt";
 import { accessRestricted, allowedUser } from "@/lib/access";
+import { askClaude, CLAUDE_MODEL as DEFAULT_MODEL, resolveKey } from "@/lib/claude";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
-
-const API_URL = "https://api.anthropic.com/v1/messages";
-const DEFAULT_MODEL = process.env.ANTHROPIC_MODEL || "claude-sonnet-5-5";
 
 /** Diz ao app como a geração está liberada: chave do servidor, código ou conta. */
 export async function GET() {
@@ -38,52 +36,8 @@ function fail(message: string, status: number) {
   return NextResponse.json({ error: message }, { status });
 }
 
-async function callClaude(key: string, system: string, user: string, maxTokens: number) {
-  let res: Response;
-  try {
-    res = await fetch(API_URL, {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        "x-api-key": key,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model: DEFAULT_MODEL,
-        max_tokens: maxTokens,
-        temperature: 0.7,
-        system,
-        messages: [{ role: "user", content: user }],
-      }),
-    });
-  } catch {
-    throw new Error("Não foi possível falar com a API da Anthropic. Verifique a conexão e tente de novo.");
-  }
-
-  if (!res.ok) {
-    const detail = await res.text().catch(() => "");
-    if (res.status === 401) throw new Error("Chave da API recusada. Confira se ela está correta e ativa.");
-    if (res.status === 429) throw new Error("Limite de uso da API atingido. Espere um pouco e tente de novo.");
-    if (res.status === 400 && detail.includes("credit"))
-      throw new Error("A conta da API está sem créditos.");
-    throw new Error(`A API respondeu com erro ${res.status}.`);
-  }
-
-  const data = (await res.json()) as {
-    content?: { type: string; text?: string }[];
-    stop_reason?: string;
-  };
-  const text = (data.content ?? [])
-    .filter((b) => b.type === "text")
-    .map((b) => b.text ?? "")
-    .join("");
-
-  if (!text.trim()) throw new Error("A API respondeu vazio.");
-  if (data.stop_reason === "max_tokens")
-    throw new Error("A resposta foi cortada por tamanho. Tente gerar com menos minutos por dia.");
-
-  return text;
-}
+const callClaude = (key: string, system: string, user: string, maxTokens: number) =>
+  askClaude({ key, system, user, maxTokens });
 
 export async function POST(request: Request) {
   let body: Body;
@@ -93,36 +47,9 @@ export async function POST(request: Request) {
     return fail("Requisição inválida.", 400);
   }
 
-  const visitorKey = typeof body.apiKey === "string" ? body.apiKey.trim() : "";
-  const allowOwnKey = process.env.ALLOW_VISITOR_KEY !== "false";
-  const serverKey = process.env.ANTHROPIC_API_KEY ?? "";
-
-  let key = "";
-  if (visitorKey && allowOwnKey) {
-    key = visitorKey;
-  } else if (serverKey) {
-    // A chave do servidor é liberada para quem entrou com conta autorizada
-    // ou para quem souber o código de acesso.
-    const expected = process.env.APP_ACCESS_CODE;
-    const user = await allowedUser();
-    const codigoConfere = Boolean(expected) && body.accessCode === expected;
-    if (!user && !codigoConfere) {
-      return fail(
-        expected
-          ? "Entre com a conta autorizada ou informe o código de acesso."
-          : "Entre com a conta autorizada para gerar o plano.",
-        403,
-      );
-    }
-    key = serverKey;
-  }
-
-  if (!key) {
-    return fail(
-      "Nenhuma chave da API disponível. Configure ANTHROPIC_API_KEY no servidor ou informe a sua própria chave.",
-      400,
-    );
-  }
+  const chave = await resolveKey(body.apiKey, body.accessCode);
+  if ("error" in chave) return fail(chave.error, chave.status);
+  const key = chave.key;
 
   if (!body.profile) return fail("Perfil não enviado.", 400);
   const profile = clampProfile(body.profile);

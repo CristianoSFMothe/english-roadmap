@@ -128,7 +128,6 @@ export default function Generator({
       >
         <div className="drawer-head">
           <div>
-            <span className="dow">Claude · {config?.model || "API"}</span>
             <h2>Gerar meu plano</h2>
           </div>
           {!running && (
@@ -184,9 +183,9 @@ export default function Generator({
 
         <div className="tip">
           <b>Como funciona: </b>
-          primeiro a Claude monta o esboço das {total} semanas e depois desenvolve uma por
-          uma, com vocabulário, recursos e as atividades de cada dia. Leva alguns minutos.
-          Deixe esta janela aberta.
+          primeiro a Inteligência Artificial monta o esboço das {total} semanas e depois
+          desenvolve uma por uma, com vocabulário, recursos e as atividades de cada dia.
+          Leva alguns minutos. Deixe esta janela aberta.
         </div>
 
         {running && (
