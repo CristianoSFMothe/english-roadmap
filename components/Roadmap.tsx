@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { RawWeek, Week } from "@/lib/content";
 import { buildWeeks, dayKey, totalsOf } from "@/lib/content";
 import { emptyProfile, sampleProfile, type Profile } from "@/lib/profile";
@@ -10,6 +10,9 @@ import Flashcards from "./Flashcards";
 import Notes from "./Notes";
 import ProfileForm from "./ProfileForm";
 import Generator, { type GeneratedPlan } from "./Generator";
+import AuthBar from "./AuthBar";
+import CalendarExport from "./CalendarExport";
+import { useSession } from "@/lib/auth-client";
 
 type Tab = "plan" | "cards" | "notes";
 
@@ -28,7 +31,13 @@ export function Check() {
   );
 }
 
-export default function Roadmap({ sample }: { sample: RawWeek[] }) {
+export default function Roadmap({
+  sample,
+  authEnabled,
+}: {
+  sample: RawWeek[];
+  authEnabled: boolean;
+}) {
   const [plan, setPlan] = usePersistentState<GeneratedPlan | null>("plan", null);
   const [profile, setProfile] = usePersistentState<Profile>("profile", sampleProfile);
   const [profileSaved, setProfileSaved] = usePersistentState<boolean>("profileSaved", false);
@@ -45,6 +54,102 @@ export default function Roadmap({ sample }: { sample: RawWeek[] }) {
   const [openDay, setOpenDay] = useState<number | null>(null);
   const [showProfile, setShowProfile] = useState(false);
   const [showGenerator, setShowGenerator] = useState(false);
+  const [showCalendar, setShowCalendar] = useState(false);
+
+  const { data: session } = useSession();
+  const userId = authEnabled ? (session?.user?.id ?? null) : null;
+  const [syncing, setSyncing] = useState(false);
+  const pulled = useRef<string | null>(null);
+  const pulling = useRef(false);
+
+  // Ao entrar na conta: traz o que está no servidor. Se lá não houver nada e
+  // aqui houver, sobe o que foi feito antes do login — ninguém perde histórico.
+  useEffect(() => {
+    if (!userId || pulled.current === userId) return;
+    let cancelado = false;
+    pulling.current = true;
+    (async () => {
+      try {
+        const res = await fetch("/api/data");
+        const data = (await res.json()) as {
+          signedIn?: boolean;
+          profile?: Profile | null;
+          plan?: GeneratedPlan | null;
+          progress?: Record<
+            string,
+            {
+              done: Record<string, boolean>;
+              known: Record<string, boolean>;
+              notes: Record<string, string>;
+              currentWeek: number;
+            }
+          >;
+        };
+        if (cancelado || !data.signedIn) return;
+
+        if (data.plan) setPlan(data.plan);
+        if (data.profile) {
+          setProfile(data.profile);
+          setProfileSaved(true);
+        }
+        const idDoPlano = data.plan?.id ?? "sample";
+        const p = data.progress?.[idDoPlano];
+        if (p) {
+          setDone(p.done ?? {});
+          setKnown(p.known ?? {});
+          setNotes(p.notes ?? {});
+          setWeekN(p.currentWeek ?? 1);
+        }
+
+        const servidorVazio = !data.plan && !data.profile;
+        if (servidorVazio && (plan || profileSaved)) {
+          await fetch("/api/data", {
+            method: "PUT",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({
+              profile: profileSaved ? profile : undefined,
+              plan: plan ?? undefined,
+              progress: { planId, value: { done, known, notes, currentWeek: weekN } },
+            }),
+          });
+        }
+        pulled.current = userId;
+      } catch {
+        /* sem rede: o app continua funcionando com o que está no navegador */
+      } finally {
+        pulling.current = false;
+      }
+    })();
+    return () => {
+      cancelado = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId]);
+
+  // Depois do primeiro carregamento, qualquer mudança sobe com um respiro de 1,2 s.
+  useEffect(() => {
+    if (!userId || pulled.current !== userId || pulling.current) return;
+    setSyncing(true);
+    const t = setTimeout(async () => {
+      try {
+        await fetch("/api/data", {
+          method: "PUT",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            profile: profileSaved ? profile : undefined,
+            plan: plan ?? null,
+            progress: { planId, value: { done, known, notes, currentWeek: weekN } },
+          }),
+        });
+      } catch {
+        /* tenta de novo na próxima mudança */
+      } finally {
+        setSyncing(false);
+      }
+    }, 1200);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId, plan, profile, profileSaved, done, known, notes, weekN, planId]);
 
   const weeks: Week[] = useMemo(
     () => buildWeeks(plan?.weeks ?? sample),
@@ -98,6 +203,12 @@ export default function Roadmap({ sample }: { sample: RawWeek[] }) {
               <button className="btn small" onClick={() => setShowProfile(true)}>
                 Meu perfil
               </button>
+              <AuthBar
+                enabled={authEnabled}
+                syncing={syncing}
+                canExport={weeks.length > 0}
+                onExport={() => setShowCalendar(true)}
+              />
             </div>
           </div>
           <div
@@ -408,6 +519,14 @@ export default function Roadmap({ sample }: { sample: RawWeek[] }) {
             setShowGenerator(true);
           }}
           onClose={() => setShowProfile(false)}
+        />
+      )}
+
+      {showCalendar && (
+        <CalendarExport
+          weeks={weeks}
+          planId={planId}
+          onClose={() => setShowCalendar(false)}
         />
       )}
 

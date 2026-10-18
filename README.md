@@ -54,6 +54,36 @@ opção de chave própria, use `ALLOW_VISITOR_KEY=false`.
 
 Variáveis disponíveis estão em `.env.example`. Nenhuma delas vai para o código do cliente.
 
+## Login com Google e Google Agenda
+
+O login é **opcional**: sem as variáveis abaixo o botão nem aparece e o app segue
+guardando tudo no navegador. Com elas configuradas, quem entra com a conta Google tem
+perfil, plano, progresso, anotações e flashcards salvos no Postgres e sincronizados
+entre aparelhos, e pode jogar o plano no Google Agenda.
+
+- Autenticação: [Better Auth](https://better-auth.com) com provedor Google apenas.
+- Banco: Postgres (Supabase). Tabelas do Better Auth (`user`, `session`, `account`,
+  `verification`) e do app (`app_profile`, `app_plan`, `app_progress`,
+  `app_calendar_export`).
+- Agenda: o token do Google fica em `account`, é renovado pelo refresh token quando
+  expira e serve para criar um evento por dia de estudo, com as tarefas na descrição.
+
+### Configurar
+
+1. **Banco**: Supabase → Project Settings → Database → Connection string → **Transaction
+   pooler** → `DATABASE_URL`.
+2. **Google Cloud Console**: ative a **Google Calendar API**; na tela de permissão OAuth
+   (tipo Externo) inclua os escopos `userinfo.email`, `userinfo.profile` e
+   `calendar.events`, e cadastre seu e-mail em **Usuários de teste**; crie um **ID do
+   cliente OAuth** do tipo aplicativo da Web com os redirects:
+   - `http://localhost:3000/api/auth/callback/google`
+   - `https://<seu-domínio>/api/auth/callback/google`
+3. `BETTER_AUTH_SECRET`: `openssl rand -base64 32`.
+4. `BETTER_AUTH_URL`: a URL pública do app.
+
+O escopo `calendar.events` é sensível para o Google: em modo **Testing** funciona para os
+usuários de teste cadastrados; abrir ao público exige a verificação do Google.
+
 ## Rodando localmente
 
 ```bash
