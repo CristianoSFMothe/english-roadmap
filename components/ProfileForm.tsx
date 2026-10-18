@@ -13,12 +13,11 @@ import {
 
 type Props = {
   initial: Profile;
-  onSave: (p: Profile) => void;
   onGenerate: (p: Profile) => void;
   onClose: () => void;
 };
 
-export default function ProfileForm({ initial, onSave, onGenerate, onClose }: Props) {
+export default function ProfileForm({ initial, onGenerate, onClose }: Props) {
   const [p, setP] = useState<Profile>(initial);
 
   const set = <K extends keyof Profile>(key: K, value: Profile[K]) =>
@@ -53,14 +52,14 @@ export default function ProfileForm({ initial, onSave, onGenerate, onClose }: Pr
     </div>
   );
 
+  // O clique fora não fecha: a saída é pelo X, pelo Cancelar ou pela geração.
   return (
-    <div className="scrim" onClick={onClose} role="presentation">
+    <div className="scrim" role="presentation">
       <div
         className="drawer wide"
         role="dialog"
         aria-modal="true"
         aria-label="Meu perfil de estudo"
-        onClick={(e) => e.stopPropagation()}
       >
         <div className="drawer-head">
           <div>
@@ -226,8 +225,8 @@ export default function ProfileForm({ initial, onSave, onGenerate, onClose }: Pr
         )}
 
         <div className="fc-actions">
-          <button className="btn" onClick={() => onSave(clampProfile(p))}>
-            Salvar perfil
+          <button className="btn" onClick={onClose}>
+            Cancelar
           </button>
           <button
             className="btn primary"

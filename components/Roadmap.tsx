@@ -401,11 +401,6 @@ export default function Roadmap({ sample }: { sample: RawWeek[] }) {
               ? profile
               : { ...emptyProfile, level: profile.level, target: profile.target }
           }
-          onSave={(p) => {
-            setProfile(p);
-            setProfileSaved(true);
-            setShowProfile(false);
-          }}
           onGenerate={(p) => {
             setProfile(p);
             setProfileSaved(true);
