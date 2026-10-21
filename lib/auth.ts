@@ -1,5 +1,6 @@
 import { betterAuth } from "better-auth";
 import { pool } from "./db";
+import { siteUrl } from "./site";
 
 /** Escopos pedidos ao Google: identificação e criação de eventos na agenda. */
 export const GOOGLE_SCOPES = [
@@ -7,15 +8,6 @@ export const GOOGLE_SCOPES = [
   "https://www.googleapis.com/auth/userinfo.profile",
   "https://www.googleapis.com/auth/calendar.events",
 ];
-
-function baseUrl(): string {
-  if (process.env.BETTER_AUTH_URL) return process.env.BETTER_AUTH_URL;
-  if (process.env.NEXT_PUBLIC_APP_URL) return process.env.NEXT_PUBLIC_APP_URL;
-  if (process.env.VERCEL_PROJECT_PRODUCTION_URL)
-    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
-  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
-  return "http://localhost:3000";
-}
 
 /** O login só aparece no app quando as três peças estão configuradas. */
 export const authConfigured = Boolean(
@@ -27,8 +19,8 @@ export const authConfigured = Boolean(
 export const auth = betterAuth({
   database: pool,
   secret: process.env.BETTER_AUTH_SECRET ?? "chave-de-desenvolvimento-trocar",
-  baseURL: baseUrl(),
-  trustedOrigins: [baseUrl()],
+  baseURL: siteUrl(),
+  trustedOrigins: [siteUrl()],
   socialProviders: {
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID ?? "",

@@ -76,6 +76,10 @@ async function callGemini(key: string, system: string, user: string, maxTokens: 
     const status = res?.status ?? 0;
     if (status === 401 || status === 403 || detail.includes("API_KEY_INVALID"))
       throw new Error("Chave da API recusada. Confira se ela está correta e ativa.");
+    if (status === 429 && detail.includes("PerDay"))
+      throw new Error(
+        `O limite diário gratuito do modelo ${DEFAULT_MODEL} acabou. Ele volta a liberar no dia seguinte.`,
+      );
     if (status === 429) throw new Error("Limite de uso da API atingido. Espere um pouco e tente de novo.");
     if (status === 404) throw new Error(`O modelo ${DEFAULT_MODEL} não está disponível para esta chave.`);
     if (status >= 500)
