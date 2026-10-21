@@ -128,7 +128,6 @@ export default function Generator({
       >
         <div className="drawer-head">
           <div>
-            <span className="dow">Claude · {config?.model || "API"}</span>
             <h2>Gerar meu plano</h2>
           </div>
           {!running && (
@@ -142,19 +141,19 @@ export default function Generator({
 
         {config && needsKey && (
           <div className="field">
-            <label htmlFor="gen-key">Sua chave da API da Anthropic</label>
+            <label htmlFor="gen-key">Sua chave da API do Gemini</label>
             <input
               id="gen-key"
               type="password"
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
-              placeholder="sk-ant-..."
+              placeholder="AIza..."
               autoComplete="off"
             />
             <span style={{ fontSize: 12, color: "var(--faint)" }}>
               A chave fica salva só no seu navegador e é usada apenas para chamar a API em
-              seu nome. Você a cria em console.anthropic.com. A geração de 12 semanas
-              costuma custar poucos centavos de dólar.
+              seu nome. Você a cria em aistudio.google.com/apikey. O nível gratuito costuma
+              dar conta de gerar um plano de 12 semanas.
             </span>
           </div>
         )}
@@ -177,14 +176,14 @@ export default function Generator({
           <div className="tip" style={{ background: "var(--warn-soft)" }}>
             <b>Este site é de uso pessoal. </b>
             Entre com a conta autorizada (botão no topo) ou informe o código de acesso
-            para gerar com a chave do dono. Com a sua própria chave da Anthropic, a
+            para gerar com a chave do dono. Com a sua própria chave do Gemini, a
             geração funciona sem login.
           </div>
         )}
 
         <div className="tip">
           <b>Como funciona: </b>
-          primeiro a Claude monta o esboço das {total} semanas e depois desenvolve uma por
+          primeiro a IA monta o esboço das {total} semanas e depois desenvolve uma por
           uma, com vocabulário, recursos e as atividades de cada dia. Leva alguns minutos.
           Deixe esta janela aberta.
         </div>

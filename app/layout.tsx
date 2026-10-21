@@ -2,9 +2,9 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Trilha de Inglês QA",
+  title: "Trilha de Inglês",
   description:
-    "Roteiro semanal de inglês A1 → B1 para QA/SDET: tema, gramática, vocabulário, atividades diárias, flashcards e anotações.",
+    "Roteiro semanal de inglês montado a partir do seu perfil: tema, gramática, vocabulário, atividades diárias, flashcards e anotações.",
 };
 
 export const viewport: Viewport = {

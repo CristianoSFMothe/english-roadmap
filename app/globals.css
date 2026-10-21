@@ -792,6 +792,12 @@ textarea::placeholder {
   justify-content: center;
 }
 
+.btn svg {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+}
+
 .btn:hover {
   border-color: var(--ink);
 }
@@ -902,7 +908,7 @@ textarea::placeholder {
 }
 
 .fc-actions .btn {
-  flex: 1 1 140px;
+  flex: 1 1 120px;
 }
 
 .fc-progress {

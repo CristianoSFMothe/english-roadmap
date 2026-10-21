@@ -41,7 +41,7 @@ export default function Roadmap({
   const [plan, setPlan] = usePersistentState<GeneratedPlan | null>("plan", null);
   const [profile, setProfile] = usePersistentState<Profile>("profile", sampleProfile);
   const [profileSaved, setProfileSaved] = usePersistentState<boolean>("profileSaved", false);
-  const [apiKey, setApiKey] = usePersistentState<string>("apiKey", "");
+  const [apiKey, setApiKey] = usePersistentState<string>("geminiApiKey", "");
   const [accessCode, setAccessCode] = usePersistentState<string>("accessCode", "");
 
   const planId = plan?.id ?? "sample";
@@ -223,7 +223,7 @@ export default function Roadmap({
           </div>
           <div className="stats">
             <span>
-              <b>{knownCount}</b> de {totals.cards} palavras marcadas como sabidas
+              <b>{knownCount}</b> de {totals.cards} palavras aprendidas
             </span>
             <span>
               <b>{Math.round((totals.minutes / 60) * 10) / 10} h</b> de estudo planejadas
@@ -242,7 +242,7 @@ export default function Roadmap({
               <strong>Este é um plano de exemplo.</strong>
               <span>
                 Informe seu nível, suas dificuldades, seus objetivos e o que você gosta de
-                assistir, ler e ouvir. A Claude monta um plano inteiro no seu ritmo.
+                assistir, ler e ouvir. A IA monta um plano inteiro no seu ritmo.
               </span>
             </div>
             <button className="btn primary" onClick={() => setShowProfile(true)}>
@@ -500,7 +500,11 @@ export default function Roadmap({
           onNote={(value) =>
             setNotes((prev) => ({ ...prev, [dayKey(week.n, openDay)]: value }))
           }
-          onToggle={() => toggleDay(openDay)}
+          onToggle={() => {
+            const wasDone = !!done[dayKey(week.n, openDay)];
+            toggleDay(openDay);
+            if (!wasDone) setOpenDay(null);
+          }}
           onClose={() => setOpenDay(null)}
         />
       )}

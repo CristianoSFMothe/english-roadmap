@@ -93,7 +93,7 @@ export default function DayDrawer({
             id={`note-w${week.n}d${index}`}
             value={note}
             onChange={(e) => onNote(e.target.value)}
-            placeholder="Ex.: travei em 'I didn't tested' — o certo é 'I didn't test'."
+            placeholder="Ex.: travei em 'I didn't went' — o certo é 'I didn't go'."
           />
         </div>
 

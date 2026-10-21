@@ -14,13 +14,19 @@ const check = (name: string, fn: () => void) => {
   }
 };
 
-const p = clampProfile({ ...sampleProfile, weeks: 2, daysPerWeek: 5, minutesPerDay: 20 });
+const p = clampProfile({
+  ...sampleProfile,
+  profession: "Enfermeira",
+  weeks: 2,
+  daysPerWeek: 5,
+  minutesPerDay: 20,
+});
 
 check("prompt do sistema cita nivel, alvo e interesses", () => {
   const s = systemPrompt(p);
   if (!s.includes("A1") || !s.includes("B1")) throw new Error("niveis ausentes");
-  if (!s.includes("QA/SDET")) throw new Error("profissao ausente");
-  if (!s.includes("Somente músicas cristãs")) throw new Error("restricao ausente");
+  if (!s.includes("Enfermeira")) throw new Error("profissao ausente");
+  if (!s.includes("linguagem pesada")) throw new Error("restricao ausente");
   if (!outlineMessage(p).includes("2 semanas")) throw new Error("contagem de semanas errada");
 });
 

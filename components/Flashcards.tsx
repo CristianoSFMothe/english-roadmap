@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import type { Card, Week } from "@/lib/content";
 
 type Dir = "en-pt" | "pt-en";
+type Marks = Record<string, boolean>;
+type SetMarks = (next: (prev: Marks) => Marks) => void;
 
 export default function Flashcards({
   week,
@@ -11,13 +13,16 @@ export default function Flashcards({
   setKnown,
 }: {
   week: Week;
-  known: Record<string, boolean>;
-  setKnown: (next: (prev: Record<string, boolean>) => Record<string, boolean>) => void;
+  known: Marks;
+  setKnown: SetMarks;
 }) {
   const [group, setGroup] = useState<string>("all");
   const [dir, setDir] = useState<Dir>("en-pt");
   const [onlyUnknown, setOnlyUnknown] = useState(false);
-  const [pos, setPos] = useState(0);
+  // O cartão atual é guardado pelo id: ao marcar "Já sei" com o filtro ligado ele sai
+  // da pilha, mas continua possível voltar a ele pelo histórico.
+  const [currentId, setCurrentId] = useState<string | null>(null);
+  const [history, setHistory] = useState<string[]>([]);
   const [flipped, setFlipped] = useState(false);
 
   const deck: Card[] = useMemo(() => {
@@ -28,22 +33,47 @@ export default function Flashcards({
   }, [week, group, onlyUnknown, known]);
 
   useEffect(() => {
-    setPos(0);
+    setCurrentId(null);
+    setHistory([]);
     setFlipped(false);
   }, [group, onlyUnknown, week.n, dir]);
 
-  const card = deck[pos];
+  const card = (currentId && week.cards.find((c) => c.id === currentId)) || deck[0];
+  const pos = card ? deck.findIndex((c) => c.id === card.id) : -1;
   const weekKnown = week.cards.filter((c) => known[c.id]).length;
 
-  const advance = () => {
+  const goTo = (nextId: string | null) => {
+    if (card) setHistory((h) => [...h, card.id]);
+    setCurrentId(nextId);
     setFlipped(false);
-    setPos((p) => (deck.length === 0 ? 0 : (p + 1) % deck.length));
+  };
+
+  const nextId = (skipCurrent: boolean) => {
+    if (!card || deck.length === 0) return null;
+    const rest = skipCurrent ? deck.filter((c) => c.id !== card.id) : deck;
+    if (rest.length === 0) return null;
+    // Procura o próximo depois da posição atual; um cartão revisto fora da pilha
+    // recomeça do início dela.
+    const after = deck.slice(pos + 1).find((c) => rest.includes(c));
+    return (after ?? rest[0]).id;
+  };
+
+  const advance = () => goTo(nextId(false));
+
+  const back = () => {
+    const prev = history[history.length - 1];
+    if (!prev) return;
+    setHistory((h) => h.slice(0, -1));
+    setCurrentId(prev);
+    setFlipped(false);
   };
 
   const mark = (value: boolean) => {
     if (!card) return;
+    const leaves = onlyUnknown && value;
+    const next = nextId(leaves);
     setKnown((prev) => ({ ...prev, [card.id]: value }));
-    advance();
+    goTo(next);
   };
 
   return (
@@ -94,7 +124,8 @@ export default function Flashcards({
             aria-live="polite"
           >
             <span className="side">
-              {card.group} · cartão {pos + 1} de {deck.length}
+              {card.group} ·{" "}
+              {pos >= 0 ? `cartão ${pos + 1} de ${deck.length}` : "revendo, fora da pilha atual"}
             </span>
             {dir === "en-pt" ? (
               <>
@@ -115,34 +146,50 @@ export default function Flashcards({
                 )}
               </>
             )}
-            {known[card.id] ? <span className="side">já marcada como sabida</span> : null}
+            {known[card.id] ? <span className="side">✓ aprendida</span> : null}
           </button>
 
           <div className="fc-actions">
+            <button className="btn" onClick={back} disabled={history.length === 0}>
+              ← Voltar
+            </button>
             <button className="btn" onClick={() => mark(false)}>
               Ainda não sei
             </button>
-            <button className="btn ok" onClick={() => mark(true)}>
-              Já sei
+            <button
+              className="btn ok"
+              onClick={() => mark(true)}
+              aria-label={known[card.id] ? "Aprendido. Ir para o próximo cartão" : undefined}
+            >
+              {known[card.id] ? "✓ Aprendido" : "Já sei"}
             </button>
             <button className="btn" onClick={advance}>
-              Pular
+              Pular →
             </button>
           </div>
 
           <div className="fc-progress">
             <span>
-              Semana {week.n}: {weekKnown} de {week.cards.length} marcadas
+              Semana {week.n}: {weekKnown} de {week.cards.length} aprendidas
             </span>
             <span>Na pilha atual: {deck.length}</span>
             <span>Use no Anki as que você errar duas vezes aqui.</span>
           </div>
         </>
       ) : (
-        <p className="empty">
-          Nenhum cartão nesta pilha. Desmarque &quot;só as que faltam&quot; ou escolha
-          outro grupo.
-        </p>
+        <>
+          <p className="empty">
+            Nenhum cartão nesta pilha. Desmarque &quot;só as que faltam&quot; ou escolha
+            outro grupo.
+          </p>
+          {history.length > 0 && (
+            <div className="fc-actions">
+              <button className="btn" onClick={back}>
+                ← Voltar ao último cartão
+              </button>
+            </div>
+          )}
+        </>
       )}
     </section>
   );
