@@ -1,6 +1,7 @@
 import { pool } from "./db";
 import type { RawWeek } from "./weeks";
 import type { Profile } from "./profile";
+import type { MyWord } from "./vocabulary";
 
 export type StoredPlan = {
   id: string;
@@ -178,4 +179,63 @@ export async function googleAccessToken(userId: string): Promise<string> {
     [data.access_token, new Date(Date.now() + data.expires_in * 1000), userId],
   );
   return data.access_token;
+}
+
+const MAX_WORDS = 3000;
+const texto = (v: unknown, max: number) => (typeof v === "string" ? v.trim().slice(0, max) : "");
+
+/** Mantém só palavras bem formadas, para o banco não guardar lixo vindo do navegador. */
+export function cleanWords(raw: unknown): MyWord[] {
+  if (!Array.isArray(raw)) return [];
+  return raw
+    .slice(0, MAX_WORDS)
+    .map((w): MyWord | null => {
+      const o = (w ?? {}) as Record<string, unknown>;
+      const id = texto(o.id, 64);
+      const en = texto(o.en, 300);
+      const pt = texto(o.pt, 300);
+      if (!id || !en) return null;
+      const example = texto(o.example, 500);
+      return {
+        id,
+        en,
+        pt,
+        kind: o.kind === "frase" ? "frase" : "palavra",
+        ...(example ? { example } : {}),
+        learned: o.learned === true,
+        createdAt: Number(o.createdAt) || Date.now(),
+      };
+    })
+    .filter((w): w is MyWord => w !== null);
+}
+
+export async function loadVocab(userId: string): Promise<MyWord[] | null> {
+  const r = await pool.query<{ words: unknown }>(
+    "select words from app_vocab where user_id = $1",
+    [userId],
+  );
+  return r.rows[0] ? cleanWords(r.rows[0].words) : null;
+}
+
+export async function saveVocab(userId: string, words: MyWord[]) {
+  await pool.query(
+    `insert into app_vocab (user_id, words, updated_at) values ($1, $2, now())
+     on conflict (user_id) do update set words = excluded.words, updated_at = now()`,
+    [userId, JSON.stringify(words)],
+  );
+}
+
+/** O que a conta Google autorizou: serve para a página de preferências mostrar o estado. */
+export async function googleGrant(userId: string) {
+  const { rows } = await pool.query<{ scope: string | null; refreshToken: string | null }>(
+    `select "scope", "refreshToken" from "account"
+     where "userId" = $1 and "providerId" = 'google' limit 1`,
+    [userId],
+  );
+  const conta = rows[0];
+  return {
+    connected: Boolean(conta),
+    calendar: Boolean(conta?.scope?.includes("calendar.events")),
+    offline: Boolean(conta?.refreshToken),
+  };
 }

@@ -2,6 +2,7 @@ import { extractJson, normalizeOutline, normalizeWeek } from "../lib/normalize.t
 import { buildWeeks } from "../lib/weeks.ts";
 import { systemPrompt, outlineMessage, weekMessage } from "../lib/prompt.ts";
 import { sampleProfile, clampProfile } from "../lib/profile.ts";
+import { numberToWords } from "../lib/vocabulary.ts";
 
 let failures = 0;
 const check = (name: string, fn: () => void) => {
@@ -84,6 +85,30 @@ check("mensagem da semana carrega minutos e dias do perfil", () => {
   const m = weekMessage(p, { n: 1, theme: "T", subtitle: "s", why: "w", grammarTopic: "g", milestone: "m" }, ["1. T"]);
   if (!m.includes("5 dias de estudo")) throw new Error("dias por semana ausente");
   if (!m.includes("20 minutos")) throw new Error("minutos ausentes");
+});
+
+check("numeros por extenso de 0 a 1 milhao", () => {
+  const casos: [number, string][] = [
+    [0, "zero"],
+    [7, "seven"],
+    [15, "fifteen"],
+    [21, "twenty-one"],
+    [90, "ninety"],
+    [100, "one hundred"],
+    [101, "one hundred one"],
+    [999, "nine hundred ninety-nine"],
+    [1000, "one thousand"],
+    [2026, "two thousand twenty-six"],
+    [10010, "ten thousand ten"],
+    [999999, "nine hundred ninety-nine thousand nine hundred ninety-nine"],
+    [1000000, "one million"],
+  ];
+  for (const [n, esperado] of casos) {
+    const obtido = numberToWords(n);
+    if (obtido !== esperado) throw new Error(`${n}: "${obtido}" em vez de "${esperado}"`);
+  }
+  if (numberToWords(-1) || numberToWords(1000001) || numberToWords(1.5))
+    throw new Error("aceitou numero fora da faixa");
 });
 
 console.log(failures === 0 ? "\nTodos os testes passaram." : `\n${failures} falha(s).`);

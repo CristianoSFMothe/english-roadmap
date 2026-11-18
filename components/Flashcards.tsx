@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type { Card, Week } from "@/lib/content";
+import { SayIt, Speak } from "./SpeechButtons";
 
 type Dir = "en-pt" | "pt-en";
 type Marks = Record<string, boolean>;
@@ -11,10 +12,13 @@ export default function Flashcards({
   week,
   known,
   setKnown,
+  title,
 }: {
-  week: Week;
+  week: Pick<Week, "n" | "cards" | "vocabGroups">;
   known: Marks;
   setKnown: SetMarks;
+  /** Rótulo do contador; por padrão, "Semana N". */
+  title?: string;
 }) {
   const [group, setGroup] = useState<string>("all");
   const [dir, setDir] = useState<Dir>("en-pt");
@@ -149,6 +153,11 @@ export default function Flashcards({
             {known[card.id] ? <span className="side">✓ aprendida</span> : null}
           </button>
 
+          <div className="fc-voice">
+            <Speak text={card.en} />
+            <SayIt expected={card.en} />
+          </div>
+
           <div className="fc-actions">
             <button className="btn" onClick={back} disabled={history.length === 0}>
               ← Voltar
@@ -170,7 +179,7 @@ export default function Flashcards({
 
           <div className="fc-progress">
             <span>
-              Semana {week.n}: {weekKnown} de {week.cards.length} aprendidas
+              {title ?? `Semana ${week.n}`}: {weekKnown} de {week.cards.length} aprendidas
             </span>
             <span>Na pilha atual: {deck.length}</span>
             <span>Use no Anki as que você errar duas vezes aqui.</span>

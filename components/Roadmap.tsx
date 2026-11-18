@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { RawWeek, Week } from "@/lib/content";
 import { buildWeeks, dayKey, totalsOf } from "@/lib/content";
@@ -7,6 +8,7 @@ import { emptyProfile, sampleProfile, type Profile } from "@/lib/profile";
 import { usePersistentState } from "@/lib/storage";
 import DayDrawer from "./DayDrawer";
 import Flashcards from "./Flashcards";
+import { Speak } from "./SpeechButtons";
 import Notes from "./Notes";
 import ProfileForm from "./ProfileForm";
 import Generator, { type GeneratedPlan } from "./Generator";
@@ -203,6 +205,9 @@ export default function Roadmap({
               <button className="btn small" onClick={() => setShowProfile(true)}>
                 Meu perfil
               </button>
+              <Link className="btn small" href="/preferencias">
+                Preferências
+              </Link>
               <AuthBar
                 enabled={authEnabled}
                 syncing={syncing}
@@ -392,16 +397,24 @@ export default function Roadmap({
                   <h3>
                     {g.group} · {g.cards.length}
                   </h3>
-                  <ul className="vocab-list">
+                  <ul className="vocab-list rich">
                     {g.cards.map((c) => (
                       <li key={c.id}>
-                        <span className="en">{c.en}</span>
+                        <span className="vt">
+                          <span className="en">{c.en}</span>
+                        </span>
                         <span className="pt">{c.pt}</span>
+                        <Speak text={c.en} showIpa={false} />
                       </li>
                     ))}
                   </ul>
                 </div>
               ))}
+              <div className="vocab-more">
+                <Link className="btn" href="/vocabulario">
+                  Ver mais vocabulário →
+                </Link>
+              </div>
             </section>
 
             <div
