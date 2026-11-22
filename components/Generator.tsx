@@ -183,9 +183,9 @@ export default function Generator({
 
         <div className="tip">
           <b>Como funciona: </b>
-          primeiro a IA monta o esboço das {total} semanas e depois desenvolve uma por
-          uma, com vocabulário, recursos e as atividades de cada dia. Leva alguns minutos.
-          Deixe esta janela aberta.
+          primeiro a Inteligência Artificial monta o esboço das {total} semanas e depois
+          desenvolve uma por uma, com vocabulário, recursos e as atividades de cada dia.
+          Leva alguns minutos. Deixe esta janela aberta.
         </div>
 
         {running && (

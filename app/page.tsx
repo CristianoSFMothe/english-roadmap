@@ -18,6 +18,10 @@ const jsonLd = {
   educationalLevel: "A1 a C1 (Quadro Europeu Comum de Referência)",
 };
 
+// Lida a cada requisição: assim mudar as variáveis de ambiente passa a valer
+// sem depender do que existia no momento do build.
+export const dynamic = "force-dynamic";
+
 export default function Home() {
   return (
     <>
