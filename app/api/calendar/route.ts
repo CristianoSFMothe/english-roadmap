@@ -3,6 +3,7 @@ import { allowedUser } from "@/lib/access";
 import { authConfigured } from "@/lib/auth";
 import { googleAccessToken, recordCalendarExport } from "@/lib/server-data";
 import type { Day, RawWeek } from "@/lib/weeks";
+import { SITE_NAME, siteUrl } from "@/lib/site";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -149,7 +150,7 @@ export async function POST(request: Request) {
                   useDefault: false,
                   overrides: [{ method: "popup", minutes: lembrete }],
                 },
-                source: { title: "Trilha de Inglês", url: "https://english-roadmap-qa.vercel.app" },
+                source: { title: SITE_NAME, url: siteUrl() },
               }),
             },
           );

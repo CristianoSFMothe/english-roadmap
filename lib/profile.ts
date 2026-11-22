@@ -77,16 +77,16 @@ export const sampleProfile: Profile = {
   goalPersonal: "Entender filmes, séries e músicas sem depender de legenda em português.",
   goalProfessional:
     "Trabalhar em time internacional: participar de reuniões, escrever relatórios e fazer entrevistas em inglês.",
-  profession: "Analista de qualidade de software (QA/SDET)",
-  knowledge: "Testes manuais e automatizados, APIs, pipelines de integração contínua",
+  profession: "",
+  knowledge: "",
   movies: "Ficção científica, ação, suspense, história e fantasia",
   series: "Comédias de situação, fantasia épica",
   animation: "Animes de aventura e desenhos de super-heróis",
-  books: "Suspense, história, mitologia, desenvolvimento pessoal e textos cristãos",
-  music: "Música cristã: louvor e rock cristão",
-  hobbies: "Programação, manutenção do próprio carro, escrever no blog pessoal",
+  books: "Suspense, história, mitologia, desenvolvimento pessoal",
+  music: "Pop, rock e trilhas sonoras de filmes",
+  hobbies: "Cozinhar, caminhar, jogar videogame",
   pleasures: "Maratonar série no fim de semana, café da manhã sem pressa",
-  avoid: "Somente músicas cristãs; evitar conteúdo com linguagem pesada",
+  avoid: "Evitar conteúdo com linguagem pesada",
   notes: "",
 };
 

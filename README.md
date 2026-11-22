@@ -1,6 +1,6 @@
 # Trilha de Inglês
 
-Gerador de roteiros de estudo de inglês, semana por semana, montados pela Claude a partir
+Gerador de roteiros de estudo de inglês, semana por semana, montados pelo Gemini a partir
 do perfil de quem vai estudar: nível atual, nível desejado, dificuldades, objetivos pessoais
 e profissionais, profissão, área de conhecimento e o que a pessoa gosta de assistir, ler,
 ouvir e fazer no tempo livre.
@@ -13,7 +13,7 @@ as anotações ficam no navegador de quem usa.
 - **Perfil**: formulário com nível, dificuldades, objetivos, profissão, filmes, séries,
   animações, livros, músicas, hobbies, prazeres, restrições, minutos por dia, dias por
   semana e quantas semanas gerar.
-- **Geração**: a Claude monta primeiro o esboço das semanas e depois desenvolve uma a uma,
+- **Geração**: o Gemini monta primeiro o esboço das semanas e depois desenvolve uma a uma,
   com tema, tópico gramatical ligado ao tema, 70 a 100 itens de vocabulário, recursos
   gratuitos, conteúdos para consumir e a atividade de cada dia.
 - **Progresso geral** no topo: porcentagem e dias concluídos.
@@ -38,7 +38,7 @@ Há dois modos, e os dois podem conviver:
 
 | Modo | Como funciona | Quando usar |
 | --- | --- | --- |
-| Chave do servidor | `ANTHROPIC_API_KEY` configurada no deploy | Uso próprio ou time fechado |
+| Chave do servidor | `GEMINI_API_KEY` configurada no deploy | Uso próprio ou time fechado |
 | Chave do visitante | A pessoa informa a chave dela, salva só no navegador dela | Site público |
 
 Se o site for público e a chave do servidor estiver configurada, defina também
@@ -47,9 +47,9 @@ opção de chave própria, use `ALLOW_VISITOR_KEY=false`.
 
 ### Configurar
 
-1. Crie a chave em [console.anthropic.com](https://console.anthropic.com).
+1. Crie a chave em [aistudio.google.com/apikey](https://aistudio.google.com/apikey).
 2. Local: copie `.env.example` para `.env.local` e preencha.
-3. Vercel: **Settings → Environment Variables** → `ANTHROPIC_API_KEY` (e, se quiser,
+3. Vercel: **Settings → Environment Variables** → `GEMINI_API_KEY` (e, se quiser,
    `APP_ACCESS_CODE`), para Production e Preview. Depois, **Redeploy**.
 
 Variáveis disponíveis estão em `.env.example`. Nenhuma delas vai para o código do cliente.
@@ -87,11 +87,11 @@ entre aparelhos, e pode jogar o plano no Google Agenda.
 
 - só essas contas Google viram usuário (as outras são recusadas no login);
 - as rotas de dados e de agenda respondem 401 para qualquer outra conta;
-- a chave da Anthropic do servidor só é usada por uma conta autorizada ou por quem
+- a chave do Gemini do servidor só é usada por uma conta autorizada ou por quem
   souber o `APP_ACCESS_CODE`.
 
 Quem chegar ao site sem conta continua vendo o plano de exemplo e pode gerar o próprio
-plano com a **própria** chave da Anthropic, sem tocar na sua.
+plano com a **própria** chave do Gemini, sem tocar na sua.
 
 O escopo `calendar.events` é sensível para o Google: em modo **Testing** funciona para os
 usuários de teste cadastrados; abrir ao público exige a verificação do Google.
@@ -110,7 +110,7 @@ npm run build
 ```
 app/
   page.tsx            carrega o plano de exemplo
-  api/plan/route.ts   chama a API da Anthropic (esboço e semanas)
+  api/plan/route.ts   chama a API do Gemini (esboço e semanas)
   globals.css         tokens de cor, tema claro e escuro
 components/
   Roadmap.tsx         estado geral, progresso, abas

@@ -23,7 +23,7 @@ export async function GET() {
     loginConfigurado: authConfigured,
     acessoRestrito: accessRestricted,
     dominioDoLogin: canonical,
-    geracaoComChaveDoServidor: Boolean(process.env.ANTHROPIC_API_KEY),
+    geracaoComChaveDoServidor: Boolean(process.env.GEMINI_API_KEY),
     codigoDeAcesso: Boolean(process.env.APP_ACCESS_CODE),
   });
 }

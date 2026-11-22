@@ -3,7 +3,7 @@ import { clampProfile, type Profile } from "@/lib/profile";
 import { extractJson, normalizeOutline, normalizeWeek, type OutlineItem } from "@/lib/normalize";
 import { outlineMessage, systemPrompt, weekMessage } from "@/lib/prompt";
 import { accessRestricted, allowedUser } from "@/lib/access";
-import { askClaude, CLAUDE_MODEL as DEFAULT_MODEL, resolveKey } from "@/lib/claude";
+import { askGemini, GEMINI_MODEL as DEFAULT_MODEL, resolveKey } from "@/lib/gemini";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -12,9 +12,9 @@ export const maxDuration = 60;
 export async function GET() {
   const user = await allowedUser();
   return NextResponse.json({
-    serverKey: Boolean(process.env.ANTHROPIC_API_KEY),
+    serverKey: Boolean(process.env.GEMINI_API_KEY),
     requiresCode: Boolean(
-      process.env.ANTHROPIC_API_KEY && process.env.APP_ACCESS_CODE && !user,
+      process.env.GEMINI_API_KEY && process.env.APP_ACCESS_CODE && !user,
     ),
     allowOwnKey: process.env.ALLOW_VISITOR_KEY !== "false",
     signedIn: Boolean(user),
@@ -36,8 +36,8 @@ function fail(message: string, status: number) {
   return NextResponse.json({ error: message }, { status });
 }
 
-const callClaude = (key: string, system: string, user: string, maxTokens: number) =>
-  askClaude({ key, system, user, maxTokens });
+const callGemini = (key: string, system: string, user: string, maxTokens: number) =>
+  askGemini({ key, system, user, maxTokens });
 
 export async function POST(request: Request) {
   let body: Body;
@@ -56,18 +56,18 @@ export async function POST(request: Request) {
 
   try {
     if (body.stage === "outline") {
-      const text = await callClaude(key, systemPrompt(profile), outlineMessage(profile), 4000);
+      const text = await callGemini(key, systemPrompt(profile), outlineMessage(profile), 8000);
       const outline = normalizeOutline(extractJson(text), profile.weeks);
       return NextResponse.json({ outline });
     }
 
     if (body.stage === "week") {
       if (!body.item) return fail("Semana não informada.", 400);
-      const text = await callClaude(
+      const text = await callGemini(
         key,
         systemPrompt(profile),
         weekMessage(profile, body.item, body.outlineThemes ?? []),
-        8000,
+        16000,
       );
       const week = normalizeWeek(
         extractJson(text),

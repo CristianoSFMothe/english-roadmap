@@ -1,545 +1,885 @@
 [
   {
     "n": 5,
-    "theme": "Describing a bug",
-    "subtitle": "Explicar um problema do começo ao fim",
-    "why": "Descrever um defeito com clareza é a habilidade central do seu trabalho. Em inglês, isso tem estrutura fixa: passos, resultado esperado, resultado obtido. Dominar isso vale mais que mil palavras soltas.",
+    "theme": "What Is Happening Now",
+    "subtitle": "Descrever ações em andamento e cenas visuais",
+    "why": "Aprender a narrar o que acontece no exato momento é essencial para descrever cenas de filmes, comentar partidas de jogos e reportar o andamento de tarefas no trabalho. Dominar essa estrutura permite que você participe de reuniões explicando o que está fazendo agora sem travar.",
     "grammar": {
-      "topic": "Past simple irregular + can / can't",
-      "why": "Relatar um bug exige verbos irregulares no passado (I saw, I got, I went) e a ideia de capacidade ou impossibilidade (I can't reproduce it).",
+      "topic": "Presente contínuo (Present Continuous) e contraste com Presente Simples",
+      "why": "O Present Continuous descreve a ação que está ocorrendo agora com o verbo 'to be' e '-ing', enquanto o Present Simple fala de fatos e rotinas.",
       "examples": [
-        "I saw an error message on the payment screen.",
-        "The page took ten seconds to load.",
-        "I got a 500 error when I clicked Save.",
-        "I can't reproduce the bug on Chrome, but I can reproduce it on Firefox.",
-        "The system didn't show the correct balance."
+        "I am working on the report right now.",
+        "She is watching a science fiction movie.",
+        "They are walking in the park.",
+        "I usually drink coffee, but today I am drinking tea.",
+        "The spaceship is landing right now."
       ],
-      "tip": "Irregulares mais usados no seu dia: see/saw, get/got, go/went, take/took, find/found, run/ran, write/wrote, come/came, give/gave, make/made."
+      "tip": "Não esqueça o verbo 'to be' antes do '-ing'. Brasileiros costumam dizer 'I working' em vez do correto 'I am working'."
     },
     "vocab": [
       {
-        "group": "Verbos irregulares úteis",
-        "items": "see/saw=ver/vi; get/got=obter/obtive; go/went=ir/fui; take/took=levar/levei; find/found=encontrar/encontrei; run/ran=executar/executei; write/wrote=escrever/escrevi; come/came=vir/vim; give/gave=dar/dei; make/made=fazer/fiz; do/did=fazer/fiz; have/had=ter/tive; send/sent=enviar/enviei; break/broke=quebrar/quebrei; choose/chose=escolher/escolhi; begin/began=começar/comecei; think/thought=pensar/pensei; tell/told=contar/contei; read/read=ler/li; show/showed=mostrar/mostrei"
+        "group": "Ações visuais e movimento",
+        "items": "to run=correr; to walk=caminhar; to look at=olhar para; to watch=assistir; to wait=esperar; to move=mover; to stand=estar em pé; to sit=estar sentado; to fall=cair; to fly=voar; to escape=escapar; to follow=seguir; to hide=esconder-se; to carry=carregar; to jump=pular; to stop=parar"
       },
       {
-        "group": "Anatomia do bug report",
-        "items": "bug=defeito; defect=defeito; title=título; description=descrição; steps to reproduce=passos para reproduzir; expected result=resultado esperado; actual result=resultado obtido; severity=severidade; priority=prioridade; attachment=anexo; environment=ambiente; precondition=pré-condição; to reproduce=reproduzir; reproducible=reproduzível; intermittent=intermitente; workaround=solução alternativa; root cause=causa raiz; impact=impacto; to assign=atribuir; to close=fechar"
+        "group": "Ações de comunicação e interação",
+        "items": "to talk=conversar; to listen=escutar; to ask=perguntar; to answer=responder; to explain=explicar; to call=ligar ou chamar; to show=mostrar; to help=ajudar; to shout=gritar; to whisper=sussurrar; to smile=sorrir; to argue=discutir; to point=apontar; to agree=concordar"
       },
       {
-        "group": "O que deu errado",
-        "items": "error=erro; error message=mensagem de erro; crash=travamento; to crash=travar; to freeze=congelar; to hang=parar de responder; blank page=página em branco; broken link=link quebrado; wrong value=valor errado; missing field=campo faltando; duplicate=duplicado; timeout=tempo esgotado; slow=lento; unexpected=inesperado; incorrect=incorreto; empty=vazio; invalid=inválido; unavailable=indisponível; to fail=falhar; to behave=comportar-se"
+        "group": "Ambiente de ficção científica e cenas",
+        "items": "spaceship=nave espacial; screen=tela; light=luz; shadow=sombra; robot=robô; door=porta; sound=som; button=botão; alarm=alarme; sky=céu; planet=planeta; dark=escuro; fast=rápido; slow=lento; danger=perigo; machine=máquina"
       },
       {
-        "group": "Telas e ações do usuário",
-        "items": "screen=tela; page=página; button=botão; field=campo; form=formulário; menu=menu; dropdown=lista suspensa; checkbox=caixa de seleção; link=link; tab=aba; to click=clicar; to type=digitar; to select=selecionar; to submit=enviar; to log in=entrar; to log out=sair; to refresh=atualizar; to scroll=rolar; to open=abrir; to close=fechar"
+        "group": "Atividades em andamento no trabalho",
+        "items": "to type=digitar; to send=enviar; to check=verificar; to test=testar; to fix=consertar; to present=apresentar; to share=compartilhar; to update=atualizar; to prepare=preparar; to print=imprimir; to review=revisar; to build=construir; file=arquivo; project=projeto; team=equipe"
       },
       {
-        "group": "Severidade e julgamento",
-        "items": "critical=crítico; high=alto; medium=médio; low=baixo; minor=pequeno; major=grave; blocker=bloqueante; nice to have=desejável; edge case=caso extremo; happy path=caminho felizisto; risk=risco; side effect=efeito colateral"
+        "group": "Marcadores de tempo e contraste",
+        "items": "now=agora; right now=neste exato momento; at the moment=no momento; today=hoje; currently=atualmente; usually=geralmente; always=sempre; never=nunca; sometimes=às vezes; every day=todo dia; this week=esta semana; look!=olhe!; listen!=escute!; suddenly=de repente"
       }
     ],
     "resources": [
-      { "name": "Playwright: issues no GitHub", "url": "https://github.com/microsoft/playwright", "what": "Abra a aba Issues e leia 1 relato por semana: inglês real de bug report." },
-      { "name": "ISTQB Glossary", "url": "https://glossary.istqb.org/", "what": "Consulte defect, failure, error e severity: são diferentes em inglês técnico." },
-      { "name": "BBC 6 Minute English", "url": "https://www.bbc.co.uk/learningenglish/english/features/6-minute-english", "what": "Comece a experimentar: ouça com a transcrição aberta." },
-      { "name": "News in Levels (nível 2)", "url": "https://www.newsinlevels.com/level/level-2/", "what": "Suba de nível se o nível 1 está fácil." }
+      {
+        "name": "BBC Learning English - Basic Grammar Guide",
+        "url": "https://www.bbc.co.uk/learningenglish",
+        "what": "Revisar as regras de uso e a formação com terminação -ing."
+      },
+      {
+        "name": "VOA Learning English - Level 1",
+        "url": "https://learningenglish.voanews.com",
+        "what": "Praticar listening com áudio pausado e transcrição focando em ações presentes."
+      },
+      {
+        "name": "AnkiWeb",
+        "url": "https://apps.ankiweb.net",
+        "what": "Criar e revisar flashcards de repetição espaçada com verbos no gerúndio."
+      },
+      {
+        "name": "YouGlish",
+        "url": "https://youglish.com",
+        "what": "Pesquisar a pronúncia real de frases com 'is running', 'are looking' e afins."
+      }
     ],
     "content": [
-      { "name": "Uma issue real do Playwright no GitHub", "kind": "Leitura técnica", "what": "Marque a estrutura: título, passos, esperado, obtido." },
-      { "name": "The Martian — um vídeo-diário do Watney", "kind": "Filme", "what": "Monólogo que descreve um problema e a solução, passo a passo. Tem palavrões: escolha o trecho." },
-      { "name": "Friends — uma cena de confusão ou mal-entendido", "kind": "Série", "what": "Pratique contar o que deu errado, em 3 frases." },
-      { "name": "\"Scream\" (Skillet)", "kind": "Música", "what": "Single de 2026. Use 2 trechos; o resto é escuta." }
+      {
+        "name": "Trailer de Ficção Científica (ex: Interestelar ou Duna)",
+        "kind": "Filme",
+        "what": "Pausar o trailer em 3 momentos diferentes e descrever em voz alta o que cada personagem está fazendo."
+      },
+      {
+        "name": "The Big Bang Theory",
+        "kind": "Série",
+        "what": "Assistir a uma cena curta de 2 minutos sem som, pausar e narrar quem está sentado, falando ou comendo."
+      },
+      {
+        "name": "Radiohead - No Surprises",
+        "kind": "Música",
+        "what": "Ouvir a canção acompanhando a letra para notar o uso de descrições calmas e verbos no presente."
+      },
+      {
+        "name": "Simple English Wikipedia - Space exploration",
+        "kind": "Artigo",
+        "what": "Ler o parágrafo inicial para identificar verbos de ação e termos espaciais acessíveis."
+      }
     ],
-    "milestone": "Escrever um bug report completo em inglês, sem tradutor, e explicá-lo em voz alta em 90 segundos.",
+    "milestone": "Assistir a um trailer de ficção científica de 1 minuto e narrar 3 ações que acontecem na tela.",
     "days": [
       {
         "label": "Seg",
-        "focus": "Inglês de QA",
+        "focus": "Base gramatical",
         "minutes": 25,
         "tasks": [
-          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
-          { "what": "Ler 1 issue do Playwright e marcar as 5 partes do bug report", "resource": "GitHub do Playwright", "min": 12 },
-          { "what": "Escrever um bug report real do seu trabalho em inglês, usando o modelo", "resource": "Seu modelo de bug report", "min": 8 }
+          {
+            "what": "Ler a explicação de Present Continuous na página inicial da BBC Learning English e anotar a fórmula sujeito + to be + verbo-ing.",
+            "resource": "BBC Learning English - Basic Grammar Guide",
+            "min": 10
+          },
+          {
+            "what": "Cadastrar 10 verbos de ação com -ing no AnkiWeb e praticar a memorização.",
+            "resource": "AnkiWeb",
+            "min": 10
+          },
+          {
+            "what": "Escrever 3 frases no caderno descrevendo o que pessoas ao seu redor estão fazendo agora.",
+            "resource": "Caderno de estudos",
+            "min": 5
+          }
         ],
-        "speak": "I found a bug in the payment screen. When I click Save, I get a 500 error.",
-        "mini": "Cartões + ler o título e os passos de uma issue."
+        "speak": "I am studying English right now.",
+        "mini": "Abra o AnkiWeb e revise 5 cartões de verbos de ação com -ing por 5 minutos."
       },
       {
         "label": "Ter",
-        "focus": "Filme",
+        "focus": "Ficção científica",
         "minutes": 25,
         "tasks": [
-          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
-          { "what": "Assistir a um vídeo-diário de The Martian com legenda em inglês; marcar como ele descreve o problema", "resource": "The Martian", "min": 14 },
-          { "what": "Shadowing de 3 falas", "resource": "O mesmo trecho", "min": 6 }
+          {
+            "what": "Buscar um trailer oficial gratuito de ficção científica e assistir uma vez para captar a história geral.",
+            "resource": "Trailer de Ficção Científica (ex: Interestelar ou Duna)",
+            "min": 7
+          },
+          {
+            "what": "Assistir novamente em velocidade 0.75x, pausar em 3 cenas e listar no caderno os verbos das ações em andamento.",
+            "resource": "Trailer de Ficção Científica (ex: Interestelar ou Duna)",
+            "min": 10
+          },
+          {
+            "what": "Buscar a pronúncia de 'spaceship is moving' no YouGlish e repetir 3 vezes.",
+            "resource": "YouGlish",
+            "min": 8
+          }
         ],
-        "speak": "The problem is simple: I have a bug and I need to solve it.",
-        "mini": "Cartões + assistir ao trecho."
+        "speak": "The spaceship is flying through the dark sky.",
+        "mini": "Pause qualquer vídeo curto no celular e fale em voz alta uma ação que a pessoa está fazendo."
       },
       {
         "label": "Qua",
-        "focus": "Leitura",
+        "focus": "Inglês profissional",
         "minutes": 25,
         "tasks": [
-          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
-          { "what": "Ler as definições de error, defect e failure no glossário e anotar a diferença em 3 frases", "resource": "ISTQB Glossary", "min": 12 },
-          { "what": "Ler 1 notícia do nível 2", "resource": "News in Levels", "min": 8 }
+          {
+            "what": "Ouvir uma notícia curta no VOA Learning English prestando atenção em ações que governos ou equipes estão realizando no momento.",
+            "resource": "VOA Learning English - Level 1",
+            "min": 10
+          },
+          {
+            "what": "Praticar o contraste: escrever 3 frases comparando rotina com o momento atual (ex: I usually test software, but today I am writing a document).",
+            "resource": "Caderno de estudos",
+            "min": 10
+          },
+          {
+            "what": "Fazer shadowing de 2 frases gravando seu próprio áudio pelo celular para checar clareza.",
+            "resource": "Gravador do celular",
+            "min": 5
+          }
         ],
-        "speak": "A person makes an error, the error creates a defect, and the defect can cause a failure.",
-        "mini": "Cartões + 1 definição."
+        "speak": "My team is working on a new project today.",
+        "mini": "Grave um áudio de 30 segundos no celular dizendo: 'Right now I am working and checking files'."
       },
       {
         "label": "Qui",
-        "focus": "Música cristã",
+        "focus": "Cena de comédia",
         "minutes": 25,
         "tasks": [
-          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
-          { "what": "Ciclo da música com 2 trechos curtos", "resource": "\"Scream\" (Skillet)", "min": 15 },
-          { "what": "Usar 1 bloco em uma frase sua", "resource": "Você mesmo", "min": 5 }
+          {
+            "what": "Assistir a um trecho de 2 minutos de comédia com áudio em inglês e legendas em inglês, reparando na linguagem corporal.",
+            "resource": "The Big Bang Theory",
+            "min": 8
+          },
+          {
+            "what": "Retirar 3 frases que mostram reações imediatas dos personagens e transcrevê-las.",
+            "resource": "The Big Bang Theory",
+            "min": 7
+          },
+          {
+            "what": "Consultar a grafia e som dos verbos de reação no YouGlish.",
+            "resource": "YouGlish",
+            "min": 10
+          }
         ],
-        "speak": "I listen to this song when I need energy to work.",
-        "mini": "Cartões + ouvir a música."
+        "speak": "Look! He is opening the door and smiling.",
+        "mini": "Descreva em inglês o que um familiar ou colega está fazendo neste minuto em uma frase."
       },
       {
         "label": "Sex",
-        "focus": "Fala",
+        "focus": "Música e ritmo",
         "minutes": 25,
         "tasks": [
-          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
-          { "what": "Pronúncia dos irregulares: saw, got, went, took, found, ran", "resource": "YouGlish", "min": 10 },
-          { "what": "Gravar 90 s explicando um bug real: passos, esperado, obtido", "resource": "Gravador do celular", "min": 10 }
+          {
+            "what": "Ouvir a faixa No Surprises prestando atenção na clareza vocal e no ritmo lento das palavras.",
+            "resource": "Radiohead - No Surprises",
+            "min": 5
+          },
+          {
+            "what": "Acompanhar o áudio lendo a letra oficial gratuita em site de busca, identificando verbos no gerúndio e frases simples.",
+            "resource": "Radiohead - No Surprises",
+            "min": 10
+          },
+          {
+            "what": "Ler em voz alta duas estrofes pausadamente, mantendo a pronúncia limpa sem contrações confusas.",
+            "resource": "Radiohead - No Surprises",
+            "min": 10
+          }
         ],
-        "speak": "First I logged in. Then I opened the report. The total was wrong: it showed zero.",
-        "mini": "Cartões + gravar 30 s."
+        "speak": "A quiet life is beginning right now.",
+        "mini": "Escute 1 minuto da música prestando atenção exclusiva na terminação das palavras em -ing."
       },
       {
         "label": "Sáb",
-        "focus": "Lazer com apoio",
-        "minutes": 10,
+        "focus": "Meta da semana",
+        "minutes": 25,
         "tasks": [
-          { "what": "Conteúdo livre em inglês, por prazer", "resource": "Sua escolha", "min": 0 },
-          { "what": "Opcional: cartões", "resource": "Anki", "min": 10 }
+          {
+            "what": "Fazer uma revisão rápida de 15 cartões de vocabulário no AnkiWeb focando em verbos e marcadores de tempo.",
+            "resource": "AnkiWeb",
+            "min": 5
+          },
+          {
+            "what": "Reproduzir 1 minuto de um trailer de ficção científica sem pausas e anotar mentalmente 3 acontecimentos.",
+            "resource": "Trailer de Ficção Científica (ex: Interestelar ou Duna)",
+            "min": 5
+          },
+          {
+            "what": "Gravar a voz narrando em inglês as 3 ações simultâneas da cena para cumprir a meta da semana.",
+            "resource": "Gravador do celular",
+            "min": 15
+          }
         ],
-        "speak": "Opcional.",
-        "mini": "Livre."
-      },
-      {
-        "label": "Dom",
-        "focus": "Revisão e medição",
-        "minutes": 15,
-        "tasks": [
-          { "what": "Reler seu bug report e corrigir 3 erros que você mesmo encontrar", "resource": "Seu texto de segunda", "min": 8 },
-          { "what": "Preencher o registro semanal", "resource": "Seu registro", "min": 4 },
-          { "what": "Escolher os conteúdos da semana 6", "resource": "Sua playlist", "min": 3 }
-        ],
-        "speak": "My bug report is clear now.",
-        "mini": "Só o registro."
+        "speak": "The robot is running, the light is flashing, and the hero is escaping.",
+        "mini": "Grave uma única frase narrando uma ação visível na sua frente: 'The car is stopping now'."
       }
     ]
   },
   {
     "n": 6,
-    "theme": "Asking for help",
-    "subtitle": "Perguntar, pedir ajuda e confirmar o que você entendeu",
-    "why": "Quem fala um inglês intermediário não entende tudo: ele pede esclarecimento com naturalidade. Essa é a semana que mais reduz o medo de reunião, porque você aprende a continuar a conversa mesmo sem entender tudo.",
+    "theme": "Cooking, Steps and Instructions",
+    "subtitle": "Dar instruções simples e seguir receitas curtas",
+    "why": "Aprender a dar instruções e seguir passos em inglês desenvolve o raciocínio lógico na língua e prepara você para descrever processos do dia a dia e procedimentos simples no trabalho. Além disso, cozinhar usando conteúdos em inglês une o aprendizado ao seu hábito de preparar o café da manhã com calma.",
     "grammar": {
-      "topic": "Perguntas: do / does / did + palavras WH",
-      "why": "Perguntar em inglês exige um verbo auxiliar antes do sujeito. Sem isso, a frase soa quebrada e a resposta vem confusa.",
+      "topic": "Modo imperativo, conectores de sequência (first, then, after that) e contáveis/incontáveis",
+      "why": "O imperativo permite dar comandos diretos sem complicar a conjugação, enquanto os conectores organizam as etapas de forma clara e a distinção de contáveis/incontáveis garante o uso correto das quantidades.",
       "examples": [
-        "Do you have time to help me?",
-        "Does the test run on staging?",
-        "Did you deploy the fix yesterday?",
-        "What do you mean by \"acceptance criteria\"?",
-        "Could you repeat that, please? I didn't catch the last part."
+        "First, chop two fresh tomatoes.",
+        "Then, add a little salt and some water.",
+        "After that, heat the oil in a pan.",
+        "Mix everything together with a spoon.",
+        "Finally, serve the hot eggs with toast."
       ],
-      "tip": "Em perguntas com do/does/did, o verbo principal fica na forma base: Did you test it? (não Did you tested it?). Could you...? é mais educado que Can you...?"
+      "tip": "Evite colocar 'to' antes dos verbos no imperativo (diga 'Add salt', nunca 'To add salt') e lembre-se de que palavras como 'bread', 'water' e 'coffee' não têm plural direto em inglês."
     },
     "vocab": [
       {
-        "group": "Palavras de pergunta",
-        "items": "what=o que; who=quem; where=onde; when=quando; why=por que; how=como; which=qual; how much=quanto (incontável); how many=quantos; how long=quanto tempo; how often=com que frequência; what for=para quê; what about=e sobre; whose=de quem; what time=a que horas"
+        "group": "Ações e Verbos de Culinária",
+        "items": "to chop=picar; to slice=fatiar; to mix=misturar; to pour=despejar; to add=adicionar; to heat=aquecer; to boil=ferver; to fry=fritar; to bake=assar no forno; to stir=mexer; to serve=servir; to cut=cortar; to wash=lavar; to dry=secar"
       },
       {
-        "group": "Pedir ajuda e esclarecimento",
-        "items": "can you help me?=você pode me ajudar?; could you help me?=você poderia me ajudar?; I need help with=preciso de ajuda com; could you repeat that?=você poderia repetir?; could you speak slower?=você poderia falar mais devagar?; I didn't catch that=não peguei isso; sorry, I don't understand=desculpe, não entendi; what do you mean?=o que você quer dizer?; do you mean...?=você quer dizer...?; let me check=deixe-me verificar; I'm not sure=não tenho certeza; correct me if I'm wrong=corrija-me se eu estiver errado; does that make sense?=isso faz sentido?; just to confirm=só para confirmar; in other words=em outras palavras; for example=por exemplo; one moment, please=um momento, por favor; I'll get back to you=eu te retorno; thanks for your help=obrigado pela ajuda; no problem=sem problema"
+        "group": "Utensílios e Cozinha",
+        "items": "pan=frigideira; pot=panela; bowl=tigela; spoon=colher; fork=garfo; knife=faca; plate=prato; cup=xícara; stove=fogão; oven=forno; board=tábua de corte; glass=copo; napkin=guardanapo"
       },
       {
-        "group": "Reuniões e combinados",
-        "items": "agenda=pauta; to schedule=agendar; to reschedule=reagendar; to join a call=entrar numa chamada; to share your screen=compartilhar a tela; you're on mute=você está no mudo; can you hear me?=você me ouve?; the connection is bad=a conexão está ruim; let's move on=vamos seguir; let's discuss=vamos discutir; to agree=concordar; to decide=decidir; decision=decisão; to clarify=esclarecer; to confirm=confirmar; to explain=explicar; to suggest=sugerir; to add=acrescentar; to summarize=resumir; action item=ação definida"
+        "group": "Ingredientes e Quantidades (Contáveis e Incontáveis)",
+        "items": "bread=pão; butter=manteiga; egg=ovo; oil=óleo; salt=sal; pepper=pimenta; sugar=açúcar; milk=leite; water=água; cheese=queijo; coffee=café; tea=chá; fruit=fruta; slice=fatia; piece=pedaço; cup of=xícara de; spoonful=colherada; some=um pouco de/alguns; a few=alguns; a little=um pouco"
       },
       {
-        "group": "Critérios e requisitos",
-        "items": "requirement=requisito; acceptance criteria=critérios de aceite; specification=especificação; documentation=documentação; user story=história de usuário; scope=escopo; out of scope=fora do escopo; assumption=premissa; constraint=restrição; dependency=dependência; to approve=aprovar; to reject=rejeitar; feedback=retorno; review=revisão; to validate=validar; expected behavior=comportamento esperado; rule=regra; condition=condição; input=entrada; output=saída"
+        "group": "Conectores e Sequência",
+        "items": "first=primeiro; then=então/depois; next=em seguida; after that=depois disso; finally=por fim; step=passo/etapa; instruction=instrução; recipe=receita; before=antes; after=depois; carefully=com cuidado; slowly=devagar"
+      },
+      {
+        "group": "Termos Profissionais para Processos e Instruções",
+        "items": "process=processo; step-by-step=passo a passo; list=lista; task=tarefa; priority=prioridade; status=status/situação; check=verificar; confirm=confirmar; prepare=preparar; complete=concluir; order=ordem/pedido; update=atualizar"
       }
     ],
     "resources": [
-      { "name": "BBC Office English", "url": "https://www.bbc.co.uk/learningenglish/english/features/office-english", "what": "Procure os episódios sobre pedir ajuda, mal-entendidos e esclarecimentos." },
-      { "name": "Ministry of Testing Club", "url": "https://club.ministryoftesting.com/about", "what": "Crie a conta gratuita e leia 1 tópico. Escrever em público treina o texto de verdade." },
-      { "name": "BBC 6 Minute English", "url": "https://www.bbc.co.uk/learningenglish/english/features/6-minute-english", "what": "1 episódio com transcrição." },
-      { "name": "News in Levels (nível 2)", "url": "https://www.newsinlevels.com/level/level-2/", "what": "Leitura diária." }
+      {
+        "name": "BBC Learning English - Basic English Grammar",
+        "url": "https://www.bbc.co.uk/learningenglish",
+        "what": "Consultar explicações simples e exemplos curtos sobre o modo imperativo e conectores de sequência."
+      },
+      {
+        "name": "VOA Learning English",
+        "url": "https://learningenglish.voanews.com",
+        "what": "Ler artigos curtos com frases claras sobre estilo de vida, culinária e rotinas diárias."
+      },
+      {
+        "name": "YouGlish",
+        "url": "https://youglish.com",
+        "what": "Pesquisar como falantes nativos pronunciam verbos no imperativo como 'add', 'pour' e 'mix' em contextos reais."
+      },
+      {
+        "name": "AnkiWeb",
+        "url": "https://apps.ankiweb.net",
+        "what": "Cadastrar os novos verbos de ação e conectores para fazer revisão espaçada diária."
+      }
     ],
     "content": [
-      { "name": "Office English: mal-entendidos ou pedir ajuda", "kind": "Podcast", "what": "Marque 8 frases de esclarecimento e transforme em cartões." },
-      { "name": "The Big Bang Theory — uma cena em que alguém não entende o outro", "kind": "Série", "what": "Observe como as pessoas pedem repetição." },
-      { "name": "Ministry of Testing: um tópico do fórum", "kind": "Leitura técnica", "what": "Leia e escreva 2 frases de resposta em inglês." },
-      { "name": "\"Way Maker\" (versão em inglês)", "kind": "Música", "what": "Refrão simples e muito repetido." }
+      {
+        "name": "Séries de Comédia de Situação (ex: Friends / Brooklyn Nine-Nine)",
+        "kind": "Série",
+        "what": "Assistir a uma cena curta em que um personagem cozinha ou dá ordens rápidas na cozinha, praticando a identificação de verbos no imperativo."
+      },
+      {
+        "name": "Pop/Rock - 'Banana Pancakes' (Jack Johnson)",
+        "kind": "Música",
+        "what": "Ouvir a música acompanhando a letra para identificar vocabulário de café da manhã e expressões relaxadas do dia a dia."
+      }
     ],
-    "milestone": "Participar de uma conversa de 5 minutos pedindo esclarecimento ao menos 3 vezes, sem mudar para o português.",
+    "milestone": "Explicar em inglês uma receita de café da manhã em 4 passos lógicos.",
     "days": [
       {
         "label": "Seg",
-        "focus": "Inglês de QA",
+        "focus": "Imperativo e Receita",
         "minutes": 25,
         "tasks": [
-          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
-          { "what": "Ouvir 1 Office English sobre esclarecimentos e marcar 8 frases", "resource": "BBC Office English", "min": 12 },
-          { "what": "Escrever 5 perguntas que você faria sobre um requisito pouco claro", "resource": "Caderno", "min": 8 }
+          {
+            "what": "Estudar a regra do imperativo e os conectores 'first', 'then', 'after that', 'finally'.",
+            "resource": "BBC Learning English - Basic English Grammar",
+            "min": 10
+          },
+          {
+            "what": "Anotar e pronunciar os 14 verbos de ação da lista de vocabulário da semana.",
+            "resource": "AnkiWeb",
+            "min": 10
+          },
+          {
+            "what": "Buscar a pronúncia de 'chop', 'pour' e 'stir' para treinar a articulação correta.",
+            "resource": "YouGlish",
+            "min": 5
+          }
         ],
-        "speak": "Could you clarify the acceptance criteria? Just to confirm: the user can pay with two cards?",
-        "mini": "Cartões + 1 pergunta em voz alta."
+        "speak": "First, cut the bread and heat the pan.",
+        "mini": "Repetir os 4 conectores de sequência em voz alta por 2 minutos."
       },
       {
         "label": "Ter",
-        "focus": "Sitcom",
+        "focus": "Instruções do Trabalho",
         "minutes": 25,
         "tasks": [
-          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
-          { "what": "Cena com mal-entendido; anotar como os personagens pedem repetição", "resource": "The Big Bang Theory", "min": 14 },
-          { "what": "Shadowing de 4 falas de pergunta", "resource": "A mesma cena", "min": 6 }
+          {
+            "what": "Ler um texto curto sobre organização de tarefas e processos passo a passo no trabalho.",
+            "resource": "VOA Learning English",
+            "min": 10
+          },
+          {
+            "what": "Escrever 3 instruções simples para um colega de trabalho usando o imperativo (ex: 'Send the email', 'Check the file').",
+            "resource": "Caderno de anotações",
+            "min": 10
+          },
+          {
+            "what": "Adicionar os termos profissionais do grupo de vocabulário ao aplicativo de memorização.",
+            "resource": "AnkiWeb",
+            "min": 5
+          }
         ],
-        "speak": "Wait, what do you mean? I don't understand.",
-        "mini": "Cartões + assistir à cena."
+        "speak": "First, check the list and then send the report.",
+        "mini": "Escrever 2 frases imperativas de trabalho no bloco de notas."
       },
       {
         "label": "Qua",
-        "focus": "Escrita em público",
+        "focus": "Série e Fala",
         "minutes": 25,
         "tasks": [
-          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
-          { "what": "Ler 1 tópico do fórum de testers e escrever uma resposta de 2 a 3 frases em inglês", "resource": "Ministry of Testing Club", "min": 14 },
-          { "what": "Ler 1 notícia", "resource": "News in Levels", "min": 6 }
+          {
+            "what": "Assistir ao clipe ou cena curta de uma comédia de situação onde personagens interagem na cozinha.",
+            "resource": "Séries de Comédia de Situação (ex: Friends / Brooklyn Nine-Nine)",
+            "min": 10
+          },
+          {
+            "what": "Praticar técnica de shadowing imitando 3 frases simples do vídeo com foco na entonação de comando.",
+            "resource": "Séries de Comédia de Situação (ex: Friends / Brooklyn Nine-Nine)",
+            "min": 10
+          },
+          {
+            "what": "Revisar flashcards de utensílios de cozinha.",
+            "resource": "AnkiWeb",
+            "min": 5
+          }
         ],
-        "speak": "In my team, we test this manually. How do you do it?",
-        "mini": "Cartões + ler o tópico, sem responder."
+        "speak": "Pass me the butter and the hot coffee, please.",
+        "mini": "Fazer shadowing de apenas 1 frase simples do episódio."
       },
       {
         "label": "Qui",
-        "focus": "Música cristã",
+        "focus": "Música e Leitura",
         "minutes": 25,
         "tasks": [
-          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
-          { "what": "Ciclo da música, passos 1 a 6", "resource": "\"Way Maker\"", "min": 15 },
-          { "what": "Cantar junto o refrão", "resource": "A música", "min": 5 }
+          {
+            "what": "Ouvir a música 'Banana Pancakes' sem ler a letra para testar a compreensão auditiva.",
+            "resource": "Pop/Rock - 'Banana Pancakes' (Jack Johnson)",
+            "min": 5
+          },
+          {
+            "what": "Ouvir novamente acompanhando a letra e destacar palavras relacionadas a café da manhã e ação.",
+            "resource": "Pop/Rock - 'Banana Pancakes' (Jack Johnson)",
+            "min": 10
+          },
+          {
+            "what": "Ler uma receita simples de 4 passos na internet em inglês e identificar contáveis e incontáveis.",
+            "resource": "VOA Learning English",
+            "min": 10
+          }
         ],
-        "speak": "I pray before I start my day.",
-        "mini": "Cartões + ouvir a música."
+        "speak": "Add some fruit and a little sugar to the bowl.",
+        "mini": "Ouvir a música uma vez prestando atenção ao vocabulário conhecido."
       },
       {
         "label": "Sex",
-        "focus": "Fala",
+        "focus": "Prática de Fala",
         "minutes": 25,
         "tasks": [
-          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
-          { "what": "Pedir ao Claude um diálogo curto: você é QA e precisa esclarecer um requisito; responda por escrito e depois em voz alta", "resource": "Claude", "min": 12 },
-          { "what": "Gravar 60 s com 3 perguntas suas", "resource": "Gravador do celular", "min": 8 }
+          {
+            "what": "Escrever em um papel os 4 passos da sua própria receita de café da manhã simples usando conectores.",
+            "resource": "Caderno de anotações",
+            "min": 10
+          },
+          {
+            "what": "Gravador do celular: gravar a si mesmo apresentando a receita em voz alta sem ler o texto.",
+            "resource": "Gravador de áudio do celular",
+            "min": 10
+          },
+          {
+            "what": "Ouvir a própria gravação, identificar hesitações na pronúncia e refazer o passo mais difícil.",
+            "resource": "Gravador de áudio do celular",
+            "min": 5
+          }
         ],
-        "speak": "Could you repeat that, please? Do you mean the report or the dashboard?",
-        "mini": "Cartões + 2 perguntas em voz alta."
+        "speak": "First, take two eggs. Then, fry them in the pan.",
+        "mini": "Falar em voz alta os 4 passos da receita sem gravar."
       },
       {
         "label": "Sáb",
-        "focus": "Lazer com apoio",
-        "minutes": 10,
+        "focus": "Revisão Leve",
+        "minutes": 25,
         "tasks": [
-          { "what": "Conteúdo livre em inglês, por prazer", "resource": "Sua escolha", "min": 0 },
-          { "what": "Opcional: cartões", "resource": "Anki", "min": 10 }
+          {
+            "what": "Revisar todos os cartões de vocabulário da semana 6 (mínimo 70 palavras/expressões).",
+            "resource": "AnkiWeb",
+            "min": 10
+          },
+          {
+            "what": "Enquanto prepara seu café da manhã real, narre suas ações em inglês em voz baixa usando o imperativo.",
+            "resource": "Atividade prática na cozinha",
+            "min": 15
+          }
         ],
-        "speak": "Opcional.",
-        "mini": "Livre."
-      },
-      {
-        "label": "Dom",
-        "focus": "Revisão e medição",
-        "minutes": 15,
-        "tasks": [
-          { "what": "Escolher as 10 frases de esclarecimento que você mais usaria e decorar 5", "resource": "Anki", "min": 8 },
-          { "what": "Preencher o registro semanal", "resource": "Seu registro", "min": 4 },
-          { "what": "Escolher os conteúdos da semana 7", "resource": "Sua playlist", "min": 3 }
-        ],
-        "speak": "My five favorite phrases this week are...",
-        "mini": "Só o registro."
+        "speak": "Finally, serve the hot tea and enjoy breakfast.",
+        "mini": "Revisar apenas 10 cartões no AnkiWeb."
       }
     ]
   },
   {
     "n": 7,
-    "theme": "Money and numbers",
-    "subtitle": "Valores, pagamentos e conciliação: o seu domínio",
-    "why": "Você trabalha com cash management. Esse vocabulário é o que diferencia um QA genérico de um QA que entende o negócio, e é exatamente o que uma vaga internacional da área vai perguntar.",
+    "theme": "Past Experiences and Origins",
+    "subtitle": "Falar sobre eventos e fatos do passado",
+    "why": "Aprender a falar sobre o passado é essencial para contar como foi seu fim de semana, relatar experiências anteriores e explicar atividades concluídas no trabalho. No nível A1, dominar o passado simples abre portas para narrar histórias e interagir com mais contexto social.",
     "grammar": {
-      "topic": "Contáveis e incontáveis + much / many / a lot of + números grandes",
-      "why": "Money é incontável em inglês (much money, não many money), mas payments são contáveis. Errar isso é imediatamente perceptível.",
+      "topic": "Passado simples com o verbo to be (was/were) e verbos regulares (-ed)",
+      "why": "Permite descrever estados anteriores e ações concluídas de forma simples e direta, conectando seus hobbies e rotinas passadas.",
       "examples": [
-        "How much money is in the account?",
-        "How many payments failed yesterday?",
-        "There isn't much information in the log.",
-        "We processed a lot of transactions last month.",
-        "The total is one million, two hundred thousand reais."
+        "I was at home last weekend.",
+        "The movie was very exciting.",
+        "We watched a great sci-fi series.",
+        "I stayed on the couch all Sunday.",
+        "They worked on the project yesterday."
       ],
-      "tip": "Incontáveis comuns na sua área: money, information, data, cash, feedback, software, work. Nenhum deles aceita plural com -s nem the many."
+      "tip": "Evite pronunciar a letra 'e' na terminação '-ed' da maioria dos verbos regulares; por exemplo, fale 'watched' como /wátʃt/ e não /wátʃed/."
     },
     "vocab": [
       {
-        "group": "Dinheiro e contas",
-        "items": "money=dinheiro; cash=dinheiro em espécie; cash flow=fluxo de caixa; account=conta; bank account=conta bancária; balance=saldo; bank statement=extrato bancário; deposit=depósito; withdrawal=saque; transfer=transferência; transaction=transação; payment=pagamento; receipt=recibo; invoice=fatura; bill=conta a pagar; amount=valor; total=total; fee=taxa; interest=juros; currency=moeda"
+        "group": "Expressões de Tempo Passado",
+        "items": "yesterday=ontem; last night=ontem à noite; last weekend=no último fim de semana; last month=no mês passado; two days ago=dois dias atrás; in the past=no passado; this morning=hoje de manhã"
       },
       {
-        "group": "Conciliação e processos",
-        "items": "reconciliation=conciliação; to reconcile=conciliar; to match=corresponder; mismatch=divergência; discrepancy=discrepância; to credit=creditar; to debit=debitar; debit=débito; credit=crédito; due date=data de vencimento; overdue=em atraso; pending=pendente; approved=aprovado; declined=recusado; refund=reembolso; chargeback=contestação; installment=parcela; to settle=liquidar; settlement=liquidação; ledger=livro contábil"
+        "group": "Verbos Regulares no Passado (Hobbies e Lazer)",
+        "items": "watched=assistiu/assisti; played=jogou/joguei; cooked=cozinhou/cozinhei; walked=caminhou/caminhei; relaxed=relaxou/relaxei; listened=ouviu/ouvi; enjoyed=aproveitou/gostou; rested=descansou/descansei"
       },
       {
-        "group": "Números e medidas",
-        "items": "zero=zero; hundred=cem; thousand=mil; million=milhão; billion=bilhão; decimal=decimal; point=ponto (decimal); percent=por cento; percentage=porcentagem; rate=taxa; average=média; to increase=aumentar; to decrease=diminuir; to add up=somar; to calculate=calcular; to round=arredondar; value=valor; number=número; sum=soma; difference=diferença"
+        "group": "Verbos Regulares no Passado (Trabalho e Rotina)",
+        "items": "worked=trabalhou/trabalhei; finished=terminou/terminei; started=começou/comecei; called=ligou/liguei; emailed=enviou e-mail; checked=checou/chequei; organized=organizou/organizei; cleaned=limpou/limpei"
       },
       {
-        "group": "Quantificadores",
-        "items": "much=muito (incontável); many=muitos; a lot of=muito ou muitos; a few=alguns; a little=um pouco; some=algum; any=qualquer ou nenhum; enough=suficiente; too much=demais; less=menos; more=mais; most=a maioria; several=vários; each=cada; per=por; at least=pelo menos; up to=até; about=cerca de; almost=quase; exactly=exatamente"
+        "group": "Verbo To Be no Passado e Adjetivos de Estado",
+        "items": "was=era/estava (singular); were=eram/estavam (plural); tired=cansado; quiet=calmo/tranquilo; busy=ocupado; fun=divertido; great=ótimo; boring=tedioso"
       },
       {
-        "group": "Testar dinheiro",
-        "items": "test data=dados de teste; edge case=caso extremo; negative value=valor negativo; decimal places=casas decimais; rounding error=erro de arredondamento; currency format=formato de moeda; exchange rate=taxa de câmbio; limit=limite; threshold=limiar; to validate=validar"
+        "group": "Contexto de Séries e Filmes",
+        "items": "episode=episódio; season=temporada; show=série/show; movie=filme; scene=cena; actor=ator; story=história; ending=final/desfecho"
       }
     ],
     "resources": [
-      { "name": "News in Levels (nível 2)", "url": "https://www.newsinlevels.com/level/level-2/", "what": "Procure notícias de economia e negócios: vocabulário de dinheiro em contexto." },
-      { "name": "BBC 6 Minute English", "url": "https://www.bbc.co.uk/learningenglish/english/features/6-minute-english", "what": "Episódios sobre dinheiro e trabalho aparecem com frequência." },
-      { "name": "Simple English Wikipedia: Money", "url": "https://simple.wikipedia.org/wiki/Money", "what": "Artigo em vocabulário básico sobre o conceito." },
-      { "name": "YouGlish", "url": "https://youglish.com/", "what": "Pronúncia de balance, receipt (o p é muda), invoice, currency." }
+      {
+        "name": "VOA Learning English",
+        "url": "https://learningenglish.voanews.com",
+        "what": "Ler e ouvir artigos curtos de nível básico com áudio pausado e vocabulário contextualizado."
+      },
+      {
+        "name": "YouGlish",
+        "url": "https://youglish.com",
+        "what": "Buscar a pronúncia exata de verbos no passado terminados em -ed em vídeos reais."
+      },
+      {
+        "name": "AnkiWeb",
+        "url": "https://apps.ankiweb.net",
+        "what": "Praticar a retenção do vocabulário e das formas do passado usando repetição espaçada."
+      }
     ],
     "content": [
-      { "name": "Uma notícia de economia no nível 2", "kind": "Leitura", "what": "Marque todos os números e leia-os em voz alta." },
-      { "name": "6 Minute English sobre dinheiro ou consumo", "kind": "Podcast", "what": "Com transcrição; marque 5 blocos." },
-      { "name": "Apollo 13 — uma cena de equipe resolvendo um problema com números", "kind": "Filme", "what": "Vocabulário técnico de equipe sob pressão." },
-      { "name": "\"Great Are You Lord\" (All Sons & Daughters)", "kind": "Música", "what": "Ritmo lento, frases curtas." }
+      {
+        "name": "Comédias de Situação (Sitcoms)",
+        "kind": "Série",
+        "what": "Escolha um trailer oficial de uma sitcom (como 'Friends' ou 'Brooklyn Nine-Nine') no YouTube. Identifique momentos em que os personagens falam do passado recente."
+      },
+      {
+        "name": "Trilhas Sonoras de Ação/Ficção Científica",
+        "kind": "Música",
+        "what": "Ouça uma música instrumental de filme e use o passado simples para descrever como foi a sensação de ouví-la: 'The music was intense. I relaxed.'"
+      }
     ],
-    "milestone": "Explicar em inglês, em 2 minutos, o que o seu produto faz e qual problema de dinheiro ele resolve.",
+    "milestone": "Contar em 5 frases o que você fez no último fim de semana de maratona de séries.",
     "days": [
       {
         "label": "Seg",
-        "focus": "Inglês de QA",
+        "focus": "Séries e Lazer Passado",
         "minutes": 25,
         "tasks": [
-          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
-          { "what": "Montar o glossário do seu produto: 15 termos do seu dia em cash management, em inglês", "resource": "Caderno + ISTQB Glossary", "min": 12 },
-          { "what": "Escrever 3 casos de teste de valores (negativo, zero, limite) em inglês", "resource": "Caderno", "min": 8 }
+          {
+            "what": "Assistir a um trailer oficial de uma comédia no YouTube ativando legendas em inglês.",
+            "resource": "YouTube",
+            "min": 10
+          },
+          {
+            "what": "Anotar 3 ações que os personagens realizaram e passar para o passado simples (ex: watch -> watched).",
+            "resource": "Caderno de Anotações",
+            "min": 10
+          },
+          {
+            "what": "Praticar a pronúncia dos verbos anotados no YouGlish.",
+            "resource": "YouGlish",
+            "min": 5
+          }
         ],
-        "speak": "This test checks what happens when the user sends a negative amount.",
-        "mini": "Cartões + 3 termos do glossário."
+        "speak": "Last weekend I watched a very funny show on TV.",
+        "mini": "Assistir ao trailer por 5 minutos e repetir 1 frase sobre ele em voz alta."
       },
       {
         "label": "Ter",
-        "focus": "Filme",
+        "focus": "Inglês Profissional",
         "minutes": 25,
         "tasks": [
-          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
-          { "what": "Cena de Apollo 13 com legenda em inglês: equipe resolvendo um problema", "resource": "Apollo 13", "min": 14 },
-          { "what": "Shadowing de 3 falas", "resource": "A mesma cena", "min": 6 }
+          {
+            "what": "Ler um texto curto sobre tarefas de trabalho concluídas no passado simples.",
+            "resource": "VOA Learning English",
+            "min": 10
+          },
+          {
+            "what": "Extrair 5 verbos regulares no passado focados em tarefas (worked, emailed, checked) e adicionar ao Anki.",
+            "resource": "AnkiWeb",
+            "min": 10
+          },
+          {
+            "what": "Fazer fraseamento em voz alta relatando o que você fez ontem no trabalho.",
+            "resource": "Prática Pessoal",
+            "min": 5
+          }
         ],
-        "speak": "We have a problem. Let's check the numbers again.",
-        "mini": "Cartões + assistir à cena."
+        "speak": "Yesterday I worked hard and checked all my emails.",
+        "mini": "Adicionar 3 verbos no Anki e ler a frase do dia em voz alta."
       },
       {
         "label": "Qua",
-        "focus": "Leitura",
+        "focus": "Leitura Intensiva",
         "minutes": 25,
         "tasks": [
-          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
-          { "what": "Ler 1 notícia de economia e ler todos os números em voz alta", "resource": "News in Levels, nível 2", "min": 12 },
-          { "what": "Ler o artigo Money na Simple English Wikipedia", "resource": "Simple English Wikipedia", "min": 8 }
+          {
+            "what": "Ler um micro-conto de suspense/história adaptado para iniciantes, focando no uso de 'was' e 'were'.",
+            "resource": "VOA Learning English",
+            "min": 12
+          },
+          {
+            "what": "Sublinhar todas as ocorrências do verbo to be no passado e identificar se o sujeito é singular ou plural.",
+            "resource": "Caderno de Anotações",
+            "min": 8
+          },
+          {
+            "what": "Reescrever 2 frases do texto mudando o sujeito (de singular para plural ou vice-versa).",
+            "resource": "Caderno de Anotações",
+            "min": 5
+          }
         ],
-        "speak": "The company lost two million dollars in three months.",
-        "mini": "Cartões + a notícia."
+        "speak": "The story was quiet, but the ending was very exciting.",
+        "mini": "Ler 1 parágrafo do texto e circular as palavras 'was' e 'were'."
       },
       {
         "label": "Qui",
-        "focus": "Música cristã",
+        "focus": "Música e Pronúncia",
         "minutes": 25,
         "tasks": [
-          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
-          { "what": "Ciclo da música, passos 1 a 6", "resource": "\"Great Are You Lord\"", "min": 15 },
-          { "what": "Reutilizar 1 bloco numa frase sua", "resource": "Você mesmo", "min": 5 }
+          {
+            "what": "Ouvir uma música pop/rock e acompanhar a letra para identificar verbos regulares no passado.",
+            "resource": "YouTube / Letras Abertas",
+            "min": 10
+          },
+          {
+            "what": "Pesquisar a terminação em -ed dos verbos encontrados no YouGlish para praticar o som correto.",
+            "resource": "YouGlish",
+            "min": 10
+          },
+          {
+            "what": "Cantar/falar o refrão aplicando a pronúncia correta dos verbos.",
+            "resource": "Prática Pessoal",
+            "min": 5
+          }
         ],
-        "speak": "I listen to worship music when I work.",
-        "mini": "Cartões + ouvir a música."
+        "speak": "I listened to my favorite song and enjoyed the quiet night.",
+        "mini": "Ouvir a música uma vez focando na pronúncia de um único verbo no passado."
       },
       {
         "label": "Sex",
-        "focus": "Fala",
+        "focus": "Prática de Fala",
         "minutes": 25,
         "tasks": [
-          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
-          { "what": "Pronúncia: receipt, balance, invoice, currency, thousand", "resource": "YouGlish", "min": 10 },
-          { "what": "Gravar 2 min explicando o seu produto e o problema que ele resolve", "resource": "Gravador do celular", "min": 10 }
+          {
+            "what": "Escrever o rascunho da Meta da semana: 5 frases sobre sua última maratona de séries usando 'was/were' e verbos em '-ed'.",
+            "resource": "Caderno de Anotações",
+            "min": 10
+          },
+          {
+            "what": "Treinar Shadowing lendo suas próprias frases em voz alta, gravando o áudio no celular.",
+            "resource": "Gravador do Celular",
+            "min": 10
+          },
+          {
+            "what": "Ouvir a gravação, comparar com a pronúncia do YouGlish e ajustar se necessário.",
+            "resource": "Gravador / YouGlish",
+            "min": 5
+          }
         ],
-        "speak": "I work on a cash management product. It helps companies control payments and bank statements.",
-        "mini": "Cartões + gravar 30 s sobre o produto."
+        "speak": "Last weekend was great because I watched five episodes of my favorite show.",
+        "mini": "Escrever e falar apenas 2 frases simples sobre seu fim de semana."
       },
       {
         "label": "Sáb",
-        "focus": "Lazer com apoio",
-        "minutes": 10,
+        "focus": "Revisão Leve",
+        "minutes": 25,
         "tasks": [
-          { "what": "Conteúdo livre em inglês, por prazer", "resource": "Sua escolha", "min": 0 },
-          { "what": "Opcional: cartões", "resource": "Anki", "min": 10 }
+          {
+            "what": "Revisar todos os cards de vocabulário da semana.",
+            "resource": "AnkiWeb",
+            "min": 10
+          },
+          {
+            "what": "Apresentar a Meta (as 5 frases sobre a maratona de séries) em voz alta, de memória ou com apoio leve.",
+            "resource": "Prática Pessoal",
+            "min": 10
+          },
+          {
+            "what": "Planejar o momento de descanso com uma atividade em inglês passivo (ouvir uma trilha sonora).",
+            "resource": "Lazer",
+            "min": 5
+          }
         ],
-        "speak": "Opcional.",
-        "mini": "Livre."
-      },
-      {
-        "label": "Dom",
-        "focus": "Revisão e medição",
-        "minutes": 15,
-        "tasks": [
-          { "what": "Revisar o glossário do produto e marcar os 5 termos mais importantes", "resource": "Seu glossário", "min": 8 },
-          { "what": "Preencher o registro semanal", "resource": "Seu registro", "min": 4 },
-          { "what": "Escolher os conteúdos da semana 8", "resource": "Sua playlist", "min": 3 }
-        ],
-        "speak": "The five most important words in my job are...",
-        "mini": "Só o registro."
+        "speak": "I rested at home, cooked a warm meal, and watched movies.",
+        "mini": "Fazer 5 minutos de Anki e recitar 1 frase resumindo o sábado."
       }
     ]
   },
   {
     "n": 8,
-    "theme": "Plans and the sprint",
-    "subtitle": "Planejar a sprint, a semana e o fim de semana",
-    "why": "Planejamento é conversa de futuro, e o inglês tem três formas diferentes para isso. Saber escolher entre elas faz você soar natural em planning, refinement e conversa de corredor.",
+    "theme": "Telling Short Stories and Plots",
+    "subtitle": "Narrar enredos e eventos passados em detalhes",
+    "why": "Aprender a contar histórias curtas permite que você compartilhe momentos marcantes com colegas e amigos em inglês. Essa habilidade é essencial tanto para conversas sociais ao vivo quanto para resumir enredos e narrar acontecimentos profissionais de forma clara.",
     "grammar": {
-      "topic": "Going to / will / present continuous para futuro",
-      "why": "going to é plano decidido, will é decisão na hora ou previsão, present continuous é compromisso agendado.",
+      "topic": "Passado simples (Simple Past) com verbos irregulares comuns e perguntas com Did",
+      "why": "Verbos irregulares são os mais usados para narrar ações passadas, enquanto perguntas com Did ajudam a manter a conversa viva.",
       "examples": [
-        "I'm going to automate these tests this sprint.",
-        "I think the suite will fail again.",
-        "I'm meeting the product owner tomorrow at ten.",
-        "If the environment is stable, we'll release on Friday.",
-        "I won't have time to finish it today."
+        "The hero saw the villain and ran away.",
+        "She wrote a short report about the movie.",
+        "They went to the cinema last night.",
+        "Did you see the new episode yesterday?",
+        "What did the main character do first?"
       ],
-      "tip": "Em reunião, use I'm going to... para o que já está no seu plano e I'll... quando você decide na hora: \"I'll check that and get back to you.\""
+      "tip": "Evite usar o verbo no passado depois do auxiliar Did. Diga 'Did you see?' em vez de 'Did you saw?'."
     },
     "vocab": [
       {
-        "group": "Sprint e planejamento",
-        "items": "sprint=sprint; sprint planning=planejamento da sprint; refinement=refinamento; retrospective=retrospectiva; backlog=backlog; estimate=estimativa; to estimate=estimar; story point=ponto de história; capacity=capacidade; workload=carga de trabalho; milestone=marco; roadmap=plano de evolução; goal=objetivo; scope=escopo; to prioritize=priorizar; to postpone=postergar; to split=dividir; commitment=compromisso; delivery=entrega; to deliver=entregar"
+        "group": "Verbos Irregulares de Ação Narrativa",
+        "items": "saw=viu; wrote=escreveu; went=foi; came=veio; fought=lutou; saved=salvou; found=encontrou; lost=perdeu; took=tomou; gave=deu; spoke=falou; heard=ouviu; thought=pensou; met=conheceu; became=tornou-se"
       },
       {
-        "group": "Falar do futuro",
-        "items": "going to=vai (plano); will=irá; won't=não irá; next week=semana que vem; next month=mês que vem; next sprint=próxima sprint; soon=em breve; later=mais tarde; tonight=hoje à noite; in two days=em dois dias; by Friday=até sexta; this afternoon=esta tarde; the day after tomorrow=depois de amanhã; schedule=cronograma; plan=plano; to plan=planejar; to expect=esperar; to intend=pretender; probably=provavelmente; maybe=talvez"
+        "group": "Conectores Sequenciais para Histórias",
+        "items": "first=primeiro; then=então; after that=depois disso; next=em seguida; suddenly=de repente; in the end=no final; finally=finalmente; before=antes; later=mais tarde; soon=logo; at first=no início; meanwile=enquanto isso; eventually=com o tempo; unexpectedly=inesperadamente"
       },
       {
-        "group": "Combinar e negociar prazos",
-        "items": "deadline=prazo; on time=em dia; ahead of schedule=adiantado; behind schedule=atrasado; to meet a deadline=cumprir o prazo; to miss a deadline=perder o prazo; to extend=estender; to move=mover; available=disponível; busy=ocupado; free slot=horário livre; to book=reservar; to cancel=cancelar; it depends on=depende de; as soon as possible=o quanto antes; if possible=se possível; let's say=digamos; I'd rather=eu preferiria; that works for me=isso funciona para mim; it doesn't work for me=não funciona para mim"
+        "group": "Elementos da Narrativa e Enredo",
+        "items": "hero=herói; villain=vilão; story=história; plot=enredo; ending=final; scene=cena; battle=batalha; secret=segredo; goal=objetivo; mystery=mistério; character=personagem; adventure=aventura; conflict=conflito; action=ação; finale=desfecho"
       },
       {
-        "group": "Fim de semana e vida pessoal",
-        "items": "weekend plans=planos de fim de semana; to rest=descansar; to travel=viajar; to visit=visitar; church service=culto; to meet friends=encontrar amigos; to watch a movie=assistir a um filme; to play=jogar; to cook=cozinhar; to go out=sair; to stay home=ficar em casa; holiday=feriado; vacation=férias; day off=dia de folga; to take a day off=tirar um dia de folga; birthday=aniversário; to celebrate=celebrar; family time=tempo com a família; to relax=relaxar; to study=estudar"
+        "group": "Perguntas de Investigação de Enredo",
+        "items": "what happened=o que aconteceu; who did it=quem fez isso; where did they go=onde eles foram; why did he do that=por que ele fez isso; how did it end=como terminou; did you like it=você gostou; who was the main character=quem era o personagem principal; when did the story start=quando a história começou"
+      },
+      {
+        "group": "Sentimentos e Reações à História",
+        "items": "exciting=emocionante; surprising=surpreendente; dangerous=perigoso; sad=triste; funny=engraçado; dark=sombrio; strange=estranho; epic=épico; confusing=confuso; predictable=previsível; heroic=heróico; tense=tenso"
       }
     ],
     "resources": [
-      { "name": "BBC Office English", "url": "https://www.bbc.co.uk/learningenglish/english/features/office-english", "what": "Episódios sobre prazos, metas e organização de reuniões." },
-      { "name": "Test Automation University", "url": "https://testautomationu.applitools.com/", "what": "Comece um curso curto com transcrição; 10 min por sessão." },
-      { "name": "BBC 6 Minute English", "url": "https://www.bbc.co.uk/learningenglish/english/features/6-minute-english", "what": "1 episódio por semana, com transcrição." },
-      { "name": "News in Levels (nível 2)", "url": "https://www.newsinlevels.com/level/level-2/", "what": "Leitura diária." }
+      {
+        "name": "VOA Learning English - Simple Past Irregular Verbs",
+        "url": "https://learningenglish.voanews.com",
+        "what": "Ler artigos curtos adaptados para o nível A1 e identificar o uso do passado simples em histórias e notícias."
+      },
+      {
+        "name": "Simple English Wikipedia",
+        "url": "https://simple.wikipedia.org",
+        "what": "Consultar sinopses de filmes e animações famosos com linguagem acessível para praticar a leitura e mineração de frases."
+      },
+      {
+        "name": "YouGlish",
+        "url": "https://youglish.com",
+        "what": "Buscar trechos com perguntas como 'What happened?' e 'Did you see?' para treinar escuta e pronúncia natural."
+      },
+      {
+        "name": "AnkiWeb",
+        "url": "https://apps.ankiweb.net",
+        "what": "Cadastrar novas frases do passado simples e revisá-las diariamente usando o sistema de repetição espaçada."
+      }
     ],
     "content": [
-      { "name": "Office English: prazos e logística", "kind": "Podcast", "what": "Marque frases de negociação de prazo." },
-      { "name": "The Rings of Power — 2 min de diálogo com legenda", "kind": "Série", "what": "Fala formal e clara; descreva quem quer o quê." },
-      { "name": "Test Automation University: primeira aula de um curso", "kind": "Curso", "what": "Assista com a transcrição e anote 5 termos." },
-      { "name": "\"Build My Life\" (Housefires)", "kind": "Música", "what": "Vocabulário de construir e seguir." }
+      {
+        "name": "Trailers de Animes ou Filmes de Ficção Científica",
+        "kind": "Trailer",
+        "what": "Assistir a um trailer oficial com áudio e legendas em inglês, anotando 3 ações principais dos personagens."
+      },
+      {
+        "name": "Desenhos de Super-heróis (Cenas Curtas)",
+        "kind": "Série",
+        "what": "Escolher um clipe curto (1 a 2 minutos) sem áudio em português, identificar quem é o herói e descrever o que ele fez."
+      },
+      {
+        "name": "Músicas de Trilha Sonora com Narrativa",
+        "kind": "Música",
+        "what": "Acompanhar a letra de uma música épica de pop ou rock, buscando verbos no passado simples que contam uma história."
+      }
     ],
-    "milestone": "Conduzir sua parte de um planning fictício: 10 frases sobre o que você vai testar na próxima sprint e por quê.",
+    "milestone": "Resumir o enredo básico de um episódio de desenho ou filme em 60 segundos de fala.",
     "days": [
       {
         "label": "Seg",
-        "focus": "Inglês de QA",
+        "focus": "Passado Profissional e Histórias",
         "minutes": 25,
         "tasks": [
-          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
-          { "what": "Escrever seu plano de testes da próxima sprint em 6 frases com going to e will", "resource": "Caderno", "min": 12 },
-          { "what": "Ler em voz alta e gravar 45 s", "resource": "Gravador do celular", "min": 8 }
+          {
+            "what": "Ler um texto curto sobre o histórico de um projeto simples no VOA Learning English.",
+            "resource": "VOA Learning English",
+            "min": 10
+          },
+          {
+            "what": "Anotar 5 verbos irregulares no passado simples (ex: wrote, went) e criar frases simples no contexto de trabalho.",
+            "resource": "AnkiWeb",
+            "min": 10
+          },
+          {
+            "what": "Praticar em voz alta perguntas com Did relacionadas a tarefas passadas.",
+            "resource": "YouGlish",
+            "min": 5
+          }
         ],
-        "speak": "This sprint I'm going to automate the login tests. I think it will take three days.",
-        "mini": "Cartões + 1 frase de plano."
+        "speak": "First, he wrote the report, and then he sent the email.",
+        "mini": "Escrever e ler 2 frases no passado simples sobre o dia de trabalho."
       },
       {
         "label": "Ter",
-        "focus": "Série",
+        "focus": "Enredo de Filmes e Ação",
         "minutes": 25,
         "tasks": [
-          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
-          { "what": "2 min de diálogo de The Rings of Power com legenda em inglês", "resource": "The Rings of Power", "min": 14 },
-          { "what": "Descrever em 3 frases o que cada personagem quer", "resource": "Você mesmo", "min": 6 }
+          {
+            "what": "Assistir ao trailer oficial de um filme de ficção científica em inglês com legendas no mesmo idioma.",
+            "resource": "Trailers de Animes ou Filmes de Ficção Científica",
+            "min": 10
+          },
+          {
+            "what": "Minerar 3 frases da narrativa usando conectores (First, Then, In the end).",
+            "resource": "Simple English Wikipedia",
+            "min": 10
+          },
+          {
+            "what": "Fazer técnica de shadowing repetindo 2 frases do trailer focando na entonação das perguntas.",
+            "resource": "YouGlish",
+            "min": 5
+          }
         ],
-        "speak": "He is going to travel because he wants to find the truth.",
-        "mini": "Cartões + assistir ao trecho."
+        "speak": "The hero lost the battle, but then he saved the city.",
+        "mini": "Assistir a um trailer de 1 minuto e identificar 2 verbos no passado."
       },
       {
         "label": "Qua",
-        "focus": "Curso técnico",
+        "focus": "Leitura de Sinopses Curtas",
         "minutes": 25,
         "tasks": [
-          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
-          { "what": "Assistir a 10 min de aula com a transcrição aberta e anotar 5 termos", "resource": "Test Automation University", "min": 14 },
-          { "what": "Ler 1 notícia", "resource": "News in Levels", "min": 6 }
+          {
+            "what": "Ler a sinopse simplificada de uma animação ou filme de fantasia no Simple Wikipedia.",
+            "resource": "Simple English Wikipedia",
+            "min": 12
+          },
+          {
+            "what": "Destacar verbos irregulares e adjetivos da narrativa (ex: saw, hero, unexpected).",
+            "resource": "Simple English Wikipedia",
+            "min": 8
+          },
+          {
+            "what": "Registrar 4 novas frases no Anki com a estrutura no passado simples.",
+            "resource": "AnkiWeb",
+            "min": 5
+          }
         ],
-        "speak": "In this lesson, I learned how to structure a test project.",
-        "mini": "Cartões + 5 min de aula."
+        "speak": "She found a secret door and went inside the dark room.",
+        "mini": "Ler 3 parágrafos curtos de uma sinopse e sublinhar os verbos."
       },
       {
         "label": "Qui",
-        "focus": "Música cristã",
+        "focus": "Letras Narrativas e Pronúncia",
         "minutes": 25,
         "tasks": [
-          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
-          { "what": "Ciclo da música, passos 1 a 6", "resource": "\"Build My Life\"", "min": 15 },
-          { "what": "Reutilizar 1 bloco numa frase sobre os seus planos", "resource": "Você mesmo", "min": 5 }
+          {
+            "what": "Escutar uma música Pop ou Rock com história curta e acompanhar a letra sem tradução em português.",
+            "resource": "Músicas de Trilha Sonora com Narrativa",
+            "min": 10
+          },
+          {
+            "what": "Localizar como os verbos no passado são pronunciados em ritmo normal na canção.",
+            "resource": "Músicas de Trilha Sonora com Narrativa",
+            "min": 10
+          },
+          {
+            "what": "Cantar/Falar 2 versos que contêm o uso de Did ou verbos no passado simples.",
+            "resource": "YouGlish",
+            "min": 5
+          }
         ],
-        "speak": "I want to build my career with patience.",
-        "mini": "Cartões + ouvir a música."
+        "speak": "Did you hear the news about the main character?",
+        "mini": "Ouvir a música 1 vez lendo os versos com verbos no passado."
       },
       {
         "label": "Sex",
-        "focus": "Fala",
+        "focus": "Prática Prática de Fala",
         "minutes": 25,
         "tasks": [
-          { "what": "Revisar cartões", "resource": "Anki", "min": 5 },
-          { "what": "Pedir ao Claude um planning simulado: ele é o product owner, você é o QA", "resource": "Claude", "min": 12 },
-          { "what": "Gravar 60 s com seus planos da semana e do fim de semana", "resource": "Gravador do celular", "min": 8 }
+          {
+            "what": "Assistir a uma cena curta de 2 minutos de um desenho de super-herói.",
+            "resource": "Desenhos de Super-heróis (Cenas Curtas)",
+            "min": 8
+          },
+          {
+            "what": "Rascunhar 4 frases curtas descrevendo o início, meio e fim do que aconteceu na cena.",
+            "resource": "AnkiWeb",
+            "min": 7
+          },
+          {
+            "what": "Gravar um áudio de até 60 segundos no celular resumindo a cena em inglês usando os conectores estudados.",
+            "resource": "YouGlish",
+            "min": 10
+          }
         ],
-        "speak": "Next week I'm going to finish the regression suite. On Saturday I'm going to rest with my family.",
-        "mini": "Cartões + 2 frases de plano."
+        "speak": "Suddenly, the villain came, but the hero fought and won in the end.",
+        "mini": "Gravar uma fala de 20 segundos contando 2 ações de um herói."
       },
       {
         "label": "Sáb",
-        "focus": "Lazer com apoio",
-        "minutes": 10,
+        "focus": "Revisão Leve e Consolidação",
+        "minutes": 25,
         "tasks": [
-          { "what": "Conteúdo livre em inglês, por prazer", "resource": "Sua escolha", "min": 0 },
-          { "what": "Opcional: cartões", "resource": "Anki", "min": 10 }
+          {
+            "what": "Revisar os cartões de vocabulário e verbos irregulares acumulados na semana no Anki.",
+            "resource": "AnkiWeb",
+            "min": 15
+          },
+          {
+            "what": "Recontar oralmente a mesma história do áudio de sexta sem olhar para o papel, buscando mais naturalidade.",
+            "resource": "YouGlish",
+            "min": 10
+          }
         ],
-        "speak": "Opcional.",
-        "mini": "Livre."
-      },
-      {
-        "label": "Dom",
-        "focus": "Teste mensal",
-        "minutes": 30,
-        "tasks": [
-          { "what": "Escuta: 1 episódio novo de 6 Minute English sem transcrição; anotar 5 ideias e conferir", "resource": "BBC 6 Minute English", "min": 10 },
-          { "what": "Fala: gravar 90 s sobre \"my day and my job\" e comparar com o mês 1", "resource": "Gravador do celular", "min": 8 },
-          { "what": "Escrita: um e-mail de 120 palavras pedindo esclarecimento sobre um requisito", "resource": "Caderno", "min": 12 }
-        ],
-        "speak": "Two months ago I couldn't do this. Now I can.",
-        "mini": "Só a gravação de 90 s."
+        "speak": "First I thought it was difficult, but then I understood the whole plot.",
+        "mini": "Fazer apenas a revisão de flashcards no Anki."
       }
     ]
   }

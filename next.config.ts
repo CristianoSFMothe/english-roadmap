@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 /**
- * O app usa uma rota de servidor (app/api/plan) para chamar a API da Anthropic
+ * O app usa uma rota de servidor (app/api/plan) para chamar a API do Gemini
  * com a chave guardada em variável de ambiente, por isso não é mais um export estático.
  */
 const nextConfig: NextConfig = {

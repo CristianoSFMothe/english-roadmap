@@ -1,6 +1,6 @@
-"use client";
+'use client'
 
-import { useState } from "react";
+import { useState } from 'react'
 import {
   ACCENTS,
   DIFFICULTIES,
@@ -9,19 +9,19 @@ import {
   clampProfile,
   profileIsUsable,
   type Profile,
-} from "@/lib/profile";
+} from '@/lib/profile'
 
 type Props = {
-  initial: Profile;
-  onGenerate: (p: Profile) => void;
-  onClose: () => void;
-};
+  initial: Profile
+  onGenerate: (p: Profile) => void
+  onClose: () => void
+}
 
 export default function ProfileForm({ initial, onGenerate, onClose }: Props) {
-  const [p, setP] = useState<Profile>(initial);
+  const [p, setP] = useState<Profile>(initial)
 
   const set = <K extends keyof Profile>(key: K, value: Profile[K]) =>
-    setP((prev) => ({ ...prev, [key]: value }));
+    setP((prev) => ({ ...prev, [key]: value }))
 
   const toggleDifficulty = (d: string) =>
     setP((prev) => ({
@@ -29,9 +29,9 @@ export default function ProfileForm({ initial, onGenerate, onClose }: Props) {
       difficulties: prev.difficulties.includes(d)
         ? prev.difficulties.filter((x) => x !== d)
         : [...prev.difficulties, d],
-    }));
+    }))
 
-  const ready = profileIsUsable(p);
+  const ready = profileIsUsable(p)
 
   const text = (
     key: keyof Profile,
@@ -43,14 +43,14 @@ export default function ProfileForm({ initial, onGenerate, onClose }: Props) {
       <label htmlFor={`pf-${key}`}>{label}</label>
       <textarea
         id={`pf-${key}`}
-        value={String(p[key] ?? "")}
+        value={String(p[key] ?? '')}
         onChange={(e) => set(key, e.target.value as Profile[typeof key])}
         placeholder={placeholder}
         rows={rows}
         style={{ minHeight: rows * 38 + 54 }}
       />
     </div>
-  );
+  )
 
   // O clique fora não fecha: a saída é pelo X, pelo Cancelar ou pela geração.
   return (
@@ -71,9 +71,9 @@ export default function ProfileForm({ initial, onGenerate, onClose }: Props) {
           </button>
         </div>
 
-        <p style={{ fontSize: 13.5, color: "var(--muted)" }}>
-          Quanto mais específico você for, melhor o plano. Os campos de interesse aceitam
-          gêneros, títulos e artistas misturados.
+        <p style={{ fontSize: 13.5, color: 'var(--muted)' }}>
+          Quanto mais específico você for, melhor o plano. Os campos de
+          interesse aceitam gêneros, títulos e artistas misturados.
         </p>
 
         <fieldset className="fs">
@@ -81,7 +81,11 @@ export default function ProfileForm({ initial, onGenerate, onClose }: Props) {
           <div className="row-3">
             <div className="field">
               <label htmlFor="pf-level">Nível atual</label>
-              <select id="pf-level" value={p.level} onChange={(e) => set("level", e.target.value)}>
+              <select
+                id="pf-level"
+                value={p.level}
+                onChange={(e) => set('level', e.target.value)}
+              >
                 {LEVELS.map((l) => (
                   <option key={l} value={l}>
                     {l}
@@ -91,7 +95,11 @@ export default function ProfileForm({ initial, onGenerate, onClose }: Props) {
             </div>
             <div className="field">
               <label htmlFor="pf-target">Nível desejado</label>
-              <select id="pf-target" value={p.target} onChange={(e) => set("target", e.target.value)}>
+              <select
+                id="pf-target"
+                value={p.target}
+                onChange={(e) => set('target', e.target.value)}
+              >
                 {TARGETS.map((l) => (
                   <option key={l} value={l}>
                     {l}
@@ -101,7 +109,11 @@ export default function ProfileForm({ initial, onGenerate, onClose }: Props) {
             </div>
             <div className="field">
               <label htmlFor="pf-accent">Sotaque de preferência</label>
-              <select id="pf-accent" value={p.accent} onChange={(e) => set("accent", e.target.value)}>
+              <select
+                id="pf-accent"
+                value={p.accent}
+                onChange={(e) => set('accent', e.target.value)}
+              >
                 {ACCENTS.map((a) => (
                   <option key={a} value={a}>
                     {a}
@@ -137,7 +149,7 @@ export default function ProfileForm({ initial, onGenerate, onClose }: Props) {
               <input
                 id="pf-name"
                 value={p.name}
-                onChange={(e) => set("name", e.target.value)}
+                onChange={(e) => set('name', e.target.value)}
                 placeholder="Como você quer ser chamado"
               />
             </div>
@@ -146,29 +158,58 @@ export default function ProfileForm({ initial, onGenerate, onClose }: Props) {
               <input
                 id="pf-profession"
                 value={p.profession}
-                onChange={(e) => set("profession", e.target.value)}
-                placeholder="Ex.: analista de qualidade de software"
+                onChange={(e) => set('profession', e.target.value)}
+                placeholder="Ex.: professora, vendedor, estudante"
               />
             </div>
           </div>
-          {text("knowledge", "Conhecimento e área técnica", "Ex.: testes automatizados, APIs, bancos de dados, finanças", 2)}
+          {text(
+            'knowledge',
+            'Conhecimento e área técnica',
+            'Ex.: saúde, educação, finanças, tecnologia',
+            2,
+          )}
         </fieldset>
 
         <fieldset className="fs">
           <legend>Objetivos</legend>
-          {text("goalPersonal", "Objetivo pessoal", "Ex.: entender filmes sem legenda, viajar, conversar com amigos de outros países")}
-          {text("goalProfessional", "Objetivo profissional", "Ex.: participar de reuniões e entrevistas em inglês, trabalhar em time internacional")}
+          {text(
+            'goalPersonal',
+            'Objetivo pessoal',
+            'Ex.: entender filmes sem legenda, viajar, conversar com amigos de outros países',
+          )}
+          {text(
+            'goalProfessional',
+            'Objetivo profissional',
+            'Ex.: participar de reuniões e entrevistas em inglês, trabalhar em time internacional',
+          )}
         </fieldset>
 
         <fieldset className="fs">
           <legend>Seus interesses</legend>
-          {text("movies", "Filmes", "Gêneros e títulos: ficção científica, suspense, história...")}
-          {text("series", "Séries", "Séries que você gosta ou já assistiu")}
-          {text("animation", "Animes, desenhos e animações", "Universos que você já conhece bem")}
-          {text("books", "Livros e leitura", "Gêneros e temas: mitologia, biografias, desenvolvimento pessoal...")}
-          {text("music", "Músicas", "Estilos e artistas que você escuta")}
-          {text("hobbies", "Hobbies", "O que você faz no tempo livre")}
-          {text("pleasures", "Prazeres", "Pequenos prazeres do seu dia: café da manhã sem pressa, caminhada...")}
+          {text(
+            'movies',
+            'Filmes',
+            'Gêneros e títulos: ficção científica, suspense, história...',
+          )}
+          {text('series', 'Séries', 'Séries que você gosta ou já assistiu')}
+          {text(
+            'animation',
+            'Animes, desenhos e animações',
+            'Universos que você já conhece bem',
+          )}
+          {text(
+            'books',
+            'Livros e leitura',
+            'Gêneros e temas: mitologia, biografias, desenvolvimento pessoal...',
+          )}
+          {text('music', 'Músicas', 'Estilos e artistas que você escuta')}
+          {text('hobbies', 'Hobbies', 'O que você faz no tempo livre')}
+          {text(
+            'pleasures',
+            'Prazeres',
+            'Pequenos prazeres do seu dia: café da manhã sem pressa, caminhada...',
+          )}
         </fieldset>
 
         <fieldset className="fs">
@@ -182,7 +223,7 @@ export default function ProfileForm({ initial, onGenerate, onClose }: Props) {
                 min={5}
                 max={120}
                 value={p.minutesPerDay}
-                onChange={(e) => set("minutesPerDay", Number(e.target.value))}
+                onChange={(e) => set('minutesPerDay', Number(e.target.value))}
               />
             </div>
             <div className="field">
@@ -193,7 +234,7 @@ export default function ProfileForm({ initial, onGenerate, onClose }: Props) {
                 min={1}
                 max={7}
                 value={p.daysPerWeek}
-                onChange={(e) => set("daysPerWeek", Number(e.target.value))}
+                onChange={(e) => set('daysPerWeek', Number(e.target.value))}
               />
             </div>
             <div className="field">
@@ -204,7 +245,7 @@ export default function ProfileForm({ initial, onGenerate, onClose }: Props) {
                 min={1}
                 max={24}
                 value={p.weeks}
-                onChange={(e) => set("weeks", Number(e.target.value))}
+                onChange={(e) => set('weeks', Number(e.target.value))}
               />
             </div>
           </div>
@@ -212,15 +253,19 @@ export default function ProfileForm({ initial, onGenerate, onClose }: Props) {
 
         <fieldset className="fs">
           <legend>Limites e observações</legend>
-          {text("avoid", "O que evitar", "Ex.: nada de linguagem pesada; apenas músicas cristãs")}
-          {text("notes", "Mais alguma coisa que eu deva saber", "Ex.: trabalho em turnos, estudo no ônibus, já tentei curso e parei")}
+          {text('avoid', 'O que evitar', 'Ex.: nada de linguagem pesada.')}
+          {text(
+            'notes',
+            'Mais alguma coisa que eu deva saber',
+            'Ex.: trabalho em turnos, estudo no ônibus, já tentei curso e parei',
+          )}
         </fieldset>
 
         {!ready && (
           <p className="tip">
             <b>Falta pouco: </b>
-            preencha pelo menos três campos de objetivo ou interesse para o plano sair
-            personalizado de verdade.
+            preencha pelo menos três campos de objetivo ou interesse para o
+            plano sair personalizado de verdade.
           </p>
         )}
 
@@ -238,5 +283,5 @@ export default function ProfileForm({ initial, onGenerate, onClose }: Props) {
         </div>
       </div>
     </div>
-  );
+  )
 }

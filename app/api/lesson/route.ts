@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { allowedUser } from "@/lib/access";
-import { askClaude, resolveKey } from "@/lib/claude";
+import { askGemini, resolveKey } from "@/lib/gemini";
 import { clampProfile, emptyProfile, type Profile } from "@/lib/profile";
 import { loadUserData } from "@/lib/server-data";
 import {
@@ -135,7 +135,7 @@ async function gerar(userId: string, body: Body, key: string) {
   const profile = await perfilDoUsuario(userId, body.profile);
   const erros = await errosRecentes(userId);
 
-  const texto = await askClaude({
+  const texto = await askGemini({
     key,
     system: lessonSystemPrompt(profile),
     user: lessonUserPrompt({
@@ -146,7 +146,7 @@ async function gerar(userId: string, body: Body, key: string) {
       errosRecentes: erros,
       data,
     }),
-    maxTokens: 3000,
+    maxTokens: 6000,
     temperature: 0.9,
   });
 
@@ -178,11 +178,11 @@ async function corrigir(userId: string, body: Body, key: string) {
   const questao = lesson.questions.find((q) => q.id === body.questionId);
   if (!questao) return fail("Questão não encontrada.", 404);
 
-  const texto = await askClaude({
+  const texto = await askGemini({
     key,
     system: gradeSystemPrompt(lesson.level),
     user: gradeUserPrompt(questao, resposta),
-    maxTokens: 700,
+    maxTokens: 2000,
     temperature: 0.2,
   });
 

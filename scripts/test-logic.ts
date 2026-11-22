@@ -2,6 +2,7 @@ import { extractJson, normalizeOutline, normalizeWeek } from "../lib/normalize.t
 import { buildWeeks } from "../lib/weeks.ts";
 import { systemPrompt, outlineMessage, weekMessage } from "../lib/prompt.ts";
 import { sampleProfile, clampProfile } from "../lib/profile.ts";
+import { numberToWords } from "../lib/vocabulary.ts";
 import { normalizeQuestions, normalizeResult } from "../lib/lesson-normalize.ts";
 import { lessonSystemPrompt, lessonUserPrompt, ORDEM, TOTAL_QUESTOES } from "../lib/lesson-prompt.ts";
 
@@ -16,13 +17,19 @@ const check = (name: string, fn: () => void) => {
   }
 };
 
-const p = clampProfile({ ...sampleProfile, weeks: 2, daysPerWeek: 5, minutesPerDay: 20 });
+const p = clampProfile({
+  ...sampleProfile,
+  profession: "Enfermeira",
+  weeks: 2,
+  daysPerWeek: 5,
+  minutesPerDay: 20,
+});
 
 check("prompt do sistema cita nivel, alvo e interesses", () => {
   const s = systemPrompt(p);
   if (!s.includes("A1") || !s.includes("B1")) throw new Error("niveis ausentes");
-  if (!s.includes("QA/SDET")) throw new Error("profissao ausente");
-  if (!s.includes("Somente músicas cristãs")) throw new Error("restricao ausente");
+  if (!s.includes("Enfermeira")) throw new Error("profissao ausente");
+  if (!s.includes("linguagem pesada")) throw new Error("restricao ausente");
   if (!outlineMessage(p).includes("2 semanas")) throw new Error("contagem de semanas errada");
 });
 
@@ -80,6 +87,30 @@ check("mensagem da semana carrega minutos e dias do perfil", () => {
   const m = weekMessage(p, { n: 1, theme: "T", subtitle: "s", why: "w", grammarTopic: "g", milestone: "m" }, ["1. T"]);
   if (!m.includes("5 dias de estudo")) throw new Error("dias por semana ausente");
   if (!m.includes("20 minutos")) throw new Error("minutos ausentes");
+});
+
+check("numeros por extenso de 0 a 1 milhao", () => {
+  const casos: [number, string][] = [
+    [0, "zero"],
+    [7, "seven"],
+    [15, "fifteen"],
+    [21, "twenty-one"],
+    [90, "ninety"],
+    [100, "one hundred"],
+    [101, "one hundred one"],
+    [999, "nine hundred ninety-nine"],
+    [1000, "one thousand"],
+    [2026, "two thousand twenty-six"],
+    [10010, "ten thousand ten"],
+    [999999, "nine hundred ninety-nine thousand nine hundred ninety-nine"],
+    [1000000, "one million"],
+  ];
+  for (const [n, esperado] of casos) {
+    const obtido = numberToWords(n);
+    if (obtido !== esperado) throw new Error(`${n}: "${obtido}" em vez de "${esperado}"`);
+  }
+  if (numberToWords(-1) || numberToWords(1000001) || numberToWords(1.5))
+    throw new Error("aceitou numero fora da faixa");
 });
 
 const licaoBruta = (n: number) =>

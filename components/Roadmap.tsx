@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { RawWeek, Week } from "@/lib/content";
 import { buildWeeks, dayKey, totalsOf } from "@/lib/content";
@@ -7,6 +8,7 @@ import { emptyProfile, sampleProfile, type Profile } from "@/lib/profile";
 import { usePersistentState } from "@/lib/storage";
 import DayDrawer from "./DayDrawer";
 import Flashcards from "./Flashcards";
+import { Speak } from "./SpeechButtons";
 import Lessons from "./Lessons";
 import Notes from "./Notes";
 import ProfileForm from "./ProfileForm";
@@ -42,7 +44,7 @@ export default function Roadmap({
   const [plan, setPlan] = usePersistentState<GeneratedPlan | null>("plan", null);
   const [profile, setProfile] = usePersistentState<Profile>("profile", sampleProfile);
   const [profileSaved, setProfileSaved] = usePersistentState<boolean>("profileSaved", false);
-  const [apiKey, setApiKey] = usePersistentState<string>("apiKey", "");
+  const [apiKey, setApiKey] = usePersistentState<string>("geminiApiKey", "");
   const [accessCode, setAccessCode] = usePersistentState<string>("accessCode", "");
 
   const planId = plan?.id ?? "sample";
@@ -204,6 +206,9 @@ export default function Roadmap({
               <button className="btn small" onClick={() => setShowProfile(true)}>
                 Meu perfil
               </button>
+              <Link className="btn small" href="/preferencias">
+                Preferências
+              </Link>
               <AuthBar
                 enabled={authEnabled}
                 syncing={syncing}
@@ -224,7 +229,7 @@ export default function Roadmap({
           </div>
           <div className="stats">
             <span>
-              <b>{knownCount}</b> de {totals.cards} palavras marcadas como sabidas
+              <b>{knownCount}</b> de {totals.cards} palavras aprendidas
             </span>
             <span>
               <b>{Math.round((totals.minutes / 60) * 10) / 10} h</b> de estudo planejadas
@@ -243,7 +248,7 @@ export default function Roadmap({
               <strong>Este é um plano de exemplo.</strong>
               <span>
                 Informe seu nível, suas dificuldades, seus objetivos e o que você gosta de
-                assistir, ler e ouvir. A Claude monta um plano inteiro no seu ritmo.
+                assistir, ler e ouvir. A IA monta um plano inteiro no seu ritmo.
               </span>
             </div>
             <button className="btn primary" onClick={() => setShowProfile(true)}>
@@ -396,16 +401,24 @@ export default function Roadmap({
                   <h3>
                     {g.group} · {g.cards.length}
                   </h3>
-                  <ul className="vocab-list">
+                  <ul className="vocab-list rich">
                     {g.cards.map((c) => (
                       <li key={c.id}>
-                        <span className="en">{c.en}</span>
+                        <span className="vt">
+                          <span className="en">{c.en}</span>
+                        </span>
                         <span className="pt">{c.pt}</span>
+                        <Speak text={c.en} showIpa={false} />
                       </li>
                     ))}
                   </ul>
                 </div>
               ))}
+              <div className="vocab-more">
+                <Link className="btn" href="/vocabulario">
+                  Ver mais vocabulário →
+                </Link>
+              </div>
             </section>
 
             <div
@@ -513,7 +526,11 @@ export default function Roadmap({
           onNote={(value) =>
             setNotes((prev) => ({ ...prev, [dayKey(week.n, openDay)]: value }))
           }
-          onToggle={() => toggleDay(openDay)}
+          onToggle={() => {
+            const wasDone = !!done[dayKey(week.n, openDay)];
+            toggleDay(openDay);
+            if (!wasDone) setOpenDay(null);
+          }}
           onClose={() => setOpenDay(null)}
         />
       )}
