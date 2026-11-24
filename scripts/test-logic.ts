@@ -7,6 +7,7 @@ import { readFileSync } from "node:fs";
 import type { RawWeek } from "../lib/weeks.ts";
 import { VERBS, thirdPerson, findVerb, ingForm, ptGerund, ptConditional, buildTense, TENSES, statNotice, buildExamples, shortAnswers } from "../lib/verbs.ts";
 import { sayPhrase, pronKey, pronounce, PRON_STYLE, PRON_EXAMPLES } from "../lib/pronunciation.ts";
+import { isDailyQuota, nextModel } from "../lib/gemini-errors.ts";
 import { canGenerateMore, looksEnglish, MAX_IMPROVEMENTS, mergeImprovements, normalizeImprovements, normalizeQuestions, normalizeResult, normalizeStudy } from "../lib/lesson-normalize.ts";
 import { normalizePronMap, pronBatches, pronSystemPrompt, pronUserPrompt, shouldStoreShared, splitGeneratable } from "../lib/pron-prompt.ts";
 import { gradeSystemPrompt, improveSystemPrompt, improveUserPrompt, lessonSystemPrompt, lessonUserPrompt, ORDEM, TOTAL_QUESTOES } from "../lib/lesson-prompt.ts";
@@ -417,38 +418,6 @@ check("cleanWords guarda a pronuncia com limite", () => {
   if ((l.say ?? "").length !== 300) throw new Error("limite");
 });
 
-check("so a chave do servidor grava na tabela compartilhada", () => {
-  if (shouldStoreShared("chave-do-visitante", "chave-do-servidor")) throw new Error("visitante gravou");
-  if (!shouldStoreShared("chave-do-servidor", "chave-do-servidor")) throw new Error("servidor nao gravou");
-  if (shouldStoreShared("", undefined)) throw new Error("sem chave");
-});
-
-check("textos longos demais saem da geracao como falha", () => {
-  const { ok, skipped } = splitGeneratable(["book", "x".repeat(250), "Book!", ""], pronKey);
-  if (ok.length !== 1 || ok[0] !== "book") throw new Error(JSON.stringify(ok));
-  if (skipped.length !== 1 || skipped[0].length !== 250) throw new Error("pulado");
-});
-
-const sampleRaw: RawWeek[] = ["a", "b", "c"].flatMap((s) =>
-  JSON.parse(readFileSync(new URL(`../lib/weeks-${s}.json`, import.meta.url), "utf8")),
-);
-
-check("todo item fixo do vocabulario tem pronuncia", () => {
-  const faltam = CATEGORIES.flatMap((c) => c.groups.flatMap((g) => g.items.filter((i) => !i.say?.trim()).map((i) => `${c.id}/${i.en}`)));
-  if (faltam.length) throw new Error(`${faltam.length} sem say: ${faltam.slice(0, 10).join(", ")}`);
-});
-
-check("todo card do plano de exemplo tem pronuncia", () => {
-  const faltam = buildWeeks(sampleRaw).flatMap((w) => w.cards.filter((c) => !c.say?.trim()).map((c) => c.en));
-  if (faltam.length) throw new Error(`${faltam.length} sem pronuncia: ${faltam.slice(0, 10).join(", ")}`);
-});
-
-check("frases do dia e exemplos de gramatica do plano de exemplo tem pronuncia", () => {
-  const textos = sampleRaw.flatMap((w) => [...w.days.map((d) => d.speak), ...w.grammar.examples]);
-  const faltam = textos.filter((t) => t && !pronounce(t));
-  if (faltam.length) throw new Error(`${faltam.length} sem pronuncia: ${faltam.slice(0, 5).join(" | ")}`);
-});
-
 check("estudo completo normalizado", () => {
   const s = normalizeStudy({ study: { topic: "To be negativo", goal: "g", explanation: ["a", "b"], pattern: "P", examples: [{ en: "I am not", pt: "Eu não sou", pron: "ái ém nót" }, { pt: "sem en" }], tips: [{ text: "t", wrong: "I not am", right: "I am not" }, "dica solta"] } });
   if (s.topic !== "To be negativo" || s.examples.length !== 1 || s.tips.length !== 2) throw new Error(JSON.stringify(s));
@@ -484,6 +453,38 @@ check("prompt da licao leva o mesmo estilo de PRON_STYLE", () => {
   const s = lessonSystemPrompt(sampleProfile);
   const falta = PRON_STYLE.split("\n").find((r) => !s.includes(r));
   if (falta) throw new Error("regra fora do prompt: " + falta);
+});
+
+check("so a chave do servidor grava na tabela compartilhada", () => {
+  if (shouldStoreShared("chave-do-visitante", "chave-do-servidor")) throw new Error("visitante gravou");
+  if (!shouldStoreShared("chave-do-servidor", "chave-do-servidor")) throw new Error("servidor nao gravou");
+  if (shouldStoreShared("", undefined)) throw new Error("sem chave");
+});
+
+check("textos longos demais saem da geracao como falha", () => {
+  const { ok, skipped } = splitGeneratable(["book", "x".repeat(250), "Book!", ""], pronKey);
+  if (ok.length !== 1 || ok[0] !== "book") throw new Error(JSON.stringify(ok));
+  if (skipped.length !== 1 || skipped[0].length !== 250) throw new Error("pulado");
+});
+
+const sampleRaw: RawWeek[] = ["a", "b", "c"].flatMap((s) =>
+  JSON.parse(readFileSync(new URL(`../lib/weeks-${s}.json`, import.meta.url), "utf8")),
+);
+
+check("todo item fixo do vocabulario tem pronuncia", () => {
+  const faltam = CATEGORIES.flatMap((c) => c.groups.flatMap((g) => g.items.filter((i) => !i.say?.trim()).map((i) => `${c.id}/${i.en}`)));
+  if (faltam.length) throw new Error(`${faltam.length} sem say: ${faltam.slice(0, 10).join(", ")}`);
+});
+
+check("todo card do plano de exemplo tem pronuncia", () => {
+  const faltam = buildWeeks(sampleRaw).flatMap((w) => w.cards.filter((c) => !c.say?.trim()).map((c) => c.en));
+  if (faltam.length) throw new Error(`${faltam.length} sem pronuncia: ${faltam.slice(0, 10).join(", ")}`);
+});
+
+check("frases do dia e exemplos de gramatica do plano de exemplo tem pronuncia", () => {
+  const textos = sampleRaw.flatMap((w) => [...w.days.map((d) => d.speak), ...w.grammar.examples]);
+  const faltam = textos.filter((t) => t && !pronounce(t));
+  if (faltam.length) throw new Error(`${faltam.length} sem pronuncia: ${faltam.slice(0, 5).join(" | ")}`);
 });
 
 check("correcao traz ate 3 jeitos de melhorar a resposta", () => {
@@ -565,6 +566,15 @@ check("respostas geradas antes da trava contam como ja geradas", () => {
   const nova = normalizeResult({ correct: true, feedback: "ok", correction: "I am a QA analyst.", improvements: [{ style: "informal", en: "I'm a QA.", tip: "x" }] });
   if (!nova.withImprovements || !canGenerateMore(nova)) throw new Error("correcao nova ainda pode gerar uma vez");
   if (canGenerateMore({ ...nova, moreGenerated: true })) throw new Error("nova depois de gerar");
+});
+
+check("limite diario gratuito troca para o modelo reserva uma vez", () => {
+  const dia = '{"error":{"code":429,"message":"Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20 ... requests per day","details":[{"violations":[{"quotaId":"GenerateRequestsPerDayPerProjectPerModel-FreeTier"}]}]}}';
+  const minuto = '{"error":{"code":429,"details":[{"violations":[{"quotaId":"GenerateRequestsPerMinutePerProjectPerModel-FreeTier"}]}]}}';
+  if (!isDailyQuota(429, dia) || isDailyQuota(429, minuto) || isDailyQuota(500, dia)) throw new Error("isDailyQuota");
+  if (nextModel("gemini-3.8-flash", "gemini-3.5-flash") !== "gemini-3.5-flash") throw new Error("reserva");
+  if (nextModel("gemini-3.5-flash", "gemini-3.5-flash") !== null) throw new Error("reserva igual ao principal");
+  if (nextModel("gemini-3.8-flash", "") !== null) throw new Error("sem reserva");
 });
 
 console.log(failures === 0 ? "\nTodos os testes passaram." : `\n${failures} falha(s).`);
