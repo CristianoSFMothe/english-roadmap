@@ -2,10 +2,13 @@ import { extractJson, normalizeOutline, normalizeWeek } from "../lib/normalize.t
 import { buildWeeks } from "../lib/weeks.ts";
 import { systemPrompt, outlineMessage, weekMessage } from "../lib/prompt.ts";
 import { sampleProfile, clampProfile } from "../lib/profile.ts";
-import { numberToWords } from "../lib/vocabulary.ts";
+import { numberToWords, cleanWords, CATEGORIES } from "../lib/vocabulary.ts";
+import { readFileSync } from "node:fs";
+import type { RawWeek } from "../lib/weeks.ts";
 import { VERBS, thirdPerson, findVerb, ingForm, ptGerund, ptConditional, buildTense, TENSES, statNotice, buildExamples, shortAnswers } from "../lib/verbs.ts";
 import { sayPhrase, pronKey, pronounce, PRON_STYLE, PRON_EXAMPLES } from "../lib/pronunciation.ts";
 import { normalizeQuestions, normalizeResult } from "../lib/lesson-normalize.ts";
+import { normalizePronMap, pronBatches, pronSystemPrompt, pronUserPrompt, shouldStoreShared, splitGeneratable } from "../lib/pron-prompt.ts";
 import { lessonSystemPrompt, lessonUserPrompt, ORDEM, TOTAL_QUESTOES } from "../lib/lesson-prompt.ts";
 
 let failures = 0;
@@ -341,6 +344,109 @@ check("todo tempo tem explicacao completa", () => {
   }
   const basic = TENSES[0];
   if (!basic.endings || basic.endings.length < 6) throw new Error("terminacoes -s e -ed");
+});
+
+check("pronKey ignora caixa, espacos e pontuacao final", () => {
+  if (pronKey("  Hello!  ") !== "hello") throw new Error("hello");
+  if (pronKey("How   are you?") !== "how are you") throw new Error("how are you");
+  if (pronKey("Dr. Smith") !== "dr. smith") throw new Error("ponto no meio fica");
+});
+
+check("pronounce: explicita, dicionario, semente", () => {
+  if (pronounce("book", "búk!") !== "búk!") throw new Error("explicita");
+  if (pronounce("book") !== sayPhrase("book")) throw new Error("dicionario");
+  if (pronounce("zzqx") !== undefined) throw new Error("desconhecida");
+  if (pronounce("book", "  ") !== sayPhrase("book")) throw new Error("explicita vazia");
+});
+
+check("estilo e exemplos para o prompt", () => {
+  if (!PRON_STYLE.includes("rr")) throw new Error("regra do h");
+  if (PRON_EXAMPLES.length < 8) throw new Error("exemplos");
+});
+
+const semanaBruta = {
+  theme: "T",
+  grammar: { topic: "g", examples: ["I am here."] },
+  vocab: [{ group: "G", items: "cat=gato" }],
+  days: [{ label: "Seg", focus: "f", minutes: 15, tasks: [{ what: "x", resource: "y", min: 15 }] }],
+};
+const semanaMinima = normalizeWeek(semanaBruta, 1, 5, 20);
+
+check("parseItems le a pronuncia como 3a parte", () => {
+  const [w] = buildWeeks([{ ...semanaMinima, vocab: [{ group: "G", items: "book=livro=búk; pen=caneta" }] }]);
+  if (w.cards[0].say !== "búk" || w.cards[0].pt !== "livro") throw new Error("3 partes");
+  if (w.cards[1].say !== undefined || w.cards[1].pt !== "caneta") throw new Error("2 partes");
+});
+
+check("vocabulario em objeto aceita say/pron/pronuncia", () => {
+  const w = normalizeWeek({ ...semanaBruta, vocab: [{ group: "G", items: [{ en: "book", pt: "livro", pron: "búk" }] }] }, 1, 5, 20);
+  if (w.vocab[0].items !== "book=livro=búk") throw new Error(w.vocab[0].items);
+});
+
+check("prompt da semana pede a pronuncia", () => {
+  const m = weekMessage(p, { n: 1, theme: "T", subtitle: "s", why: "w", grammarTopic: "g", milestone: "m" }, ["1. T"]);
+  if (!m.includes("=uârd") || !m.includes("rr")) throw new Error("formato ou estilo ausente");
+});
+
+check("prompt da semana leva o mesmo estilo de PRON_STYLE", () => {
+  const m = weekMessage(p, { n: 1, theme: "T", subtitle: "s", why: "w", grammarTopic: "g", milestone: "m" }, ["1. T"]);
+  const falta = PRON_STYLE.split("\n").find((r) => !m.includes(r));
+  if (falta) throw new Error("regra fora do prompt: " + falta);
+});
+
+check("normalizePronMap fica so com o que foi pedido", () => {
+  const m = normalizePronMap({ Hello: "rre-lôu", extra: "x", "Good night!": "" }, ["hello", "good night"], pronKey);
+  if (m.hello !== "rre-lôu" || "extra" in m || "good night" in m) throw new Error(JSON.stringify(m));
+});
+
+check("pronBatches tira repetidos e corta em 40", () => {
+  const textos = [...Array(90).keys()].map((i) => `w${i}`).concat(["W1", "", "x".repeat(201)]);
+  const lotes = pronBatches(textos, pronKey);
+  if (lotes.length !== 3 || lotes[0].length !== 40 || lotes.flat().length !== 90) throw new Error("lotes");
+});
+
+check("prompt de pronuncia leva estilo e textos", () => {
+  if (!pronSystemPrompt(PRON_STYLE, PRON_EXAMPLES).includes("rr")) throw new Error("estilo");
+  if (!pronUserPrompt(["Good morning"]).includes("Good morning")) throw new Error("texto");
+});
+
+check("cleanWords guarda a pronuncia com limite", () => {
+  const [w] = cleanWords([{ id: "1", en: "book", pt: "livro", say: "búk" }]);
+  if (w.say !== "búk") throw new Error("say");
+  const [l] = cleanWords([{ id: "2", en: "a", pt: "b", say: "x".repeat(400) }]);
+  if ((l.say ?? "").length !== 300) throw new Error("limite");
+});
+
+check("so a chave do servidor grava na tabela compartilhada", () => {
+  if (shouldStoreShared("chave-do-visitante", "chave-do-servidor")) throw new Error("visitante gravou");
+  if (!shouldStoreShared("chave-do-servidor", "chave-do-servidor")) throw new Error("servidor nao gravou");
+  if (shouldStoreShared("", undefined)) throw new Error("sem chave");
+});
+
+check("textos longos demais saem da geracao como falha", () => {
+  const { ok, skipped } = splitGeneratable(["book", "x".repeat(250), "Book!", ""], pronKey);
+  if (ok.length !== 1 || ok[0] !== "book") throw new Error(JSON.stringify(ok));
+  if (skipped.length !== 1 || skipped[0].length !== 250) throw new Error("pulado");
+});
+
+const sampleRaw: RawWeek[] = ["a", "b", "c"].flatMap((s) =>
+  JSON.parse(readFileSync(new URL(`../lib/weeks-${s}.json`, import.meta.url), "utf8")),
+);
+
+check("todo item fixo do vocabulario tem pronuncia", () => {
+  const faltam = CATEGORIES.flatMap((c) => c.groups.flatMap((g) => g.items.filter((i) => !i.say?.trim()).map((i) => `${c.id}/${i.en}`)));
+  if (faltam.length) throw new Error(`${faltam.length} sem say: ${faltam.slice(0, 10).join(", ")}`);
+});
+
+check("todo card do plano de exemplo tem pronuncia", () => {
+  const faltam = buildWeeks(sampleRaw).flatMap((w) => w.cards.filter((c) => !c.say?.trim()).map((c) => c.en));
+  if (faltam.length) throw new Error(`${faltam.length} sem pronuncia: ${faltam.slice(0, 10).join(", ")}`);
+});
+
+check("frases do dia e exemplos de gramatica do plano de exemplo tem pronuncia", () => {
+  const textos = sampleRaw.flatMap((w) => [...w.days.map((d) => d.speak), ...w.grammar.examples]);
+  const faltam = textos.filter((t) => t && !pronounce(t));
+  if (faltam.length) throw new Error(`${faltam.length} sem pronuncia: ${faltam.slice(0, 5).join(" | ")}`);
 });
 
 console.log(failures === 0 ? "\nTodos os testes passaram." : `\n${failures} falha(s).`);

@@ -19,23 +19,23 @@
     "vocab": [
       {
         "group": "Ações visuais e movimento",
-        "items": "to run=correr; to walk=caminhar; to look at=olhar para; to watch=assistir; to wait=esperar; to move=mover; to stand=estar em pé; to sit=estar sentado; to fall=cair; to fly=voar; to escape=escapar; to follow=seguir; to hide=esconder-se; to carry=carregar; to jump=pular; to stop=parar"
+        "items": "to run=correr=tu rân; to walk=caminhar=tu uók; to look at=olhar para=tu lúk ét; to watch=assistir=tu uótch; to wait=esperar=tu uêit; to move=mover=tu múv; to stand=estar em pé=tu sténd; to sit=estar sentado=tu sít; to fall=cair=tu fól; to fly=voar=tu flái; to escape=escapar=tu is-kêip; to follow=seguir=tu fó-lou; to hide=esconder-se=tu rráid; to carry=carregar=tu ké-ri; to jump=pular=tu djâmp; to stop=parar=tu stóp"
       },
       {
         "group": "Ações de comunicação e interação",
-        "items": "to talk=conversar; to listen=escutar; to ask=perguntar; to answer=responder; to explain=explicar; to call=ligar ou chamar; to show=mostrar; to help=ajudar; to shout=gritar; to whisper=sussurrar; to smile=sorrir; to argue=discutir; to point=apontar; to agree=concordar"
+        "items": "to talk=conversar=tu tók; to listen=escutar=tu lí-sen; to ask=perguntar=tu ésk; to answer=responder=tu én-ser; to explain=explicar=tu eks-plêin; to call=ligar ou chamar=tu kól; to show=mostrar=tu chôu; to help=ajudar=tu rrélp; to shout=gritar=tu cháut; to whisper=sussurrar=tu uís-per; to smile=sorrir=tu smáil; to argue=discutir=tu ár-guiu; to point=apontar=tu póint; to agree=concordar=tu â-grí"
       },
       {
         "group": "Ambiente de ficção científica e cenas",
-        "items": "spaceship=nave espacial; screen=tela; light=luz; shadow=sombra; robot=robô; door=porta; sound=som; button=botão; alarm=alarme; sky=céu; planet=planeta; dark=escuro; fast=rápido; slow=lento; danger=perigo; machine=máquina"
+        "items": "spaceship=nave espacial=spêis-chip; screen=tela=skrín; light=luz=láit; shadow=sombra=ché-dou; robot=robô=rôu-bót; door=porta=dór; sound=som=sáund; button=botão=bâ-ton; alarm=alarme=â-lárm; sky=céu=skái; planet=planeta=plé-nit; dark=escuro=dárk; fast=rápido=fést; slow=lento=slôu; danger=perigo=dêin-djer; machine=máquina=mâ-chín"
       },
       {
         "group": "Atividades em andamento no trabalho",
-        "items": "to type=digitar; to send=enviar; to check=verificar; to test=testar; to fix=consertar; to present=apresentar; to share=compartilhar; to update=atualizar; to prepare=preparar; to print=imprimir; to review=revisar; to build=construir; file=arquivo; project=projeto; team=equipe"
+        "items": "to type=digitar=tu táip; to send=enviar=tu sénd; to check=verificar=tu tchék; to test=testar=tu tést; to fix=consertar=tu fíks; to present=apresentar=tu pri-zént; to share=compartilhar=tu chér; to update=atualizar=tu âp-dêit; to prepare=preparar=tu pri-pér; to print=imprimir=tu prínt; to review=revisar=tu ri-viú; to build=construir=tu bíld; file=arquivo=fáil; project=projeto=pró-djekt; team=equipe=tím"
       },
       {
         "group": "Marcadores de tempo e contraste",
-        "items": "now=agora; right now=neste exato momento; at the moment=no momento; today=hoje; currently=atualmente; usually=geralmente; always=sempre; never=nunca; sometimes=às vezes; every day=todo dia; this week=esta semana; look!=olhe!; listen!=escute!; suddenly=de repente"
+        "items": "now=agora=náu; right now=neste exato momento=ráit náu; at the moment=no momento=ét dâ môu-ment; today=hoje=tu-dêi; currently=atualmente=kâ-rent-li; usually=geralmente=iú-ju-a-li; always=sempre=ól-uêiz; never=nunca=né-ver; sometimes=às vezes=sâm-táimz; every day=todo dia=év-ri dêi; this week=esta semana=dís uík; look!=olhe!=lúk!; listen!=escute!=lí-sen!; suddenly=de repente=sâ-den-li"
       }
     ],
     "resources": [
@@ -250,23 +250,23 @@
     "vocab": [
       {
         "group": "Ações e Verbos de Culinária",
-        "items": "to chop=picar; to slice=fatiar; to mix=misturar; to pour=despejar; to add=adicionar; to heat=aquecer; to boil=ferver; to fry=fritar; to bake=assar no forno; to stir=mexer; to serve=servir; to cut=cortar; to wash=lavar; to dry=secar"
+        "items": "to chop=picar=tu tchóp; to slice=fatiar=tu sláis; to mix=misturar=tu míks; to pour=despejar=tu pór; to add=adicionar=tu éd; to heat=aquecer=tu rrít; to boil=ferver=tu bóil; to fry=fritar=tu frái; to bake=assar no forno=tu bêik; to stir=mexer=tu stâr; to serve=servir=tu sârv; to cut=cortar=tu kât; to wash=lavar=tu uóch; to dry=secar=tu drái"
       },
       {
         "group": "Utensílios e Cozinha",
-        "items": "pan=frigideira; pot=panela; bowl=tigela; spoon=colher; fork=garfo; knife=faca; plate=prato; cup=xícara; stove=fogão; oven=forno; board=tábua de corte; glass=copo; napkin=guardanapo"
+        "items": "pan=frigideira=pén; pot=panela=pót; bowl=tigela=bôul; spoon=colher=spún; fork=garfo=fórk; knife=faca=náif; plate=prato=plêit; cup=xícara=kâp; stove=fogão=stôuv; oven=forno=â-ven; board=tábua de corte=bórd; glass=copo=glés; napkin=guardanapo=nép-kin"
       },
       {
         "group": "Ingredientes e Quantidades (Contáveis e Incontáveis)",
-        "items": "bread=pão; butter=manteiga; egg=ovo; oil=óleo; salt=sal; pepper=pimenta; sugar=açúcar; milk=leite; water=água; cheese=queijo; coffee=café; tea=chá; fruit=fruta; slice=fatia; piece=pedaço; cup of=xícara de; spoonful=colherada; some=um pouco de/alguns; a few=alguns; a little=um pouco"
+        "items": "bread=pão=bréd; butter=manteiga=bâ-ter; egg=ovo=ég; oil=óleo=óil; salt=sal=sólt; pepper=pimenta=pé-per; sugar=açúcar=chú-gar; milk=leite=mílk; water=água=uó-ter; cheese=queijo=tchíz; coffee=café=kó-fi; tea=chá=tí; fruit=fruta=frút; slice=fatia=sláis; piece=pedaço=pís; cup of=xícara de=kâp óv; spoonful=colherada=spún-ful; some=um pouco de/alguns=sâm; a few=alguns=â fiú; a little=um pouco=â lí-tel"
       },
       {
         "group": "Conectores e Sequência",
-        "items": "first=primeiro; then=então/depois; next=em seguida; after that=depois disso; finally=por fim; step=passo/etapa; instruction=instrução; recipe=receita; before=antes; after=depois; carefully=com cuidado; slowly=devagar"
+        "items": "first=primeiro=fârst; then=então/depois=dén; next=em seguida=nékst; after that=depois disso=éf-ter dét; finally=por fim=fái-na-li; step=passo/etapa=stép; instruction=instrução=ins-trâk-chân; recipe=receita=ré-si-pi; before=antes=bi-fór; after=depois=éf-ter; carefully=com cuidado=kér-fu-li; slowly=devagar=slôu-li"
       },
       {
         "group": "Termos Profissionais para Processos e Instruções",
-        "items": "process=processo; step-by-step=passo a passo; list=lista; task=tarefa; priority=prioridade; status=status/situação; check=verificar; confirm=confirmar; prepare=preparar; complete=concluir; order=ordem/pedido; update=atualizar"
+        "items": "process=processo=pró-ses; step-by-step=passo a passo=stép-bái-stép; list=lista=líst; task=tarefa=tésk; priority=prioridade=prai-ó-ri-ti; status=status/situação=stêi-tâs; check=verificar=tchék; confirm=confirmar=kon-fârm; prepare=preparar=pri-pér; complete=concluir=kom-plít; order=ordem/pedido=ór-der; update=atualizar=âp-dêit"
       }
     ],
     "resources": [
@@ -466,23 +466,23 @@
     "vocab": [
       {
         "group": "Expressões de Tempo Passado",
-        "items": "yesterday=ontem; last night=ontem à noite; last weekend=no último fim de semana; last month=no mês passado; two days ago=dois dias atrás; in the past=no passado; this morning=hoje de manhã"
+        "items": "yesterday=ontem=iés-ter-dêi; last night=ontem à noite=lést náit; last weekend=no último fim de semana=lést uí-kend; last month=no mês passado=lést mânth; two days ago=dois dias atrás=tú dêiz â-gôu; in the past=no passado=ín dâ pést; this morning=hoje de manhã=dís mór-ning"
       },
       {
         "group": "Verbos Regulares no Passado (Hobbies e Lazer)",
-        "items": "watched=assistiu/assisti; played=jogou/joguei; cooked=cozinhou/cozinhei; walked=caminhou/caminhei; relaxed=relaxou/relaxei; listened=ouviu/ouvi; enjoyed=aproveitou/gostou; rested=descansou/descansei"
+        "items": "watched=assistiu/assisti=uótcht; played=jogou/joguei=plêid; cooked=cozinhou/cozinhei=kúkt; walked=caminhou/caminhei=uókt; relaxed=relaxou/relaxei=ri-lékst; listened=ouviu/ouvi=lí-send; enjoyed=aproveitou/gostou=en-djóid; rested=descansou/descansei=rés-tid"
       },
       {
         "group": "Verbos Regulares no Passado (Trabalho e Rotina)",
-        "items": "worked=trabalhou/trabalhei; finished=terminou/terminei; started=começou/comecei; called=ligou/liguei; emailed=enviou e-mail; checked=checou/chequei; organized=organizou/organizei; cleaned=limpou/limpei"
+        "items": "worked=trabalhou/trabalhei=uârkt; finished=terminou/terminei=fí-nicht; started=começou/comecei=stár-tid; called=ligou/liguei=kóld; emailed=enviou e-mail=í-mêild; checked=checou/chequei=tchékt; organized=organizou/organizei=ór-ga-náizd; cleaned=limpou/limpei=klínd"
       },
       {
         "group": "Verbo To Be no Passado e Adjetivos de Estado",
-        "items": "was=era/estava (singular); were=eram/estavam (plural); tired=cansado; quiet=calmo/tranquilo; busy=ocupado; fun=divertido; great=ótimo; boring=tedioso"
+        "items": "was=era/estava (singular)=uóz; were=eram/estavam (plural)=uâr; tired=cansado=táierd; quiet=calmo/tranquilo=kuái-et; busy=ocupado=bí-zi; fun=divertido=fân; great=ótimo=grêit; boring=tedioso=bó-ring"
       },
       {
         "group": "Contexto de Séries e Filmes",
-        "items": "episode=episódio; season=temporada; show=série/show; movie=filme; scene=cena; actor=ator; story=história; ending=final/desfecho"
+        "items": "episode=episódio=é-pi-sôud; season=temporada=sí-zon; show=série/show=chôu; movie=filme=mú-vi; scene=cena=sín; actor=ator=ék-ter; story=história=stó-ri; ending=final/desfecho=én-ding"
       }
     ],
     "resources": [
@@ -682,23 +682,23 @@
     "vocab": [
       {
         "group": "Verbos Irregulares de Ação Narrativa",
-        "items": "saw=viu; wrote=escreveu; went=foi; came=veio; fought=lutou; saved=salvou; found=encontrou; lost=perdeu; took=tomou; gave=deu; spoke=falou; heard=ouviu; thought=pensou; met=conheceu; became=tornou-se"
+        "items": "saw=viu=só; wrote=escreveu=rôut; went=foi=uént; came=veio=kêim; fought=lutou=fót; saved=salvou=sêivd; found=encontrou=fáund; lost=perdeu=lóst; took=tomou=túk; gave=deu=guêiv; spoke=falou=spôuk; heard=ouviu=rrârd; thought=pensou=thót; met=conheceu=mét; became=tornou-se=bi-kêim"
       },
       {
         "group": "Conectores Sequenciais para Histórias",
-        "items": "first=primeiro; then=então; after that=depois disso; next=em seguida; suddenly=de repente; in the end=no final; finally=finalmente; before=antes; later=mais tarde; soon=logo; at first=no início; meanwile=enquanto isso; eventually=com o tempo; unexpectedly=inesperadamente"
+        "items": "first=primeiro=fârst; then=então=dén; after that=depois disso=éf-ter dét; next=em seguida=nékst; suddenly=de repente=sâ-den-li; in the end=no final=ín dâ énd; finally=finalmente=fái-na-li; before=antes=bi-fór; later=mais tarde=lêi-ter; soon=logo=sún; at first=no início=ét fârst; meanwhile=enquanto isso=mín-uáil; eventually=com o tempo=i-vén-tchu-â-li; unexpectedly=inesperadamente=ân-eks-pék-tid-li"
       },
       {
         "group": "Elementos da Narrativa e Enredo",
-        "items": "hero=herói; villain=vilão; story=história; plot=enredo; ending=final; scene=cena; battle=batalha; secret=segredo; goal=objetivo; mystery=mistério; character=personagem; adventure=aventura; conflict=conflito; action=ação; finale=desfecho"
+        "items": "hero=herói=rrí-rou; villain=vilão=ví-len; story=história=stó-ri; plot=enredo=plót; ending=final=én-ding; scene=cena=sín; battle=batalha=bé-tel; secret=segredo=sí-kret; goal=objetivo=gôul; mystery=mistério=mís-te-ri; character=personagem=ké-rak-ter; adventure=aventura=âd-vén-tcher; conflict=conflito=kón-flikt; action=ação=ék-chân; finale=desfecho=fi-né-li"
       },
       {
         "group": "Perguntas de Investigação de Enredo",
-        "items": "what happened=o que aconteceu; who did it=quem fez isso; where did they go=onde eles foram; why did he do that=por que ele fez isso; how did it end=como terminou; did you like it=você gostou; who was the main character=quem era o personagem principal; when did the story start=quando a história começou"
+        "items": "what happened=o que aconteceu=uót rré-pend; who did it=quem fez isso=rrú díd ít; where did they go=onde eles foram=uér díd dêi gôu; why did he do that=por que ele fez isso=uái díd rrí dú dét; how did it end=como terminou=rráu díd ít énd; did you like it=você gostou=díd iú láik ít; who was the main character=quem era o personagem principal=rrú uóz dâ mêin ké-rak-ter; when did the story start=quando a história começou=uén díd dâ stó-ri stárt"
       },
       {
         "group": "Sentimentos e Reações à História",
-        "items": "exciting=emocionante; surprising=surpreendente; dangerous=perigoso; sad=triste; funny=engraçado; dark=sombrio; strange=estranho; epic=épico; confusing=confuso; predictable=previsível; heroic=heróico; tense=tenso"
+        "items": "exciting=emocionante=ek-sái-ting; surprising=surpreendente=sur-prái-zing; dangerous=perigoso=dêin-dje-râs; sad=triste=séd; funny=engraçado=fâ-ni; dark=sombrio=dárk; strange=estranho=strêindj; epic=épico=é-pik; confusing=confuso=kon-fiú-zing; predictable=previsível=pri-dík-ta-bel; heroic=heróico=rri-rôu-ik; tense=tenso=téns"
       }
     ],
     "resources": [

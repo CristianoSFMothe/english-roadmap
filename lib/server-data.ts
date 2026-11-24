@@ -1,7 +1,7 @@
 import { pool } from "./db";
 import type { RawWeek } from "./weeks";
 import type { Profile } from "./profile";
-import type { MyWord } from "./vocabulary";
+import { cleanWords, type MyWord } from "./vocabulary";
 
 export type StoredPlan = {
   id: string;
@@ -181,33 +181,8 @@ export async function googleAccessToken(userId: string): Promise<string> {
   return data.access_token;
 }
 
-const MAX_WORDS = 3000;
-const texto = (v: unknown, max: number) => (typeof v === "string" ? v.trim().slice(0, max) : "");
-
-/** Mantém só palavras bem formadas, para o banco não guardar lixo vindo do navegador. */
-export function cleanWords(raw: unknown): MyWord[] {
-  if (!Array.isArray(raw)) return [];
-  return raw
-    .slice(0, MAX_WORDS)
-    .map((w): MyWord | null => {
-      const o = (w ?? {}) as Record<string, unknown>;
-      const id = texto(o.id, 64);
-      const en = texto(o.en, 300);
-      const pt = texto(o.pt, 300);
-      if (!id || !en) return null;
-      const example = texto(o.example, 500);
-      return {
-        id,
-        en,
-        pt,
-        kind: o.kind === "frase" ? "frase" : "palavra",
-        ...(example ? { example } : {}),
-        learned: o.learned === true,
-        createdAt: Number(o.createdAt) || Date.now(),
-      };
-    })
-    .filter((w): w is MyWord => w !== null);
-}
+/** Fica em lib/vocabulary.ts para o `npm test` conseguir testar sem o banco. */
+export { cleanWords };
 
 export async function loadVocab(userId: string): Promise<MyWord[] | null> {
   const r = await pool.query<{ words: unknown }>(

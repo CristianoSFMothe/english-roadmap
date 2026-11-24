@@ -8,7 +8,11 @@ import { useSession } from "@/lib/auth-client";
 import { usePersistentState } from "@/lib/storage";
 import { CATEGORIES, numberToWords, type MyWord, type RefCategory } from "@/lib/vocabulary";
 import Flashcards from "./Flashcards";
+import VerbsView from "./VerbsView";
+import { Pron, PronListButton } from "./Pron";
 import { SayIt, Speak } from "./SpeechButtons";
+import { generatePron, knownPron } from "@/lib/use-pron";
+import { pronKey } from "@/lib/pronunciation";
 import { readPrefs, writePrefs, type Speed } from "@/lib/speech";
 
 type Marks = Record<string, boolean>;
@@ -31,7 +35,9 @@ function categoryDeck(cat: RefCategory) {
     cards: g.items.map(
       (i): Card => ({
         en: i.en,
-        pt: i.say ? `${i.pt} (${i.say})` : i.pt,
+        // Sem tradução (letras do alfabeto), a pronúncia fica no verso, como antes.
+        pt: i.pt || i.say || "",
+        ...(i.pt && i.say ? { say: i.say } : {}),
         group: g.title,
         id: `ref:${cat.id}:${i.en}`,
       }),
@@ -119,7 +125,7 @@ function CategoryView({
                       <span className="en">{i.en}</span>
                       {i.say && <span className="say">{i.say}</span>}
                     </span>
-                    <span className="pt">{i.pt}</span>
+                    {i.pt && <span className="pt">{i.pt}</span>}
                     <Speak text={i.en} />
                   </li>
                 ))}
@@ -146,6 +152,8 @@ function MyWordsView({
   const kind: MyWord["kind"] =
     chosenKind ?? (en.trim().split(/\s+/).length >= 3 ? "frase" : "palavra");
   const [example, setExample] = useState("");
+  const [say, setSay] = useState("");
+  const [sayState, setSayState] = useState<"idle" | "busy" | "failed">("idle");
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<"todas" | "palavra" | "frase" | "faltam">("todas");
   const [practice, setPractice] = useState(false);
@@ -160,6 +168,7 @@ function MyWordsView({
       pt: pt.trim(),
       kind,
       ...(example.trim() ? { example: example.trim() } : {}),
+      ...(say.trim() || knownPron(en.trim()) ? { say: say.trim() || knownPron(en.trim()) } : {}),
       learned: false,
       createdAt: Date.now(),
     };
@@ -167,9 +176,34 @@ function MyWordsView({
     setEn("");
     setPt("");
     setExample("");
+    setSay("");
+    setSayState("idle");
     setChosenKind(null);
     enRef.current?.focus();
   };
+
+  /** Preenche o campo de pronúncia: dicionário/cache, senão o Gemini (só no clique). */
+  const fillSay = async () => {
+    const text = en.trim();
+    if (!text) return;
+    const known = knownPron(text);
+    if (known) {
+      setSay(known);
+      return;
+    }
+    setSayState("busy");
+    const got = (await generatePron([text]))[pronKey(text)];
+    if (got) {
+      setSay(got);
+      setSayState("idle");
+    } else setSayState("failed");
+  };
+
+  /** Grava em cada palavra a pronúncia gerada pelo botão da lista. */
+  const saveGenerated = (map: Record<string, string>) =>
+    setWords((prev) =>
+      prev.map((w) => (w.say || !map[pronKey(w.en)] ? w : { ...w, say: map[pronKey(w.en)] })),
+    );
 
   const q = query.trim().toLowerCase();
   const shown = words.filter((w) => {
@@ -197,7 +231,15 @@ function MyWordsView({
         group: k === "palavra" ? "Palavras" : "Frases",
         cards: words
           .filter((w) => w.kind === k)
-          .map((w): Card => ({ en: w.en, pt: w.pt || "(sem tradução)", group: k, id: w.id })),
+          .map(
+            (w): Card => ({
+              en: w.en,
+              pt: w.pt || "(sem tradução)",
+              group: k,
+              id: w.id,
+              ...(w.say ? { say: w.say } : {}),
+            }),
+          ),
       }))
       .filter((g) => g.cards.length > 0);
     return { n: 0, vocabGroups: groups, cards: groups.flatMap((g) => g.cards) };
@@ -267,6 +309,28 @@ function MyWordsView({
               </select>
             </div>
             <div className="field span-2">
+              <label htmlFor="w-say">Pronúncia (opcional)</label>
+              <div className="say-field">
+                <input
+                  id="w-say"
+                  value={say}
+                  onChange={(e) => setSay(e.target.value)}
+                  placeholder="Ex.: ái ém lú-king fór-uârd tu ít"
+                  autoComplete="off"
+                  maxLength={300}
+                />
+                <button
+                  type="button"
+                  className="pron-btn"
+                  onClick={() => void fillSay()}
+                  disabled={!en.trim() || sayState === "busy"}
+                >
+                  {sayState === "busy" ? "Gerando…" : "Gerar"}
+                </button>
+              </div>
+              {sayState === "failed" && <span className="say-result bad">Não deu para gerar agora</span>}
+            </div>
+            <div className="field span-2">
               <label htmlFor="w-ex">Exemplo ou onde você viu (opcional)</label>
               <input
                 id="w-ex"
@@ -312,6 +376,12 @@ function MyWordsView({
             </div>
           )}
 
+          {words.length > 0 && (
+            <div className="pron-list-row">
+              <PronListButton texts={words.filter((w) => !w.say).map((w) => w.en)} onGenerated={saveGenerated} />
+            </div>
+          )}
+
           {words.length === 0 ? (
             <p className="empty">Nenhuma palavra ainda. Adicione a primeira acima.</p>
           ) : shown.length === 0 ? (
@@ -322,6 +392,7 @@ function MyWordsView({
                 <li key={w.id} className={w.learned ? "learned" : undefined}>
                   <div className="word-main">
                     <span className="en">{w.en}</span>
+                    <Pron text={w.en} explicit={w.say} noButton />
                     {w.pt && <span className="pt">{w.pt}</span>}
                     {w.example && <span className="note">{w.example}</span>}
                   </div>
@@ -386,13 +457,15 @@ function LearnedView({ sample }: { sample: RawWeek[] }) {
         byWeek.map((w) => (
           <div className="vocab-group" key={w.n}>
             <h3>
-              Semana {w.n} · {w.theme} · {w.cards.length}
+              Semana {w.n} · {w.theme} · {w.cards.length}{" "}
+              <PronListButton texts={w.cards.filter((c) => !c.say).map((c) => c.en)} />
             </h3>
             <ul className="vocab-list rich">
               {w.cards.map((c) => (
                 <li key={c.id}>
                   <span className="vt">
                     <span className="en">{c.en}</span>
+                    <Pron text={c.en} explicit={c.say} noButton />
                   </span>
                   <span className="pt">{c.pt}</span>
                   <Speak text={c.en} />
@@ -501,6 +574,9 @@ export default function VocabularyPage({
               <strong>Vocabulário</strong>
             </div>
             <div className="head-actions">
+              <Link className="btn small" href="/estudo-diario">
+                Estudo do dia
+              </Link>
               <Link className="btn small" href="/preferencias">
                 Preferências
               </Link>
@@ -535,6 +611,8 @@ export default function VocabularyPage({
 
         {tab === LEARNED ? (
           <LearnedView sample={sample} />
+        ) : current?.id === "verbos" ? (
+          <VerbsView known={refKnown} setKnown={setRefKnown} />
         ) : current ? (
           <CategoryView key={current.id} cat={current} known={refKnown} setKnown={setRefKnown} />
         ) : (

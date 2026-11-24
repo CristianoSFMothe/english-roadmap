@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type { Card, Week } from "@/lib/content";
+import { Pron } from "./Pron";
 import { SayIt, Speak } from "./SpeechButtons";
 
 type Dir = "en-pt" | "pt-en";
@@ -134,6 +135,7 @@ export default function Flashcards({
             {dir === "en-pt" ? (
               <>
                 <span className="term en">{card.en}</span>
+                <Pron text={card.en} explicit={card.say} noButton className="fc-say" />
                 {flipped ? (
                   <span className="answer">{card.pt}</span>
                 ) : (
@@ -144,7 +146,10 @@ export default function Flashcards({
               <>
                 <span className="term">{card.pt}</span>
                 {flipped ? (
-                  <span className="answer en">{card.en}</span>
+                  <>
+                    <span className="answer en">{card.en}</span>
+                    <Pron text={card.en} explicit={card.say} noButton className="fc-say" />
+                  </>
                 ) : (
                   <span className="hint">Toque para ver em inglês</span>
                 )}
@@ -156,6 +161,7 @@ export default function Flashcards({
           <div className="fc-voice">
             <Speak text={card.en} />
             <SayIt expected={card.en} />
+            <Pron text={card.en} explicit={card.say} buttonOnly />
           </div>
 
           <div className="fc-actions">

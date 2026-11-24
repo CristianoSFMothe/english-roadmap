@@ -22,7 +22,8 @@ export type RawWeek = {
   days: Day[];
 };
 
-export type Card = { en: string; pt: string; group: string; id: string };
+/** `say` é a pronúncia aproximada em sons do português (3ª parte de "en=pt=say"). */
+export type Card = { en: string; pt: string; group: string; id: string; say?: string };
 
 export type Week = Omit<RawWeek, "vocab"> & {
   vocabGroups: { group: string; cards: Card[] }[];
@@ -37,10 +38,14 @@ function parseItems(weekN: number, group: string, items: string): Card[] {
     .map((pair) => pair.trim())
     .filter(Boolean)
     .map((pair, i) => {
-      const cut = pair.indexOf("=");
-      const en = cut === -1 ? pair : pair.slice(0, cut).trim();
-      const pt = cut === -1 ? "" : pair.slice(cut + 1).trim();
-      return { en, pt, group, id: `w${weekN}-${group}-${i}` };
+      // "en=pt" ou "en=pt=pronúncia": com 3 partes ou mais, a última é a pronúncia.
+      const parts = pair.split("=").map((x) => x.trim());
+      const en = parts[0];
+      const say = parts.length >= 3 ? parts[parts.length - 1] || undefined : undefined;
+      const pt = (parts.length >= 3 ? parts.slice(1, -1) : parts.slice(1)).join("=");
+      const card: Card = { en, pt, group, id: `w${weekN}-${group}-${i}` };
+      if (say) card.say = say;
+      return card;
     });
 }
 

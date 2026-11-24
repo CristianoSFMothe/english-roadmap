@@ -75,7 +75,9 @@ export function normalizeWeek(
               const pair = (it ?? {}) as Record<string, unknown>;
               const en = str(pair.en ?? pair.english);
               const pt = str(pair.pt ?? pair.portuguese ?? pair.translation);
-              return en ? `${en}=${pt}` : "";
+              const say = str(pair.say ?? pair.pron ?? pair.pronuncia);
+              if (!en) return "";
+              return say ? `${en}=${pt}=${say}` : `${en}=${pt}`;
             })
             .filter(Boolean)
             .join("; ")
