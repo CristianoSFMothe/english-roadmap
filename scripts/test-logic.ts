@@ -7,9 +7,9 @@ import { readFileSync } from "node:fs";
 import type { RawWeek } from "../lib/weeks.ts";
 import { VERBS, thirdPerson, findVerb, ingForm, ptGerund, ptConditional, buildTense, TENSES, statNotice, buildExamples, shortAnswers } from "../lib/verbs.ts";
 import { sayPhrase, pronKey, pronounce, PRON_STYLE, PRON_EXAMPLES } from "../lib/pronunciation.ts";
-import { normalizeQuestions, normalizeResult } from "../lib/lesson-normalize.ts";
+import { canGenerateMore, looksEnglish, MAX_IMPROVEMENTS, mergeImprovements, normalizeImprovements, normalizeQuestions, normalizeResult, normalizeStudy } from "../lib/lesson-normalize.ts";
 import { normalizePronMap, pronBatches, pronSystemPrompt, pronUserPrompt, shouldStoreShared, splitGeneratable } from "../lib/pron-prompt.ts";
-import { lessonSystemPrompt, lessonUserPrompt, ORDEM, TOTAL_QUESTOES } from "../lib/lesson-prompt.ts";
+import { gradeSystemPrompt, improveSystemPrompt, improveUserPrompt, lessonSystemPrompt, lessonUserPrompt, ORDEM, TOTAL_QUESTOES } from "../lib/lesson-prompt.ts";
 
 let failures = 0;
 const check = (name: string, fn: () => void) => {
@@ -447,6 +447,124 @@ check("frases do dia e exemplos de gramatica do plano de exemplo tem pronuncia",
   const textos = sampleRaw.flatMap((w) => [...w.days.map((d) => d.speak), ...w.grammar.examples]);
   const faltam = textos.filter((t) => t && !pronounce(t));
   if (faltam.length) throw new Error(`${faltam.length} sem pronuncia: ${faltam.slice(0, 5).join(" | ")}`);
+});
+
+check("estudo completo normalizado", () => {
+  const s = normalizeStudy({ study: { topic: "To be negativo", goal: "g", explanation: ["a", "b"], pattern: "P", examples: [{ en: "I am not", pt: "Eu não sou", pron: "ái ém nót" }, { pt: "sem en" }], tips: [{ text: "t", wrong: "I not am", right: "I am not" }, "dica solta"] } });
+  if (s.topic !== "To be negativo" || s.examples.length !== 1 || s.tips.length !== 2) throw new Error(JSON.stringify(s));
+  if (s.tips[1].text !== "dica solta" || s.examples[0].pron !== "ái ém nót") throw new Error("campos");
+});
+
+check("estudo com chaves em portugues e sem opcionais", () => {
+  const s = normalizeStudy({ estudo: { assunto: "A", explicacao: "um parágrafo", exemplos: [{ ingles: "Hi", traducao: "Oi" }], dicas: [] } });
+  if (s.explanation.length !== 1 || s.pattern !== undefined || s.examples[0].pron !== undefined) throw new Error("opcionais");
+});
+
+check("resposta sem teoria e recusada", () => {
+  let threw = false;
+  try { normalizeStudy(JSON.parse(licaoBruta(5))); } catch { threw = true; }
+  if (!threw) throw new Error("deveria recusar array sem study");
+});
+
+check("questoes saem do objeto novo", () => {
+  const qs = normalizeQuestions({ study: {}, questions: JSON.parse(licaoBruta(5)) }, ORDEM);
+  if (qs.length !== TOTAL_QUESTOES) throw new Error("questions no objeto");
+});
+
+check("prompt da licao pede teoria ligada as questoes", () => {
+  const s = lessonSystemPrompt(sampleProfile);
+  if (!/teoria/i.test(s) || !/jarg/i.test(s)) throw new Error("regras da teoria");
+  const u = lessonUserPrompt({ level: "A1", data: "2026-11-23", gramatica: "to be", assuntosRecentes: ["To be afirmativo", "To be negativo"] });
+  if (!u.includes('"study"') || !u.includes('"questions"')) throw new Error("formato");
+  if (!u.includes("To be negativo") || !/não repita/i.test(u)) throw new Error("assuntos recentes");
+  if (!u.includes('"pron"')) throw new Error("pronuncia nos exemplos");
+});
+
+check("prompt da licao leva o mesmo estilo de PRON_STYLE", () => {
+  const s = lessonSystemPrompt(sampleProfile);
+  const falta = PRON_STYLE.split("\n").find((r) => !s.includes(r));
+  if (falta) throw new Error("regra fora do prompt: " + falta);
+});
+
+check("correcao traz ate 3 jeitos de melhorar a resposta", () => {
+  const r = normalizeResult(extractJson(JSON.stringify({
+    correct: true, feedback: "Boa.", correction: "My first name is Cristiano.",
+    improvements: [
+      { en: "My first name is Cristiano and I am a QA analyst.", why: "Diz a profissao completa." },
+      { en: "  ", why: "vazio" },
+      { frase: "I'm Cristiano, and I work as a QA analyst.", motivo: "Mais natural." },
+      "Hi! I'm Cristiano. I'm a QA engineer.",
+      { en: "My first name is Cristiano and I am a QA analyst.", why: "repetida" },
+      { en: "I work in quality assurance as an analyst.", why: "Outro jeito." },
+    ],
+  })));
+  if (r.improvements.length !== 3) throw new Error(JSON.stringify(r.improvements));
+  if (r.improvements[1].en !== "I'm Cristiano, and I work as a QA analyst." || r.improvements[1].why !== "Mais natural.") throw new Error("chaves em pt");
+  if (r.improvements[2].why !== "") throw new Error("string solta vira frase sem porque");
+  const antigo = normalizeResult(extractJson('{"correct": false, "feedback": "x"}'));
+  if (!Array.isArray(antigo.improvements) || antigo.improvements.length) throw new Error("sem melhorias");
+  const pt = normalizeResult({ correct: true, melhorias: [{ en: "I am a tester.", porque: "Simples." }] });
+  if (pt.improvements[0]?.why !== "Simples.") throw new Error("melhorias em pt");
+});
+
+check("prompt de correcao pede 3 jeitos de melhorar, certo ou errado", () => {
+  const p = gradeSystemPrompt("A1");
+  if (!p.includes('"improvements"') || !/3 jeitos/.test(p)) throw new Error("sem improvements");
+});
+
+check("so o material em ingles ganha ouvir e pronuncia", () => {
+  for (const en of ["What is your first name and what is your job?", "I ___ (work) every day.", "She don't like coffee.", "What do you do?", "I work as a tester, as you know."])
+    if (!looksEnglish(en)) throw new Error(`devia ser ingles: ${en}`);
+  for (const pt of ["Eu trabalho todos os dias.", "Traduza: você gosta de café?", "Ela não gosta de chá", "", "o que você faz no fim de semana"])
+    if (looksEnglish(pt)) throw new Error(`devia ser portugues: ${pt}`);
+});
+
+check("novas respostas vem nos 3 estilos, com dica, sem repetir as que ja existem", () => {
+  const atuais = [{ en: "I don't like coffee.", why: "x", style: "usual" as const }];
+  const novas = normalizeImprovements({ improvements: [
+    { style: "informal", en: "Nah, coffee's not my thing.", tip: "Com amigos." },
+    { estilo: "formal", frase: "I do not care for coffee.", dica: "Em reunioes." },
+    { style: "mais usual", en: "i don't like coffee", why: "repetida" },
+    { style: "Usual", en: "I'm not a fan of coffee.", why: "No dia a dia." },
+    { style: "estranho", en: "Coffee? No, thanks.", why: "sem estilo conhecido" },
+  ] }, atuais);
+  if (novas.length !== 3) throw new Error(JSON.stringify(novas));
+  if (novas.map((n) => n.style).join() !== "informal,formal,usual") throw new Error(novas.map((n) => n.style).join());
+  if (novas[0].why !== "Com amigos." || novas[1].why !== "Em reunioes.") throw new Error("dica");
+  const lista = normalizeImprovements([{ en: "Coffee? No, thanks." }], []);
+  if (lista[0]?.style !== undefined) throw new Error("estilo desconhecido fica sem estilo");
+});
+
+check("gerar mais respostas acumula sem passar do limite", () => {
+  const base = Array.from({ length: MAX_IMPROVEMENTS - 2 }, (_, i) => ({ en: `Sentence ${i}.`, why: "" }));
+  const juntas = mergeImprovements(base, [{ en: "A.", why: "" }, { en: "B.", why: "" }, { en: "C.", why: "" }]);
+  if (juntas.length !== MAX_IMPROVEMENTS || juntas[0].en !== "Sentence 0." || juntas.at(-1)!.en !== "B.") throw new Error(String(juntas.length));
+});
+
+check("prompt de mais respostas pede informal, formal e mais usual e manda as que ja existem", () => {
+  const sys = improveSystemPrompt("A1");
+  if (!/informal/.test(sys) || !/formal/.test(sys) || !/usual/.test(sys) || !sys.includes('"style"')) throw new Error("estilos");
+  const q = { id: "q1", difficulty: "media" as const, type: "pergunta", prompt: "Responda.", content: "What is your job?", expected: "I am a QA analyst." };
+  const u = improveUserPrompt(q, "I am QA", "I am a QA analyst.", [{ en: "I work as a QA analyst.", why: "" }]);
+  if (!u.includes("I am QA") || !u.includes("I work as a QA analyst.")) throw new Error(u);
+  if (!/informal/.test(gradeSystemPrompt("A1"))) throw new Error("correcao tambem nos 3 estilos");
+});
+
+check("as 3 respostas extras so podem ser geradas uma vez por questao", () => {
+  const base = { correct: true, feedback: "", correction: "", tip: "", improvements: [] };
+  if (!canGenerateMore(base)) throw new Error("ainda nao gerou");
+  if (!canGenerateMore({ ...base, withImprovements: true, improvements: [{ en: "A.", why: "" }] })) throw new Error("as da correcao nao contam");
+  if (canGenerateMore({ ...base, moreGenerated: true })) throw new Error("ja gerou");
+  if (canGenerateMore(undefined)) throw new Error("sem resposta");
+});
+
+check("respostas geradas antes da trava contam como ja geradas", () => {
+  const base = { correct: true, feedback: "", correction: "", tip: "", improvements: [] };
+  const antigaGerada = { ...base, improvements: [{ en: "I work in QA.", why: "", style: "usual" as const }] };
+  if (canGenerateMore(antigaGerada)) throw new Error("antiga com respostas geradas pelo botao");
+  const nova = normalizeResult({ correct: true, feedback: "ok", correction: "I am a QA analyst.", improvements: [{ style: "informal", en: "I'm a QA.", tip: "x" }] });
+  if (!nova.withImprovements || !canGenerateMore(nova)) throw new Error("correcao nova ainda pode gerar uma vez");
+  if (canGenerateMore({ ...nova, moreGenerated: true })) throw new Error("nova depois de gerar");
 });
 
 console.log(failures === 0 ? "\nTodos os testes passaram." : `\n${failures} falha(s).`);

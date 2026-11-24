@@ -567,6 +567,9 @@ export default function PreferencesPage() {
               <strong>Preferências</strong>
             </div>
             <div className="head-actions">
+              <Link className="btn small" href="/estudo-diario">
+                Estudo do dia
+              </Link>
               <Link className="btn small" href="/vocabulario">
                 Vocabulário
               </Link>

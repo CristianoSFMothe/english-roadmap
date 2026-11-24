@@ -4,6 +4,7 @@ import { askGemini, resolveKey } from "@/lib/gemini";
 import { clampProfile, emptyProfile, type Profile } from "@/lib/profile";
 import { loadUserData } from "@/lib/server-data";
 import {
+  assuntosRecentes,
   createLesson,
   errosRecentes,
   getLesson,
@@ -11,17 +12,27 @@ import {
   hojeSaoPaulo,
   pendentes,
   saveAnswer,
+  setImprovements,
   type Lesson,
 } from "@/lib/lessons";
 import {
   gradeSystemPrompt,
   gradeUserPrompt,
+  improveSystemPrompt,
+  improveUserPrompt,
   lessonSystemPrompt,
   lessonUserPrompt,
   ORDEM,
   TOTAL_QUESTOES,
 } from "@/lib/lesson-prompt";
-import { normalizeQuestions, normalizeResult } from "@/lib/lesson-normalize";
+import {
+  canGenerateMore,
+  mergeImprovements,
+  normalizeImprovements,
+  normalizeQuestions,
+  normalizeResult,
+  normalizeStudy,
+} from "@/lib/lesson-normalize";
 import { extractJson } from "@/lib/normalize";
 
 export const runtime = "nodejs";
@@ -81,7 +92,7 @@ export async function GET() {
 }
 
 type Body = {
-  action?: "generate" | "answer";
+  action?: "generate" | "answer" | "improve";
   date?: string;
   weekN?: number;
   tema?: string;
@@ -112,6 +123,7 @@ export async function POST(request: Request) {
   try {
     if (body.action === "generate") return await gerar(user.id, body, chave.key);
     if (body.action === "answer") return await corrigir(user.id, body, chave.key);
+    if (body.action === "improve") return await maisRespostas(user.id, body, chave.key);
     return fail("Ação desconhecida.", 400);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Falha na lição.";
@@ -133,7 +145,7 @@ async function gerar(userId: string, body: Body, key: string) {
   }
 
   const profile = await perfilDoUsuario(userId, body.profile);
-  const erros = await errosRecentes(userId);
+  const [erros, assuntos] = await Promise.all([errosRecentes(userId), assuntosRecentes(userId)]);
 
   const texto = await askGemini({
     key,
@@ -144,22 +156,37 @@ async function gerar(userId: string, body: Body, key: string) {
       gramatica: body.gramatica,
       vocabulario: body.vocabulario,
       errosRecentes: erros,
+      assuntosRecentes: assuntos,
       data,
     }),
-    maxTokens: 6000,
+    // Teoria, dicas e 5 questões numa resposta só.
+    maxTokens: 12000,
     temperature: 0.9,
   });
 
-  const questions = normalizeQuestions(extractJson(texto), ORDEM);
+  const bruto = extractJson(texto);
+  // A teoria primeiro: sem ela (resposta no formato antigo), nada é salvo.
+  const study = normalizeStudy(bruto);
+  const questions = normalizeQuestions(bruto, ORDEM);
   const lesson = await createLesson({
     userId,
     date: data,
     level: profile.level,
     weekN: typeof body.weekN === "number" ? body.weekN : null,
     questions,
+    study,
   });
 
   return NextResponse.json({ lesson, jaExistia: false });
+}
+
+/** A lição do pedido: a do dia informado ou uma das abertas dos últimos 30 dias. */
+async function acharLicao(userId: string, body: Body): Promise<Lesson | null> {
+  const data = /^\d{4}-\d{2}-\d{2}$/.test(body.date ?? "") ? (body.date as string) : hojeSaoPaulo();
+  const lesson = await getLesson(userId, data);
+  if (lesson && lesson.id === body.lessonId) return lesson;
+  const abertas = await pendentes(userId, 30);
+  return abertas.find((l) => l.id === body.lessonId) ?? null;
 }
 
 async function corrigir(userId: string, body: Body, key: string) {
@@ -167,12 +194,7 @@ async function corrigir(userId: string, body: Body, key: string) {
   const resposta = (body.answer ?? "").trim();
   if (!resposta) return fail("Escreva a resposta antes de corrigir.", 400);
 
-  const data = /^\d{4}-\d{2}-\d{2}$/.test(body.date ?? "") ? (body.date as string) : hojeSaoPaulo();
-  let lesson: Lesson | null = await getLesson(userId, data);
-  if (!lesson || lesson.id !== body.lessonId) {
-    const abertas = await pendentes(userId, 30);
-    lesson = abertas.find((l) => l.id === body.lessonId) ?? null;
-  }
+  const lesson = await acharLicao(userId, body);
   if (!lesson) return fail("Lição não encontrada.", 404);
 
   const questao = lesson.questions.find((q) => q.id === body.questionId);
@@ -197,4 +219,43 @@ async function corrigir(userId: string, body: Body, key: string) {
   });
 
   return NextResponse.json({ result, lesson: atualizada ?? lesson });
+}
+
+/** "Gerar 3 respostas": informal, formal e mais usual, somadas às que já existem (uma vez por questão). */
+async function maisRespostas(userId: string, body: Body, key: string) {
+  if (!body.lessonId || !body.questionId) return fail("Lição ou questão não informada.", 400);
+  const lesson = await acharLicao(userId, body);
+  if (!lesson) return fail("Lição não encontrada.", 404);
+
+  const questao = lesson.questions.find((q) => q.id === body.questionId);
+  const result = lesson.results?.[body.questionId];
+  if (!questao || !result) return fail("Responda a questão antes de pedir outras respostas.", 400);
+
+  if (!canGenerateMore(result)) {
+    return fail("Você já gerou as 3 respostas desta questão.", 409);
+  }
+  const atuais = result.improvements ?? [];
+
+  const texto = await askGemini({
+    key,
+    system: improveSystemPrompt(lesson.level),
+    user: improveUserPrompt(questao, lesson.answers?.[questao.id] ?? "", result.correction, atuais),
+    maxTokens: 2000,
+    temperature: 0.7,
+  });
+  const novas = normalizeImprovements(extractJson(texto), [
+    ...atuais,
+    ...(result.correction ? [{ en: result.correction, why: "" }] : []),
+  ]);
+  if (!novas.length) return fail("A IA não trouxe respostas novas. Tente de novo.", 502);
+
+  const atualizada = await setImprovements({
+    userId,
+    lessonId: lesson.id,
+    questionId: questao.id,
+    improvements: mergeImprovements(atuais, novas),
+  });
+  // Sem linha atualizada: outro clique (ou outra aba) gerou antes deste.
+  if (!atualizada) return fail("Você já gerou as 3 respostas desta questão.", 409);
+  return NextResponse.json({ lesson: atualizada, added: novas.length });
 }
