@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import type { Day, Week } from "@/lib/content";
 import { Check } from "./Roadmap";
+import { Pron } from "./Pron";
 
 export default function DayDrawer({
   week,
@@ -77,7 +78,9 @@ export default function DayDrawer({
 
         <div className="goal">
           <span>Frase</span>
-          <span className="en">{day.speak}</span>
+          <span className="goal-text">
+            <span className="en">{day.speak}</span> <Pron text={day.speak} />
+          </span>
         </div>
 
         <div className="tip">

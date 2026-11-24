@@ -19,23 +19,23 @@
     "vocab": [
       {
         "group": "Metas e Prazos de Trabalho",
-        "items": "project=projeto; deadline=prazo; goal=meta; next week=próxima semana; tomorrow=amanhã; schedule=cronograma; priority=prioridade; status report=relatório de status; meeting=reunião; milestone=marco de projeto; delivery=entrega; timeline=linha do tempo; task=tarefa; priority list=lista de prioridades; target=alvo ou meta"
+        "items": "project=projeto=pró-djekt; deadline=prazo=déd-láin; goal=meta=gôul; next week=próxima semana=nékst uík; tomorrow=amanhã=tu-mó-rou; schedule=cronograma=ské-djul; priority=prioridade=prai-ó-ri-ti; status report=relatório de status=stêi-tâs ri-pórt; meeting=reunião=mí-ting; milestone=marco de projeto=máil-stôun; delivery=entrega=di-lí-ve-ri; timeline=linha do tempo=táim-láin; task=tarefa=tésk; priority list=lista de prioridades=prai-ó-ri-ti líst; target=alvo ou meta=tár-guit"
       },
       {
         "group": "Ações Futuras de Negócios",
-        "items": "to finish=terminar; to start=começar; to send=enviar; to review=revisar; to present=apresentar; to complete=completar; to organize=organizar; to schedule=agendar; to update=atualizar; to launch=lançar; to assist=ajudar; to contact=entrar em contato; to check=verificar; to prepare=preparar; to deliver=entregar"
+        "items": "to finish=terminar=tu fí-nich; to start=começar=tu stárt; to send=enviar=tu sénd; to review=revisar=tu ri-viú; to present=apresentar=tu pri-zént; to complete=completar=tu kâm-plít; to organize=organizar=tu ór-ga-náiz; to schedule=agendar=tu ské-djul; to update=atualizar=tu âp-dêit; to launch=lançar=tu lóntch; to assist=ajudar=tu â-síst; to contact=entrar em contato=tu kón-tékt; to check=verificar=tu tchék; to prepare=preparar=tu pri-pér; to deliver=entregar=tu di-lí-ver"
       },
       {
         "group": "Planos Pessoais e Fim de Semana",
-        "items": "weekend=fim de semana; to relax=relaxar; to cook=cozinhar; to play games=jogar videogame; to watch a movie=assistir a um filme; to walk in the park=caminhar no parque; to visit=visitar; coffee break=pausa para o café; leisure time=tempo de lazer; rest=descanso; travel=viagem; outdoor activity=atividade ao ar livre; dinner=jantar; morning coffee=café da manhã; free time=tempo livre"
+        "items": "weekend=fim de semana=uí-kend; to relax=relaxar=tu ri-léks; to cook=cozinhar=tu kúk; to play games=jogar videogame=tu plêi guêimz; to watch a movie=assistir a um filme=tu uótch â mú-vi; to walk in the park=caminhar no parque=tu uók ín dâ párk; to visit=visitar=tu ví-zit; coffee break=pausa para o café=kó-fi brêik; leisure time=tempo de lazer=lí-jer táim; rest=descanso=rést; travel=viagem=tré-vel; outdoor activity=atividade ao ar livre=áut-dór ek-tí-vi-ti; dinner=jantar=dí-ner; morning coffee=café da manhã=mór-ning kó-fi; free time=tempo livre=frí táim"
       },
       {
         "group": "Expressões de Tempo Futuro",
-        "items": "soon=em breve; later=mais tarde; next month=próximo mês; in two days=em dois dias; on Monday=na segunda-feira; by Friday=até sexta-feira; this afternoon=esta tarde; tonight=hoje à noite; next step=próximo passo; in the future=no futuro; upcoming=próximo ou vindouro; shortly=em pouco tempo; eventually=eventualmente; next year=próximo ano; this weekend=este fim de semana"
+        "items": "soon=em breve=sún; later=mais tarde=lêi-ter; next month=próximo mês=nékst mânth; in two days=em dois dias=ín tú dêiz; on Monday=na segunda-feira=ón mân-dêi; by Friday=até sexta-feira=bái frái-dêi; this afternoon=esta tarde=dís éf-ter-nún; tonight=hoje à noite=tu-náit; next step=próximo passo=nékst stép; in the future=no futuro=ín dâ fiú-tcher; upcoming=próximo ou vindouro=âp-kâ-ming; shortly=em pouco tempo=chórt-li; eventually=eventualmente=i-vén-tchu-â-li; next year=próximo ano=nékst iír; this weekend=este fim de semana=dís uí-kend"
       },
       {
         "group": "Marcadores de Decisão e Expectativa",
-        "items": "maybe=talvez; probably=provavelmente; I plan to=eu planejo; I hope to=eu espero; I intend to=eu intenciono; I think=eu acho que; definitely=com certeza; for sure=com certeza; expected=esperado; ready=pronto; planned=planejado; decision=decisão; sudden idea=ideia repentina; certainty=certeza; promise=promessa"
+        "items": "maybe=talvez=mêi-bi; probably=provavelmente=pró-bâ-bli; I plan to=eu planejo=ái plén tu; I hope to=eu espero=ái rrôup tu; I intend to=eu intenciono=ái in-ténd tu; I think=eu acho que=ái thínk; definitely=com certeza=dé-fi-nit-li; for sure=com certeza=fór chúr; expected=esperado=eks-pék-tid; ready=pronto=ré-di; planned=planejado=plénd; decision=decisão=di-sí-jân; sudden idea=ideia repentina=sâ-den ai-día; certainty=certeza=sâr-ten-ti; promise=promessa=pró-mis"
       }
     ],
     "resources": [
@@ -230,23 +230,23 @@
     "vocab": [
       {
         "group": "Pedindo Esclarecimentos em Reuniões",
-        "items": "could you repeat=você poderia repetir; I did not understand=eu não entendi; what do you mean=o que você quer dizer; could you speak slower=você poderia falar mais devagar; can you explain this=você pode explicar isso; I have a question=eu tenho uma pergunta; could you clarify=você poderia esclarecer; what is the main goal=qual é o objetivo principal; can you give an example=você pode dar um exemplo; sorry to interrupt=desculpe interromper; let me see if I understood=deixe-me ver se eu entendi; is that correct=isso está correto; what are the next steps=quais são os próximos passos; can you send that in writing=você pode enviar isso por escrito; could you speak a bit louder=você poderia falar um pouco mais alto"
+        "items": "could you repeat=você poderia repetir=kúd iú ri-pít; I did not understand=eu não entendi=ái díd nót ân-der-sténd; what do you mean=o que você quer dizer=uót dú iú mín; could you speak slower=você poderia falar mais devagar=kúd iú spík slôu-er; can you explain this=você pode explicar isso=kén iú eks-plêin dís; I have a question=eu tenho uma pergunta=ái rrév â kués-tchân; could you clarify=você poderia esclarecer=kúd iú klé-ri-fái; what is the main goal=qual é o objetivo principal=uót íz dâ mêin gôul; can you give an example=você pode dar um exemplo=kén iú guív én ig-zém-pel; sorry to interrupt=desculpe interromper=só-ri tu in-te-râpt; let me see if I understood=deixe-me ver se eu entendi=lét mí sí íf ái ân-der-stúd; is that correct=isso está correto=íz dét ko-rékt; what are the next steps=quais são os próximos passos=uót ár dâ nékst stéps; can you send that in writing=você pode enviar isso por escrito=kén iú sénd dét ín rái-ting; could you speak a bit louder=você poderia falar um pouco mais alto=kúd iú spík â bít láu-der"
       },
       {
         "group": "Expressando Necessidades e Regras do Trabalho",
-        "items": "we must fix this=nós devemos consertar isso; you should send an email=você deveria enviar um email; we need more time=nós precisamos de mais tempo; it is necessary=é necessário; it is mandatory=é obrigatório; you cannot do that=você não pode fazer isso; you must follow the policy=você deve seguir a política; we should talk to the team=nós deveríamos falar com a equipe; I need help with this report=eu preciso de ajuda com este relatório; safety guidelines=diretrizes de segurança; company rules=regras da empresa; clear instructions=instruções claras; urgent request=pedido urgente; mandatory meeting=reunião obrigatória; standard procedure=procedimento padrão"
+        "items": "we must fix this=nós devemos consertar isso=uí mâst fíks dís; you should send an email=você deveria enviar um email=iú chúd sénd én í-mêil; we need more time=nós precisamos de mais tempo=uí níd mór táim; it is necessary=é necessário=ít íz né-se-sé-ri; it is mandatory=é obrigatório=ít íz mén-da-tó-ri; you cannot do that=você não pode fazer isso=iú ké-nót dú dét; you must follow the policy=você deve seguir a política=iú mâst fó-lou dâ pó-li-si; we should talk to the team=nós deveríamos falar com a equipe=uí chúd tók tu dâ tím; I need help with this report=eu preciso de ajuda com este relatório=ái níd rrélp uíd dís ri-pórt; safety guidelines=diretrizes de segurança=sêif-ti gáid-láinz; company rules=regras da empresa=kâm-pa-ni rúlz; clear instructions=instruções claras=klír ins-trâk-chânz; urgent request=pedido urgente=âr-djent ri-kuést; mandatory meeting=reunião obrigatória=mén-da-tó-ri mí-ting; standard procedure=procedimento padrão=stén-dârd pro-sí-djer"
       },
       {
         "group": "Propondo Soluções e Sugestões",
-        "items": "we can try another option=nós podemos tentar outra opção; I suggest a short meeting=eu sugiro uma reunião curta; we could change the date=nós poderíamos mudar a data; how about this idea=que tal esta ideia; we should check the plan=nós deveríamos checar o plano; my recommendation is=minha recomendação é; we can solve this quickly=nós podemos resolver isso rapidamente; I have a solution=eu tenho uma solução; let us review the schedule=vamos revisar o cronograma; we must act fast=nós devemos agir rápido; a simple fix=uma solução simples; alternative plan=plano alternativo; possible outcome=resultado possível; proposed timeline=cronograma proposto; practical approach=abordagem prática"
+        "items": "we can try another option=nós podemos tentar outra opção=uí kén trái â-nâ-der óp-chân; I suggest a short meeting=eu sugiro uma reunião curta=ái sâg-djést â chórt mí-ting; we could change the date=nós poderíamos mudar a data=uí kúd tchêindj dâ dêit; how about this idea=que tal esta ideia=rráu â-báut dís ai-día; we should check the plan=nós deveríamos checar o plano=uí chúd tchék dâ plén; my recommendation is=minha recomendação é=mái ré-ko-men-dêi-chân íz; we can solve this quickly=nós podemos resolver isso rapidamente=uí kén sólv dís kuík-li; I have a solution=eu tenho uma solução=ái rrév â so-lú-chân; let us review the schedule=vamos revisar o cronograma=lét âs ri-viú dâ ské-djul; we must act fast=nós devemos agir rápido=uí mâst ékt fést; a simple fix=uma solução simples=â sím-pel fíks; alternative plan=plano alternativo=ól-târ-na-tiv plén; possible outcome=resultado possível=pó-si-bel áut-kâm; proposed timeline=cronograma proposto=pro-pôuzd táim-láin; practical approach=abordagem prática=prék-ti-kal â-prôutch"
       },
       {
         "group": "Contexto de Ficção Científica e Fantasia",
-        "items": "space mission rules=regras da missão espacial; magic system constraints=restrições do sistema de magia; emergency protocol=protocolo de emergência; team strategy=estratégia de equipe; order of command=ordem de comando; main objective=objetivo principal; safety boundary=limite de segurança; vital requirement=requisito vital; urgent signal=sinal urgente; clear warning=aviso claro; strict policy=política rigorosa; necessary permission=permissão necessária; secret instructions=instruções secretas; strategic advantage=vantagem estratégica; final decision=decisão final"
+        "items": "space mission rules=regras da missão espacial=spêis mí-chân rúlz; magic system constraints=restrições do sistema de magia=mé-djik sís-tem kon-strêints; emergency protocol=protocolo de emergência=i-mâr-djen-si prôu-to-kól; team strategy=estratégia de equipe=tím stré-te-dji; order of command=ordem de comando=ór-der óv ko-ménd; main objective=objetivo principal=mêin ob-djék-tiv; safety boundary=limite de segurança=sêif-ti báun-da-ri; vital requirement=requisito vital=vái-tal ri-kuáier-ment; urgent signal=sinal urgente=âr-djent síg-nal; clear warning=aviso claro=klír uór-ning; strict policy=política rigorosa=stríkt pó-li-si; necessary permission=permissão necessária=né-se-sé-ri per-mí-chân; secret instructions=instruções secretas=sí-kret ins-trâk-chânz; strategic advantage=vantagem estratégica=stra-tí-djik ed-vén-tidj; final decision=decisão final=fái-nal di-sí-jân"
       },
       {
         "group": "Vocabulário do Cotidiano e Hobbies",
-        "items": "cooking recipe steps=passos da receita de cozinha; game strategy=estratégia do jogo; morning coffee break=pausa do café da manhã; walking route=rota da caminhada; daily checklist=lista de verificação diária; personal preference=preferência pessoal; household rules=regras da casa; board game rules=regras do jogo de tabuleiro; quick break=pausa rápida; clear path=caminho claro; quiet park=parque tranquilo; simple ingredient=ingrediente simples; game controller setting=configuração do controle do jogo; timing is key=o tempo é fundamental; step by step=passo a passo"
+        "items": "cooking recipe steps=passos da receita de cozinha=kú-king ré-si-pi stéps; game strategy=estratégia do jogo=guêim stré-te-dji; morning coffee break=pausa do café da manhã=mór-ning kó-fi brêik; walking route=rota da caminhada=uó-king rút; daily checklist=lista de verificação diária=dêi-li tchék-líst; personal preference=preferência pessoal=pâr-so-nal pré-fe-rens; household rules=regras da casa=rráus-rrôuld rúlz; board game rules=regras do jogo de tabuleiro=bórd guêim rúlz; quick break=pausa rápida=kuík brêik; clear path=caminho claro=klír péth; quiet park=parque tranquilo=kuái-et párk; simple ingredient=ingrediente simples=sím-pel in-grí-di-ent; game controller setting=configuração do controle do jogo=guêim kon-trôu-ler sé-ting; timing is key=o tempo é fundamental=tái-ming íz kí; step by step=passo a passo=stép bái stép"
       }
     ],
     "resources": [
@@ -451,23 +451,23 @@
     "vocab": [
       {
         "group": "Conquistas Profissionais",
-        "items": "achievement=conquista; goal=meta; success=sucesso; award=prêmio; promotion=promoção; milestone=marco; growth=crescimento; result=resultado; challenge=desafio; progress=progresso; career=carreira; impact=impacto; gain=ganho; target=alvo; standard=padrão"
+        "items": "achievement=conquista=â-tchív-ment; goal=meta=gôul; success=sucesso=sâk-sés; award=prêmio=â-uórd; promotion=promoção=pro-môu-chân; milestone=marco=máil-stôun; growth=crescimento=grôuth; result=resultado=ri-zâlt; challenge=desafio=tché-lendj; progress=progresso=pró-gres; career=carreira=ka-rír; impact=impacto=ím-pékt; gain=ganho=guêin; target=alvo=tár-guit; standard=padrão=stén-dârd"
       },
       {
         "group": "Ações e Experiências",
-        "items": "to achieve=alcançar; to complete=completar; to win=vencer; to create=criar; to improve=melhorar; to lead=liderar; to manage=gerenciar; to build=construir; to finish=finalizar; to solve=resolver; to organize=organizar; to deliver=entregar; to participate=participar; to increase=aumentar; to develop=desenvolver"
+        "items": "to achieve=alcançar=tu â-tchív; to complete=completar=tu kâm-plít; to win=vencer=tu uín; to create=criar=tu kri-êit; to improve=melhorar=tu im-prúv; to lead=liderar=tu líd; to manage=gerenciar=tu mé-nidj; to build=construir=tu bíld; to finish=finalizar=tu fí-nich; to solve=resolver=tu sólv; to organize=organizar=tu ór-ga-náiz; to deliver=entregar=tu di-lí-ver; to participate=participar=tu par-tí-si-pêit; to increase=aumentar=tu in-krís; to develop=desenvolver=tu di-vé-lop"
       },
       {
         "group": "Marcadores de Tempo do Present Perfect",
-        "items": "ever=alguma vez; never=nunca; already=já; yet=ainda; so far=até agora; recently=recentemente; lately=ultimamente; before=antes; until now=até agora; so many times=tantas vezes; twice=duas vezes; once=uma vez; always=sempre; just=acabar de; frequently=frequentemente"
+        "items": "ever=alguma vez=é-ver; never=nunca=né-ver; already=já=ól-ré-di; yet=ainda=iét; so far=até agora=sôu fár; recently=recentemente=rí-sent-li; lately=ultimamente=lêit-li; before=antes=bi-fór; until now=até agora=ân-tíl náu; so many times=tantas vezes=sôu mé-ni táimz; twice=duas vezes=tuáis; once=uma vez=uâns; always=sempre=ól-uêiz; just=acabar de=djâst; frequently=frequentemente=frí-kuent-li"
       },
       {
         "group": "Qualidades e Qualificações",
-        "items": "experienced=experiente; skilled=habilidoso; certified=certificado; efficient=eficiente; successful=bem-sucedido; qualified=qualificado; responsible=responsável; dedicated=dedicado; productive=produtivo; capable=capaz; active=ativo; prepared=preparado; trained=treinado; flexible=flexível; expert=especialista"
+        "items": "experienced=experiente=eks-pí-ri-enst; skilled=habilidoso=skíld; certified=certificado=sâr-ti-fáid; efficient=eficiente=i-fí-chent; successful=bem-sucedido=sâk-sés-ful; qualified=qualificado=kuó-li-fáid; responsible=responsável=ris-pón-si-bel; dedicated=dedicado=dé-di-kêi-tid; productive=produtivo=pro-dâk-tiv; capable=capaz=kêi-pa-bel; active=ativo=ék-tiv; prepared=preparado=pri-pérd; trained=treinado=trêind; flexible=flexível=flék-si-bel; expert=especialista=éks-pert"
       },
       {
         "group": "Projetos e Processos",
-        "items": "project=projeto; task=tarefa; system=sistema; training=treinamento; client=cliente; team=equipe; report=relatório; presentation=apresentação; process=processo; solution=solução; event=evento; software=software; document=documento; workflow=fluxo de trabalho; feedback=comentário construtivo"
+        "items": "project=projeto=pró-djekt; task=tarefa=tésk; system=sistema=sís-tem; training=treinamento=trêi-ning; client=cliente=klái-ent; team=equipe=tím; report=relatório=ri-pórt; presentation=apresentação=pré-zen-têi-chân; process=processo=pró-ses; solution=solução=so-lú-chân; event=evento=i-vént; software=software=sóft-uér; document=documento=dó-kiu-ment; workflow=fluxo de trabalho=uârk-flôu; feedback=comentário construtivo=fíd-bék"
       }
     ],
     "resources": [
@@ -642,23 +642,23 @@
     "vocab": [
       {
         "group": "Status de Projetos e Resultados",
-        "items": "status report=relatório de status; progress=progresso; deadline=prazo final; delay=atraso; on schedule=dentro do cronograma; ahead of schedule=adiantado; behind schedule=atrasado; outcome=resultado; target=meta; accomplishment=conquista; issue=problema; blocker=impedimento; resolution=solução; milestone=marco do projeto; completion=conclusão"
+        "items": "status report=relatório de status=stêi-tâs ri-pórt; progress=progresso=pró-gres; deadline=prazo final=déd-láin; delay=atraso=di-lêi; on schedule=dentro do cronograma=ón ské-djul; ahead of schedule=adiantado=â-rréd óv ské-djul; behind schedule=atrasado=bi-rráind ské-djul; outcome=resultado=áut-kâm; target=meta=tár-guit; accomplishment=conquista=â-kóm-plich-ment; issue=problema=í-chu; blocker=impedimento=bló-ker; resolution=solução=ré-zo-lú-chân; milestone=marco do projeto=máil-stôun; completion=conclusão=kâm-plí-chân"
       },
       {
         "group": "Expressões para Reuniões e Opiniões",
-        "items": "in my opinion=na minha opinião; I suggest=eu sugiro; I propose=eu proponho; I agree=eu concordo; I disagree=eu discordo; main reason=razão principal; key point=ponto-chave; next step=próximo passo; action item=ação a ser tomada; summary=resumo; in conclusion=em conclusão; feedback=retorno; challenge=desafio; priority=prioridade; strategy=estratégia"
+        "items": "in my opinion=na minha opinião=ín mái o-pí-niân; I suggest=eu sugiro=ái sâg-djést; I propose=eu proponho=ái pro-pôuz; I agree=eu concordo=ái â-grí; I disagree=eu discordo=ái dis-â-grí; main reason=razão principal=mêin rí-zân; key point=ponto-chave=kí póint; next step=próximo passo=nékst stép; action item=ação a ser tomada=ék-chân ái-tem; summary=resumo=sâ-ma-ri; in conclusion=em conclusão=ín kon-klú-jân; feedback=retorno=fíd-bék; challenge=desafio=tché-lendj; priority=prioridade=prai-ó-ri-ti; strategy=estratégia=stré-te-dji"
       },
       {
         "group": "Métricas e Desempenho Profissional",
-        "items": "increase=aumento; decrease=redução; efficiency=eficiência; productivity=produtividade; budget=orçamento; cost=custo; revenue=receita; impact=impacto; improvement=melhoria; risk=risco; performance=desempenho; metric=métrica; data=dados; trend=tendência; goal=objetivo"
+        "items": "increase=aumento=ín-kris; decrease=redução=dí-kris; efficiency=eficiência=i-fí-chen-si; productivity=produtividade=pro-dâk-tí-vi-ti; budget=orçamento=bâ-djit; cost=custo=kóst; revenue=receita=ré-ve-nu; impact=impacto=ím-pékt; improvement=melhoria=im-prúv-ment; risk=risco=rísk; performance=desempenho=per-fór-mens; metric=métrica=mé-trik; data=dados=dêi-ta; trend=tendência=trénd; goal=objetivo=gôul"
       },
       {
         "group": "Conectores e Transições",
-        "items": "because=porque; because of=por causa de; however=no entanto; therefore=portanto; although=embora; controls=controles; as a result=como resultado; on the other hand=por outro lado; in addition=além disso; for example=por exemplo; besides=além de; overall=no geral; mainly=principalmente; due to=devido a; in order to=para que"
+        "items": "because=porque=bi-kóz; because of=por causa de=bi-kóz óv; however=no entanto=rrau-é-ver; therefore=portanto=dér-for; although=embora=ól-dôu; controls=controles=kon-trôulz; as a result=como resultado=éz â ri-zâlt; on the other hand=por outro lado=ón dâ â-der rrénd; in addition=além disso=ín â-dí-chân; for example=por exemplo=fór ig-zém-pel; besides=além de=bi-sáidz; overall=no geral=ôu-ver-ól; mainly=principalmente=mêin-li; due to=devido a=dú tu; in order to=para que=ín ór-der tu"
       },
       {
         "group": "Ações e Verbos de Apresentação",
-        "items": "to present=apresentar; to report=relatar; to explain=explicar; to achieve=alcançar; to fail=falhar; to resolve=resolver; to discuss=discutir; to approve=aprovar; to reject=rejeitar; to complete=concluir; to adjust=ajustar; to deliver=entregar; to manage=gerenciar; to lead=liderar; to improve=melhorar"
+        "items": "to present=apresentar=tu pri-zént; to report=relatar=tu ri-pórt; to explain=explicar=tu eks-plêin; to achieve=alcançar=tu â-tchív; to fail=falhar=tu fêil; to resolve=resolver=tu ri-zólv; to discuss=discutir=tu dis-kâs; to approve=aprovar=tu â-prúv; to reject=rejeitar=tu ri-djékt; to complete=concluir=tu kâm-plít; to adjust=ajustar=tu â-djâst; to deliver=entregar=tu di-lí-ver; to manage=gerenciar=tu mé-nidj; to lead=liderar=tu líd; to improve=melhorar=tu im-prúv"
       }
     ],
     "resources": [

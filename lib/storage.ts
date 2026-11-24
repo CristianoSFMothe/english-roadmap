@@ -4,7 +4,8 @@ import { useCallback, useEffect, useState } from "react";
 
 const PREFIX = "english-roadmap:";
 
-function read<T>(key: string, fallback: T): T {
+/** Lê um valor salvo no navegador (fora de componentes). */
+export function readStored<T>(key: string, fallback: T): T {
   try {
     const raw = window.localStorage.getItem(PREFIX + key);
     if (!raw) return fallback;
@@ -14,7 +15,8 @@ function read<T>(key: string, fallback: T): T {
   }
 }
 
-function write<T>(key: string, value: T) {
+/** Grava um valor no navegador (fora de componentes). */
+export function writeStored<T>(key: string, value: T) {
   try {
     window.localStorage.setItem(PREFIX + key, JSON.stringify(value));
   } catch {
@@ -32,7 +34,7 @@ export function usePersistentState<T>(key: string, initial: T) {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    setValue(read<T>(key, initial));
+    setValue(readStored<T>(key, initial));
     setLoaded(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key]);
@@ -42,7 +44,7 @@ export function usePersistentState<T>(key: string, initial: T) {
       setValue((prev) => {
         const resolved =
           typeof next === "function" ? (next as (p: T) => T)(prev) : next;
-        write(key, resolved);
+        writeStored(key, resolved);
         return resolved;
       });
     },

@@ -19,23 +19,23 @@
     "vocab": [
       {
         "group": "Cumprimentos e Despedidas",
-        "items": "hello=olá; hi=oi; good morning=bom dia; good afternoon=boa tarde; good evening=boa noite (ao chegar); good night=boa noite (ao se despedir); nice to meet you=prazer em conhecer você; glad to meet you=contente em conhecer você; welcome=bem-vindo; goodbye=adeus; bye=tchau; see you soon=até logo; see you later=vejo você mais tarde; have a nice day=tenha um bom dia; take care=cuide-se; how are you?=como você está?; how is it going?=como vão as coisas?"
+        "items": "hello=olá=rre-lôu; hi=oi=rrái; good morning=bom dia=gúd mór-ning; good afternoon=boa tarde=gúd éf-ter-nún; good evening=boa noite (ao chegar)=gúd ív-ning; good night=boa noite (ao se despedir)=gúd náit; nice to meet you=prazer em conhecer você=náis tu mít iú; glad to meet you=contente em conhecer você=gléd tu mít iú; welcome=bem-vindo=uél-kâm; goodbye=adeus=gud-bái; bye=tchau=bái; see you soon=até logo=sí iú sún; see you later=vejo você mais tarde=sí iú lêi-ter; have a nice day=tenha um bom dia=rrév â náis dêi; take care=cuide-se=têik kér; how are you?=como você está?=rráu ár iú?; how is it going?=como vão as coisas?=rráu íz ít gôu-ing?"
       },
       {
         "group": "Identidade e Pronomes",
-        "items": "I=eu; you=você / vocês; he=ele; she=ela; it=ele / ela (coisas e animais); we=nós; they=eles / elas; name=nome; first name=primeiro nome; last name=sobrenome; country=país; city=cidade; from=de (origem); nationality=nacionalidade; age=idade; years old=anos de idade; nickname=apelido"
+        "items": "I=eu=ái; you=você / vocês=iú; he=ele=rrí; she=ela=chí; it=ele / ela (coisas e animais)=ít; we=nós=uí; they=eles / elas=dêi; name=nome=nêim; first name=primeiro nome=fârst nêim; last name=sobrenome=lést nêim; country=país=kân-tri; city=cidade=sí-ti; from=de (origem)=frâm; nationality=nacionalidade=né-châ-né-li-ti; age=idade=êidj; years old=anos de idade=iírz ôuld; nickname=apelido=ník-nêim"
       },
       {
         "group": "Ambiente de Trabalho e Reuniões",
-        "items": "job=emprego; profession=profissão; company=empresa; colleague=colega de trabalho; coworker=colega de trabalho; team=equipe; manager=gerente; meeting=reunião; developer=desenvolvedor; analyst=analista; professional=profissional; new=novo; online=online; remote=remoto; office=escritório; project=projeto; role=papel / cargo"
+        "items": "job=emprego=djób; profession=profissão=pro-fé-chân; company=empresa=kâm-pa-ni; colleague=colega de trabalho=kó-lig; coworker=colega de trabalho=kôu-uâr-ker; team=equipe=tím; manager=gerente=mé-ni-djer; meeting=reunião=mí-ting; developer=desenvolvedor=di-vé-lo-per; analyst=analista=é-na-list; professional=profissional=pro-fé-châ-nal; new=novo=nú; online=online=ón-láin; remote=remoto=ri-môut; office=escritório=ó-fis; project=projeto=pró-djekt; role=papel / cargo=rôul"
       },
       {
         "group": "Frases e Conectivos para Conversação",
-        "items": "and=e; but=mas; also=também; too=também (fim de frase); please=por favor; thank you=obrigado; thanks=obrigado; excuse me=com licença; sorry=desculpe; I think=eu acho; very=muito; here=aqui; there=lá; yes=sim; no=não; what is your name?=qual é o seu nome?; where are you from?=de onde você é?"
+        "items": "and=e=énd; but=mas=bât; also=também=ól-sôu; too=também (fim de frase)=tú; please=por favor=plíz; thank you=obrigado=thénk iú; thanks=obrigado=thénks; excuse me=com licença=eks-kiúz mí; sorry=desculpe=só-ri; I think=eu acho=ái thínk; very=muito=vé-ri; here=aqui=rrír; there=lá=dér; yes=sim=iés; no=não=nôu; what is your name?=qual é o seu nome?=uót íz iór nêim?; where are you from?=de onde você é?=uér ár iú frâm?"
       },
       {
         "group": "Hobbies Básicos e Estados",
-        "items": "hobby=hobby; free time=tempo livre; to like=gostar; cook=cozinheiro; to cook=cozinhar; walk=caminhada; to walk=caminhar; video game=videogame; music=música; movie=filme; series=série; ready=pronto; busy=ocupado; happy=feliz; tired=cansado; interested=interessado; quiet=calmo / quieto"
+        "items": "hobby=hobby=rró-bi; free time=tempo livre=frí táim; to like=gostar=tu láik; cook=cozinheiro=kúk; to cook=cozinhar=tu kúk; walk=caminhada=uók; to walk=caminhar=tu uók; video game=videogame=ví-di-ou guêim; music=música=miú-zik; movie=filme=mú-vi; series=série=sí-riz; ready=pronto=ré-di; busy=ocupado=bí-zi; happy=feliz=rré-pi; tired=cansado=táierd; interested=interessado=ín-tres-tid; quiet=calmo / quieto=kuái-et"
       }
     ],
     "resources": [
@@ -245,23 +245,23 @@
     "vocab": [
       {
         "group": "Ações matinais e higiene",
-        "items": "to wake up=acordar; to get up=levantar-se; to brush teeth=escovar os dentes; to take a shower=tomar banho; to wash face=lavar o rosto; to get dressed=vestir-se; to comb hair=pentear o cabelo; to shave=barbear-se; to make the bed=fazer a cama; to stretch=alongar-se; to open the curtains=abrir as cortinas; to drink water=beber água; alarm clock=despertador; morning routine=rotina matinal; early=cedo; late=tarde"
+        "items": "to wake up=acordar=tu uêik âp; to get up=levantar-se=tu guét âp; to brush teeth=escovar os dentes=tu brâch títh; to take a shower=tomar banho=tu têik â cháu-er; to wash face=lavar o rosto=tu uóch fêis; to get dressed=vestir-se=tu guét drést; to comb hair=pentear o cabelo=tu kôum rrér; to shave=barbear-se=tu chêiv; to make the bed=fazer a cama=tu mêik dâ béd; to stretch=alongar-se=tu strétch; to open the curtains=abrir as cortinas=tu ôu-pen dâ kâr-tenz; to drink water=beber água=tu drínk uó-ter; alarm clock=despertador=â-lárm klók; morning routine=rotina matinal=mór-ning ru-tín; early=cedo=âr-li; late=tarde=lêit"
       },
       {
         "group": "Alimentação e café da manhã",
-        "items": "to have breakfast=tomar café da manhã; to make coffee=fazer café; to brew tea=fazer chá; to drink=beber; to eat=comer; to cook=cozinhar; to prepare=preparar; bread=pão; butter=manteiga; fruit=fruta; eggs=ovos; milk=leite; toast=torrada; black coffee=café preto; slow morning=manhã sem pressa; healthy meal=refeição saudável"
+        "items": "to have breakfast=tomar café da manhã=tu rrév brék-fâst; to make coffee=fazer café=tu mêik kó-fi; to brew tea=fazer chá=tu brú tí; to drink=beber=tu drínk; to eat=comer=tu ít; to cook=cozinhar=tu kúk; to prepare=preparar=tu pri-pér; bread=pão=bréd; butter=manteiga=bâ-ter; fruit=fruta=frút; eggs=ovos=éguz; milk=leite=mílk; toast=torrada=tôust; black coffee=café preto=blék kó-fi; slow morning=manhã sem pressa=slôu mór-ning; healthy meal=refeição saudável=rrél-thi míl"
       },
       {
         "group": "Trabalho e rotina de escritório",
-        "items": "to start work=começar o trabalho; to check emails=verificar e-mails; to open the laptop=abrir o notebook; to log in=conectar-se ao sistema; to attend a meeting=participar de uma reunião; to send messages=enviar mensagens; to write a report=escrever um relatório; to take notes=fazer anotações; to take a break=fazer uma pausa; to organize tasks=organizar tarefas; to finish work=terminar o trabalho; to log out=desconectar-se; daily standup=reunião rápida diária; desk=mesa de trabalho; task list=lista de tarefas; project=projeto"
+        "items": "to start work=começar o trabalho=tu stárt uârk; to check emails=verificar e-mails=tu tchék í-mêilz; to open the laptop=abrir o notebook=tu ôu-pen dâ lép-tóp; to log in=conectar-se ao sistema=tu lóg ín; to attend a meeting=participar de uma reunião=tu â-ténd â mí-ting; to send messages=enviar mensagens=tu sénd mé-si-djiz; to write a report=escrever um relatório=tu ráit â ri-pórt; to take notes=fazer anotações=tu têik nôuts; to take a break=fazer uma pausa=tu têik â brêik; to organize tasks=organizar tarefas=tu ór-ga-náiz tésks; to finish work=terminar o trabalho=tu fí-nich uârk; to log out=desconectar-se=tu lóg áut; daily standup=reunião rápida diária=dêi-li sténd-âp; desk=mesa de trabalho=désk; task list=lista de tarefas=tésk líst; project=projeto=pró-djekt"
       },
       {
         "group": "Advérbios e marcadores de tempo",
-        "items": "always=sempre; usually=geralmente; often=frequentemente; sometimes=às vezes; rarely=raramente; never=nunca; every day=todos os dias; in the morning=de manhã; in the afternoon=à tarde; in the evening=à noite; at night=de noite; before=antes; after=depois; then=então; daily=diariamente; weekly=semanalmente"
+        "items": "always=sempre=ól-uêiz; usually=geralmente=iú-ju-a-li; often=frequentemente=ó-fen; sometimes=às vezes=sâm-táimz; rarely=raramente=rér-li; never=nunca=né-ver; every day=todos os dias=év-ri dêi; in the morning=de manhã=ín dâ mór-ning; in the afternoon=à tarde=ín dâ éf-ter-nún; in the evening=à noite=ín dâ ív-ning; at night=de noite=ét náit; before=antes=bi-fór; after=depois=éf-ter; then=então=dén; daily=diariamente=dêi-li; weekly=semanalmente=uí-kli"
       },
       {
         "group": "Descanso e fim de dia",
-        "items": "to go for a walk=dar uma caminhada; to play video games=jogar videogame; to watch a show=assistir a uma série; to read a chapter=ler um capítulo; to have dinner=jantar; to clean the dishes=lavar a louça; to relax=relaxar; to listen to music=ouvir música; to go to bed=ir para a cama; to fall asleep=pegar no sono; free time=tempo livre; bedtime=hora de dormir; quiet evening=noite tranquila; couch=sofá"
+        "items": "to go for a walk=dar uma caminhada=tu gôu fór â uók; to play video games=jogar videogame=tu plêi ví-di-ou guêimz; to watch a show=assistir a uma série=tu uótch â chôu; to read a chapter=ler um capítulo=tu ríd â tchép-ter; to have dinner=jantar=tu rrév dí-ner; to clean the dishes=lavar a louça=tu klín dâ dí-chiz; to relax=relaxar=tu ri-léks; to listen to music=ouvir música=tu lí-sen tu miú-zik; to go to bed=ir para a cama=tu gôu tu béd; to fall asleep=pegar no sono=tu fól â-slíp; free time=tempo livre=frí táim; bedtime=hora de dormir=béd-táim; quiet evening=noite tranquila=kuái-et ív-ning; couch=sofá=káutch"
       }
     ],
     "resources": [
@@ -476,23 +476,23 @@
     "vocab": [
       {
         "group": "Videogames e Jogos",
-        "items": "game=jogo; player=jogador; level=fase ou nível; controller=controle; score=pontuação; screen=tela; character=personagem; adventure=aventura; strategy=estratégia; to play=jogar; to pause=pausar; to win=vencer; to lose=perder; to save=salvar; multi-player=multijogador"
+        "items": "game=jogo=guêim; player=jogador=plêi-er; level=fase ou nível=lé-vel; controller=controle=kon-trôu-ler; score=pontuação=skór; screen=tela=skrín; character=personagem=ké-rak-ter; adventure=aventura=âd-vén-tcher; strategy=estratégia=stré-te-dji; to play=jogar=tu plêi; to pause=pausar=tu póz; to win=vencer=tu uín; to lose=perder=tu lúz; to save=salvar=tu sêiv; multi-player=multijogador=mâl-ti-plêi-er"
       },
       {
         "group": "Séries e Entretenimento",
-        "items": "series=série; episode=episódio; season=temporada; plot=enredo; scene=cena; actor=ator; actress=atriz; genre=gênero; sci-fi=ficção científica; fantasy=fantasia; soundtrack=trilha sonora; to watch=assistir; to recommend=recomendar; subtitles=legendas; funny=engraçado"
+        "items": "series=série=sí-riz; episode=episódio=é-pi-sôud; season=temporada=sí-zon; plot=enredo=plót; scene=cena=sín; actor=ator=ék-ter; actress=atriz=ék-tres; genre=gênero=jón-ra; sci-fi=ficção científica=sái-fái; fantasy=fantasia=fén-ta-si; soundtrack=trilha sonora=sáund-trék; to watch=assistir=tu uótch; to recommend=recomendar=tu ré-ko-ménd; subtitles=legendas=sâb-tái-telz; funny=engraçado=fâ-ni"
       },
       {
         "group": "Cozinhar e Café da Manhã",
-        "items": "recipe=receita; kitchen=cozinha; ingredient=ingrediente; dish=prato; breakfast=café da manhã; coffee=café; tea=chá; bread=pão; eggs=ovos; fruit=fruta; to cook=cozinhar; to prepare=preparar; to taste=provar ou ter gosto; delicious=delicioso; fresh=fresco"
+        "items": "recipe=receita=ré-si-pi; kitchen=cozinha=kí-tchen; ingredient=ingrediente=in-grí-di-ent; dish=prato=dích; breakfast=café da manhã=brék-fâst; coffee=café=kó-fi; tea=chá=tí; bread=pão=bréd; eggs=ovos=éguz; fruit=fruta=frút; to cook=cozinhar=tu kúk; to prepare=preparar=tu pri-pér; to taste=provar ou ter gosto=tu têist; delicious=delicioso=di-lí-châs; fresh=fresco=fréch"
       },
       {
         "group": "Verbos de Preferência e Opinião",
-        "items": "to like=gostar; to love=amar; to enjoy=apreciar ou curtir; to prefer=preferir; to hate=odiar; favorite=favorito; boring=tedioso; exciting=emocionante; easy=fácil; difficult=difícil; popular=popular; interesting=interessante; relaxing=relaxante; fast=rápido; slow=lento"
+        "items": "to like=gostar=tu láik; to love=amar=tu lâv; to enjoy=apreciar ou curtir=tu en-djói; to prefer=preferir=tu pri-fâr; to hate=odiar=tu rrêit; favorite=favorito=fêi-vo-rit; boring=tedioso=bó-ring; exciting=emocionante=ek-sái-ting; easy=fácil=í-zi; difficult=difícil=dí-fi-kâlt; popular=popular=pó-piu-lar; interesting=interessante=ín-tres-ting; relaxing=relaxante=ri-lék-sing; fast=rápido=fést; slow=lento=slôu"
       },
       {
         "group": "Inglês Social e no Trabalho (Small Talk)",
-        "items": "free time=tempo livre; hobby=passatempo; weekend=fim de semana; colleague=colega de trabalho; break=pausa ou intervalo; chat=bate-papo; fun=divertido; team=equipe; project=projeto; stress=estresse; to relax=relaxar; to share=compartilhar; to meet=encontrar; simple=simples; conversation=conversa"
+        "items": "free time=tempo livre=frí táim; hobby=passatempo=rró-bi; weekend=fim de semana=uí-kend; colleague=colega de trabalho=kó-lig; break=pausa ou intervalo=brêik; chat=bate-papo=tchét; fun=divertido=fân; team=equipe=tím; project=projeto=pró-djekt; stress=estresse=strés; to relax=relaxar=tu ri-léks; to share=compartilhar=tu chér; to meet=encontrar=tu mít; simple=simples=sím-pel; conversation=conversa=kon-ver-sêi-chân"
       }
     ],
     "resources": [
@@ -702,27 +702,27 @@
     "vocab": [
       {
         "group": "Móveis e espaço físico",
-        "items": "desk=mesa de trabalho; office=escritório; chair=cadeira; room=sala; wall=parede; shelf=prateleira; drawer=gaveta; window=janela; door=porta; floor=chão; trash can=lixeira; whiteboard=quadro branco; lamp=luminária; meeting room=sala de reunião"
+        "items": "desk=mesa de trabalho=désk; office=escritório=ó-fis; chair=cadeira=tchér; room=sala=rúm; wall=parede=uól; shelf=prateleira=chélf; drawer=gaveta=drór; window=janela=uín-dôu; door=porta=dór; floor=chão=flór; trash can=lixeira=tréch kén; whiteboard=quadro branco=uáit-bórd; lamp=luminária=lémp; meeting room=sala de reunião=mí-ting rúm"
       },
       {
         "group": "Equipamentos e tecnologia",
-        "items": "laptop=notebook; monitor=monitor; screen=tela; mouse=mouse; keyboard=teclado; headset=headset; charger=carregador; cable=cabo; printer=impressora; microphone=microfone; camera=câmera; tablet=tablet; power strip=filtro de linha; adapter=adaptador"
+        "items": "laptop=notebook=lép-tóp; monitor=monitor=mó-ni-ter; screen=tela=skrín; mouse=mouse=máus; keyboard=teclado=kí-bórd; headset=headset=rréd-sét; charger=carregador=tchár-djer; cable=cabo=kêi-bel; printer=impressora=prín-ter; microphone=microfone=mái-kro-fôun; camera=câmera=ké-me-ra; tablet=tablet=té-blet; power strip=filtro de linha=páu-er stríp; adapter=adaptador=â-dép-ter"
       },
       {
         "group": "Materiais de escritório e documentos",
-        "items": "notebook=caderno; pen=caneta; pencil=lápis; paper=papel; folder=pasta; sticky note=bloco adesivo; document=documento; report=relatório; file=arquivo; list=lista; box=caixa; cup=caneca; water bottle=garrafa de água; backpack=mochila"
+        "items": "notebook=caderno=nôut-búk; pen=caneta=pén; pencil=lápis=pén-sel; paper=papel=pêi-per; folder=pasta=fôul-der; sticky note=bloco adesivo=stí-ki nôut; document=documento=dó-kiu-ment; report=relatório=ri-pórt; file=arquivo=fáil; list=lista=líst; box=caixa=bóks; cup=caneca=kâp; water bottle=garrafa de água=uó-ter bó-tel; backpack=mochila=bék-pék"
       },
       {
         "group": "Tarefas diárias e ações de trabalho",
-        "items": "to send=enviar; to write=escrever; to read=ler; to check=checar; to call=ligar; to attend=participar; to print=imprimir; to save=salvar; to organize=organizar; to update=atualizar; to open=abrir; to close=fechar; to start=começar; to finish=terminar; to share=compartilhar"
+        "items": "to send=enviar=tu sénd; to write=escrever=tu ráit; to read=ler=tu ríd; to check=checar=tu tchék; to call=ligar=tu kól; to attend=participar=tu â-ténd; to print=imprimir=tu prínt; to save=salvar=tu sêiv; to organize=organizar=tu ór-ga-náiz; to update=atualizar=tu âp-dêit; to open=abrir=tu ôu-pen; to close=fechar=tu klôuz; to start=começar=tu stárt; to finish=terminar=tu fí-nich; to share=compartilhar=tu chér"
       },
       {
         "group": "Preposições de lugar e posições",
-        "items": "on=em cima de; in=dentro de; under=embaixo de; next to=ao lado de; behind=atrás de; in front of=na frente de; between=entre; near=perto de; on the left=à esquerda; on the right=à direita; above=acima de; inside=dentro"
+        "items": "on=em cima de=ón; in=dentro de=ín; under=embaixo de=ân-der; next to=ao lado de=nékst tu; behind=atrás de=bi-rráind; in front of=na frente de=ín frânt óv; between=entre=bi-tuín; near=perto de=nír; on the left=à esquerda=ón dâ léft; on the right=à direita=ón dâ ráit; above=acima de=â-bâv; inside=dentro=ín-sáid"
       },
       {
         "group": "Termos digitais e comunicação",
-        "items": "email=e-mail; message=mensagem; link=link; tab=aba do navegador; calendar=calendário; task=tarefa; priority=prioridade; deadline=prazo; project=projeto; note=anotação; chat=conversa; app=aplicativo; inbox=caixa de entrada; spreadsheet=planilha"
+        "items": "email=e-mail=í-mêil; message=mensagem=mé-sidj; link=link=línk; tab=aba do navegador=téb; calendar=calendário=ké-len-der; task=tarefa=tésk; priority=prioridade=prai-ó-ri-ti; deadline=prazo=déd-láin; project=projeto=pró-djekt; note=anotação=nôut; chat=conversa=tchét; app=aplicativo=ép; inbox=caixa de entrada=ín-bóks; spreadsheet=planilha=spréd-chít"
       }
     ],
     "resources": [

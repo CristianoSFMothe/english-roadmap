@@ -1,5 +1,23 @@
 import type { Profile } from "./profile";
 
+/**
+ * Cópia de PRON_STYLE (lib/pronunciation.ts). Este arquivo não pode importar outro em
+ * tempo de execução (o `npm test` roda direto no Node); um teste garante que as duas
+ * listas continuam iguais.
+ */
+const PRON_STYLE_COPY = [
+  "Escreva como um brasileiro leria em voz alta para soar como o inglês americano.",
+  "Use só letras e sons do português. Nada de alfabeto fonético (IPA).",
+  "O h aspirado do inglês vira \"rr\" (hello = rre-lôu, house = rráus).",
+  "Coloque acento agudo ou circunflexo na sílaba forte (water = uó-ter, today = tu-dêi).",
+  "Separe as sílabas com hífen só dentro da palavra; as palavras ficam separadas por espaço.",
+  "O th vira \"th\" quando o som não existe em português (think = thínk) e \"d\" no the/this/that (the = dâ, this = dís).",
+  "O r do fim de sílaba fica \"r\" (car = kár), e o w vira \"u\" (work = uârk).",
+  "Mantenha a pontuação da frase original (vírgula, ponto, interrogação).",
+];
+const PRON_RULES = PRON_STYLE_COPY.map((r) => `  · ${r}`).join("\n");
+const PRON_SAMPLE = "book=livro=búk; coffee=café=kó-fi; hello=olá=rre-lôu; How are you?=Como vai?=rráu ár iú?";
+
 const or = (value: string, fallback: string) =>
   value && value.trim() ? value.trim() : fallback;
 
@@ -220,7 +238,10 @@ Regras:
 - ${days} dias de estudo, com ${p.minutesPerDay} minutos nos dias normais. Varie o foco entre
   inglês profissional, série ou filme, leitura, música, fala e um dia mais leve de revisão.
 - Entre 70 e 100 itens de vocabulário no total, divididos em 4 a 6 grupos temáticos.
-- Cada item no formato "inglês=português", separados por ponto e vírgula, numa única string.
+- Cada item no formato "inglês=português=pronúncia", separados por ponto e vírgula, numa
+  única string. A pronúncia é aproximada, para um brasileiro ler em voz alta:
+${PRON_RULES}
+  Exemplos: ${PRON_SAMPLE}.
 - As tarefas de cada dia somam aproximadamente os minutos do dia.
 - Toda frase de exemplo em inglês deve ser utilizável por alguém de nível ${p.level}.
 
@@ -238,7 +259,7 @@ Responda com um único objeto JSON, nesta forma exata:
     "tip": "o erro mais comum de quem fala português, em 1 ou 2 frases"
   },
   "vocab": [
-    { "group": "nome do grupo em português", "items": "word=palavra; to work=trabalhar" }
+    { "group": "nome do grupo em português", "items": "word=palavra=uârd; to work=trabalhar=tu uârk" }
   ],
   "resources": [
     { "name": "nome do recurso", "url": "https://...", "what": "o que fazer com ele nesta semana" }

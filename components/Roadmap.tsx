@@ -8,8 +8,8 @@ import { emptyProfile, sampleProfile, type Profile } from "@/lib/profile";
 import { usePersistentState } from "@/lib/storage";
 import DayDrawer from "./DayDrawer";
 import Flashcards from "./Flashcards";
+import { Pron, PronListButton } from "./Pron";
 import { Speak } from "./SpeechButtons";
-import Lessons from "./Lessons";
 import Notes from "./Notes";
 import ProfileForm from "./ProfileForm";
 import Generator, { type GeneratedPlan } from "./Generator";
@@ -206,6 +206,9 @@ export default function Roadmap({
               <button className="btn small" onClick={() => setShowProfile(true)}>
                 Meu perfil
               </button>
+              <Link className="btn small primary" href="/estudo-diario">
+                Estudo do dia
+              </Link>
               <Link className="btn small" href="/preferencias">
                 Preferências
               </Link>
@@ -378,8 +381,8 @@ export default function Roadmap({
               )}
               <ul className="grammar-examples">
                 {week.grammar.examples.map((ex, i) => (
-                  <li key={i} className="en">
-                    {ex}
+                  <li key={i}>
+                    <span className="en">{ex}</span> <Pron text={ex} />
                   </li>
                 ))}
               </ul>
@@ -399,13 +402,15 @@ export default function Roadmap({
               {week.vocabGroups.map((g) => (
                 <div className="vocab-group" key={g.group}>
                   <h3>
-                    {g.group} · {g.cards.length}
+                    {g.group} · {g.cards.length}{" "}
+                    <PronListButton texts={g.cards.filter((c) => !c.say).map((c) => c.en)} />
                   </h3>
                   <ul className="vocab-list rich">
                     {g.cards.map((c) => (
                       <li key={c.id}>
                         <span className="vt">
                           <span className="en">{c.en}</span>
+                          <Pron text={c.en} explicit={c.say} noButton />
                         </span>
                         <span className="pt">{c.pt}</span>
                         <Speak text={c.en} showIpa={false} />
@@ -469,12 +474,18 @@ export default function Roadmap({
         )}
 
         {tab === "lesson" && (
-          <Lessons
-            week={week}
-            apiKey={apiKey}
-            accessCode={accessCode}
-            signedIn={Boolean(userId)}
-          />
+          <div className="panel">
+            <section className="lesson-empty">
+              <h2>Estudo do dia</h2>
+              <p>
+                A lição do dia agora tem teoria e dicas antes dos exercícios e fica numa página
+                própria.
+              </p>
+              <Link className="btn primary" href="/estudo-diario">
+                Abrir o estudo do dia
+              </Link>
+            </section>
+          </div>
         )}
 
         {tab === "cards" && (

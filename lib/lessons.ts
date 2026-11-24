@@ -1,11 +1,28 @@
 import { pool } from "./db";
-import type { Question } from "./lesson-prompt";
+import type { Question, Study } from "./lesson-prompt";
+
+export type ImprovementStyle = "informal" | "formal" | "usual";
+
+/**
+ * Outro jeito de responder: a frase em inglês, a dica (em português) de quando usar e o
+ * estilo. As correções antigas não têm estilo.
+ */
+export type Improvement = { en: string; why: string; style?: ImprovementStyle };
 
 export type Result = {
   correct: boolean;
   feedback: string;
   correction: string;
   tip: string;
+  /** Até 3 jeitos de melhorar a resposta; vazio nas correções antigas. */
+  improvements: Improvement[];
+  /** Já usou o "Gerar 3 respostas" (só vale uma vez por questão). */
+  moreGenerated?: boolean;
+  /**
+   * Corrigida no formato que já traz melhorias. Sem isso (correção antiga), melhorias
+   * que existirem vieram do botão, de antes de ele ganhar a trava.
+   */
+  withImprovements?: boolean;
 };
 
 export type Lesson = {
@@ -14,6 +31,8 @@ export type Lesson = {
   level: string;
   weekN: number | null;
   questions: Question[];
+  /** Teoria e dicas; null nas lições criadas antes do Estudo do dia. */
+  study: Study | null;
   answers: Record<string, string>;
   results: Record<string, Result>;
   completedAt: string | null;
@@ -35,6 +54,7 @@ type Row = {
   level: string;
   week_n: number | null;
   questions: Question[];
+  study: Study | null;
   answers: Record<string, string>;
   results: Record<string, Result>;
   completed_at: Date | null;
@@ -46,6 +66,7 @@ const paraLesson = (r: Row): Lesson => ({
   level: r.level,
   weekN: r.week_n,
   questions: r.questions ?? [],
+  study: r.study ?? null,
   answers: r.answers ?? {},
   results: r.results ?? {},
   completedAt: r.completed_at ? new Date(r.completed_at).toISOString() : null,
@@ -53,7 +74,7 @@ const paraLesson = (r: Row): Lesson => ({
 
 export async function getLesson(userId: string, date: string): Promise<Lesson | null> {
   const { rows } = await pool.query<Row>(
-    `select id, lesson_date, level, week_n, questions, answers, results, completed_at
+    `select id, lesson_date, level, week_n, questions, study, answers, results, completed_at
      from app_lesson where user_id = $1 and lesson_date = $2`,
     [userId, date],
   );
@@ -66,22 +87,45 @@ export async function createLesson(args: {
   level: string;
   weekN: number | null;
   questions: Question[];
+  study: Study;
 }): Promise<Lesson> {
   const id = `li-${args.userId.slice(0, 8)}-${args.date}`;
   const { rows } = await pool.query<Row>(
-    `insert into app_lesson (id, user_id, lesson_date, level, week_n, questions)
-     values ($1, $2, $3, $4, $5, $6)
-     on conflict (user_id, lesson_date) do update set questions = excluded.questions
-     returning id, lesson_date, level, week_n, questions, answers, results, completed_at`,
-    [id, args.userId, args.date, args.level, args.weekN, JSON.stringify(args.questions)],
+    `insert into app_lesson (id, user_id, lesson_date, level, week_n, questions, study)
+     values ($1, $2, $3, $4, $5, $6, $7)
+     on conflict (user_id, lesson_date) do update
+       set questions = excluded.questions, study = excluded.study
+     returning id, lesson_date, level, week_n, questions, study, answers, results, completed_at`,
+    [
+      id,
+      args.userId,
+      args.date,
+      args.level,
+      args.weekN,
+      JSON.stringify(args.questions),
+      JSON.stringify(args.study),
+    ],
   );
   return paraLesson(rows[0]);
+}
+
+/** Assuntos (study.topic) das últimas lições, do mais novo para o mais antigo. */
+export async function assuntosRecentes(userId: string, limite = 7): Promise<string[]> {
+  const { rows } = await pool.query<{ topic: string | null }>(
+    `select study->>'topic' as topic
+     from app_lesson
+     where user_id = $1 and study is not null
+     order by lesson_date desc
+     limit $2`,
+    [userId, limite],
+  );
+  return rows.map((r) => (r.topic ?? "").trim()).filter(Boolean);
 }
 
 /** Lições abertas: criadas e não concluídas, da mais antiga para a mais nova. */
 export async function pendentes(userId: string, limite = 14): Promise<Lesson[]> {
   const { rows } = await pool.query<Row>(
-    `select id, lesson_date, level, week_n, questions, answers, results, completed_at
+    `select id, lesson_date, level, week_n, questions, study, answers, results, completed_at
      from app_lesson
      where user_id = $1 and completed_at is null
      order by lesson_date asc
@@ -138,7 +182,7 @@ export async function saveAnswer(args: {
            else null
          end
      where user_id = $1 and id = $2
-     returning id, lesson_date, level, week_n, questions, answers, results, completed_at`,
+     returning id, lesson_date, level, week_n, questions, study, answers, results, completed_at`,
     [
       args.userId,
       args.lessonId,
@@ -147,6 +191,29 @@ export async function saveAnswer(args: {
       JSON.stringify(args.result),
       args.totalQuestoes,
     ],
+  );
+  return rows[0] ? paraLesson(rows[0]) : null;
+}
+
+/**
+ * Troca a lista de outras respostas de uma questão já corrigida e marca que o
+ * "Gerar 3 respostas" já foi usado. Só grava se ainda não tinha sido usado.
+ */
+export async function setImprovements(args: {
+  userId: string;
+  lessonId: string;
+  questionId: string;
+  improvements: Improvement[];
+}): Promise<Lesson | null> {
+  const { rows } = await pool.query<Row>(
+    `update app_lesson
+     set results = jsonb_set(
+           jsonb_set(results, array[$3::text, 'improvements'], $4::jsonb, true),
+           array[$3::text, 'moreGenerated'], 'true'::jsonb, true)
+     where user_id = $1 and id = $2 and results ? $3
+       and coalesce((results->$3->>'moreGenerated')::boolean, false) = false
+     returning id, lesson_date, level, week_n, questions, study, answers, results, completed_at`,
+    [args.userId, args.lessonId, args.questionId, JSON.stringify(args.improvements)],
   );
   return rows[0] ? paraLesson(rows[0]) : null;
 }

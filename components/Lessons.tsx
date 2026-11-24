@@ -1,10 +1,14 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Question } from "@/lib/lesson-prompt";
-import type { Lesson, Result } from "@/lib/lessons";
+import type { ImprovementStyle, Lesson, Result } from "@/lib/lessons";
 import type { Week } from "@/lib/content";
+import { canGenerateMore, looksEnglish } from "@/lib/lesson-normalize";
 import { Check } from "./Roadmap";
+import { Pron, PronListButton } from "./Pron";
+import { Speak } from "./SpeechButtons";
+import StudySections from "./StudySections";
 
 type HistItem = { date: string; completed: boolean; total: number; answered: number; correct: number };
 
@@ -20,6 +24,25 @@ type Payload = {
 };
 
 const NIVEL: Record<string, string> = { facil: "Fácil", media: "Média", dificil: "Difícil" };
+
+const ESTILO: Record<ImprovementStyle, string> = {
+  informal: "Informal",
+  formal: "Formal",
+  usual: "Mais usual",
+};
+
+/** Lacunas como "I ___ (work)" viram uma pausa na voz, em vez de "underscore". */
+const falado = (t: string) => t.replace(/_{2,}/g, "...");
+
+/** Frase em inglês com o botão de ouvir e a pronúncia aproximada. */
+function EnLine({ text, noButton }: { text: string; noButton?: boolean }) {
+  return (
+    <span className="lesson-line">
+      <span className="en">{text}</span> <Speak text={falado(text)} showIpa={false} />{" "}
+      <Pron text={text} noButton={noButton} />
+    </span>
+  );
+}
 
 function dataCurta(iso: string) {
   const [a, m, d] = iso.split("-");
@@ -42,6 +65,11 @@ export default function Lessons({
   const [respostas, setRespostas] = useState<Record<string, string>>({});
   const [carregando, setCarregando] = useState(false);
   const [corrigindo, setCorrigindo] = useState<string | null>(null);
+  const [melhorando, setMelhorando] = useState<string | null>(null);
+  const [erroMelhoria, setErroMelhoria] = useState<Record<string, string>>({});
+  // Trava na hora do clique: o "disabled" só chega no próximo render, e um clique duplo
+  // mandaria dois pedidos (duas chamadas ao Gemini).
+  const pedindoMais = useRef(false);
   const [erro, setErro] = useState("");
   const [lembrete, setLembrete] = useState<{ ativo: boolean; hora: string }>({
     ativo: false,
@@ -105,6 +133,37 @@ export default function Lessons({
     }
   };
 
+  /** Mais 3 respostas (informal, formal e mais usual), somadas às que já existem. */
+  const maisRespostas = async (q: Question) => {
+    if (!ativa || pedindoMais.current) return;
+    pedindoMais.current = true;
+    setMelhorando(q.id);
+    setErroMelhoria((e) => ({ ...e, [q.id]: "" }));
+    try {
+      const res = await fetch("/api/lesson", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          action: "improve",
+          lessonId: ativa.id,
+          date: ativa.date,
+          questionId: q.id,
+          apiKey: apiKey || undefined,
+          accessCode: accessCode || undefined,
+        }),
+      });
+      const json = (await res.json()) as { lesson?: Lesson; error?: string };
+      if (!res.ok || !json.lesson) throw new Error(json.error ?? "Não deu para gerar agora.");
+      setAtiva(json.lesson);
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Não deu para gerar agora.";
+      setErroMelhoria((er) => ({ ...er, [q.id]: msg }));
+    } finally {
+      pedindoMais.current = false;
+      setMelhorando(null);
+    }
+  };
+
   const corrigir = async (q: Question) => {
     if (!ativa) return;
     const resposta = (respostas[q.id] ?? "").trim();
@@ -165,10 +224,11 @@ export default function Lessons({
     return (
       <div className="panel">
         <section className="lesson-empty">
-          <h2>Lição do dia</h2>
+          <h2>Estudo do dia</h2>
           <p>
-            Entre com sua conta Google para receber as 5 questões diárias, guardar as respostas e
-            acumular o que ficar para trás.
+            Entre com sua conta Google (botão no alto da página) para receber todo dia uma
+            explicação curta em português, dicas para não errar e 5 exercícios. As respostas ficam
+            guardadas, e o que ficar para trás aparece para você terminar depois.
           </p>
         </section>
       </div>
@@ -185,8 +245,8 @@ export default function Lessons({
     <div className="panel">
       <section>
         <div className="section-title">
-          <h2>Lição do dia</h2>
-          <span>5 questões: 2 fáceis, 2 médias e 1 difícil. Você escreve a resposta em inglês.</span>
+          <h2>Estudo do dia</h2>
+          <span>Teoria, dicas e 5 exercícios: 2 fáceis, 2 médias e 1 difícil. Você escreve a resposta em inglês.</span>
         </div>
 
         {erro && <p className="lesson-error">{erro}</p>}
@@ -212,10 +272,16 @@ export default function Lessons({
 
         {!ativa && (
           <div className="lesson-start">
-            <p>Nenhuma lição aberta para hoje.</p>
+            <p>
+              Hoje você recebe uma explicação, dicas e 5 exercícios sobre um assunto
+              {week ? ` da semana ${week.n}` : " do seu nível"}.
+            </p>
             <button className="btn primary" onClick={() => void gerar()} disabled={carregando}>
-              {carregando ? "Gerando…" : "Gerar a lição de hoje"}
+              {carregando ? "Gerando…" : "Gerar o estudo de hoje"}
             </button>
+            {carregando && (
+              <p className="faint">Preparando teoria, dicas e exercícios… pode levar até um minuto.</p>
+            )}
           </div>
         )}
 
@@ -241,10 +307,15 @@ export default function Lessons({
               )}
             </div>
 
+            <StudySections study={ativa.study ?? null} />
+
+            <h2 className="study-exercises">Exercícios</h2>
             <ol className="lesson-list">
               {ativa.questions.map((q, i) => {
                 const r = ativa.results?.[q.id];
                 const respondida = Boolean(r);
+                // Correções antigas não têm melhorias.
+                const melhorias = r?.improvements ?? [];
                 return (
                   <li key={q.id} className={`lesson-q${r ? (r.correct ? " ok" : " bad") : ""}`}>
                     <div className="lesson-q-top">
@@ -253,7 +324,14 @@ export default function Lessons({
                       <span className="lesson-n">{i + 1}/{ativa.questions.length}</span>
                     </div>
                     <p className="lesson-prompt">{q.prompt}</p>
-                    {q.content && <p className="lesson-content">{q.content}</p>}
+                    {q.content &&
+                      (looksEnglish(q.content) ? (
+                        <div className="lesson-content">
+                          <EnLine text={q.content} />
+                        </div>
+                      ) : (
+                        <p className="lesson-content">{q.content}</p>
+                      ))}
 
                     {respondida ? (
                       <div className="lesson-answered">
@@ -264,13 +342,68 @@ export default function Lessons({
                         <p className={`lesson-verdict ${r!.correct ? "ok" : "bad"}`}>
                           {r!.correct ? "Acertou" : "Errou"} · {r!.feedback}
                         </p>
+                        {(r!.correction || melhorias.length > 0) && (
+                          <div className="lesson-tools">
+                            <PronListButton
+                              texts={[r!.correction, ...melhorias.map((m) => m.en)].filter(Boolean)}
+                            />
+                          </div>
+                        )}
                         {r!.correction && (
-                          <p className="lesson-fix">
+                          <div className="lesson-fix">
                             <span>Correta</span>
-                            {r!.correction}
-                          </p>
+                            <EnLine text={r!.correction} noButton />
+                          </div>
                         )}
                         {r!.tip && <p className="lesson-tip">{r!.tip}</p>}
+                        <div className="lesson-better">
+                          <span className="lesson-better-title">
+                            {melhorias.length === 0
+                              ? "Outras formas de responder"
+                              : melhorias.length === 1
+                                ? "1 forma de melhorar a sua resposta"
+                                : `${melhorias.length} formas de melhorar a sua resposta`}
+                          </span>
+                          {melhorias.length > 0 && (
+                            <ol>
+                              {melhorias.map((m, k) => (
+                                <li key={k}>
+                                  {m.style && (
+                                    <span className={`lesson-style ${m.style}`}>{ESTILO[m.style]}</span>
+                                  )}
+                                  <EnLine text={m.en} noButton />
+                                  {m.why && (
+                                    <span className="lesson-why">
+                                      {m.style ? `Dica: ${m.why}` : m.why}
+                                    </span>
+                                  )}
+                                </li>
+                              ))}
+                            </ol>
+                          )}
+                          <div className="lesson-more">
+                            <button
+                              type="button"
+                              className="btn small"
+                              onClick={() => void maisRespostas(q)}
+                              disabled={melhorando !== null || !canGenerateMore(r)}
+                            >
+                              {melhorando === q.id
+                                ? "Gerando 3 respostas…"
+                                : canGenerateMore(r)
+                                  ? "Gerar 3 respostas"
+                                  : "3 respostas geradas"}
+                            </button>
+                            <span className="faint">
+                              {canGenerateMore(r)
+                                ? "informal, formal e mais usual, com dica de cada uma (uma vez por questão)"
+                                : "Já foram geradas as 3 respostas desta questão."}
+                            </span>
+                            {erroMelhoria[q.id] && (
+                              <span className="say-result bad">{erroMelhoria[q.id]}</span>
+                            )}
+                          </div>
+                        </div>
                       </div>
                     ) : (
                       <div className="lesson-answer">

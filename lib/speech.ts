@@ -153,19 +153,41 @@ export function aiVoiceLoaded() {
 /** Baixa o modelo na primeira vez; o navegador guarda em cache para as próximas. */
 export function loadAiVoice(): Promise<Kokoro> {
   kokoro ??= (async () => {
-    const url = "https://cdn.jsdelivr.net/npm/kokoro-js@1.2.1/+esm";
-    const mod = (await import(/* webpackIgnore: true */ url)) as {
-      KokoroTTS: {
-        from_pretrained(id: string, o: { dtype: string; device: string }): Promise<Kokoro>;
-      };
+    // Mesma URL que o kokoro-js importa por dentro, para os dois dividirem uma única
+    // instância do transformers.js.
+    const tfUrl = "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.5.1/+esm";
+    const kokoroUrl = "https://cdn.jsdelivr.net/npm/kokoro-js@1.2.1/+esm";
+    type Loader<T> = {
+      from_pretrained(id: string, o?: Record<string, unknown>): Promise<T>;
     };
+    const [tf, mod] = (await Promise.all([
+      import(/* webpackIgnore: true */ tfUrl),
+      import(/* webpackIgnore: true */ kokoroUrl),
+    ])) as [
+      { StyleTextToSpeech2Model: Loader<unknown>; AutoTokenizer: Loader<unknown> },
+      { KokoroTTS: new (model: unknown, tokenizer: unknown) => Kokoro },
+    ];
     const id = "onnx-community/Kokoro-82M-v1.0-ONNX";
+    // O ONNX Runtime avisa (via console.error) que alguns nós ficaram na CPU, o que é
+    // esperado. Nível 3 mostra só erros. O KokoroTTS.from_pretrained não repassa
+    // session_options, então o modelo é montado aqui e entregue ao construtor.
+    const load = async (dtype: string, device: string) => {
+      const [model, tokenizer] = await Promise.all([
+        tf.StyleTextToSpeech2Model.from_pretrained(id, {
+          dtype,
+          device,
+          session_options: { logSeverityLevel: 3 },
+        }),
+        tf.AutoTokenizer.from_pretrained(id),
+      ]);
+      return new mod.KokoroTTS(model, tokenizer);
+    };
     let tts: Kokoro;
     try {
       if (!("gpu" in navigator)) throw new Error("sem WebGPU");
-      tts = await mod.KokoroTTS.from_pretrained(id, { dtype: "fp32", device: "webgpu" });
+      tts = await load("fp32", "webgpu");
     } catch {
-      tts = await mod.KokoroTTS.from_pretrained(id, { dtype: "q8", device: "wasm" });
+      tts = await load("q8", "wasm");
     }
     kokoroReady = true;
     return tts;
@@ -357,19 +379,31 @@ export function loadWhisper(): Promise<Transcriber> {
       pipeline(
         task: string,
         model: string,
-        o: { dtype: string | Record<string, string>; device: string },
+        o: {
+          dtype: string | Record<string, string>;
+          device: string;
+          session_options?: Record<string, unknown>;
+        },
       ): Promise<Transcriber>;
     };
     const id = "onnx-community/whisper-base.en";
+    // Como na voz de IA: o ONNX Runtime avisa (via console.error, que o Next mostra como
+    // erro) que alguns nós ficaram na CPU, o que é esperado. Nível 3 mostra só erros.
+    const quiet = { logSeverityLevel: 3 };
     let t: Transcriber;
     try {
       if (!("gpu" in navigator)) throw new Error("sem WebGPU");
       t = await mod.pipeline("automatic-speech-recognition", id, {
         dtype: { encoder_model: "fp32", decoder_model_merged: "q4" },
         device: "webgpu",
+        session_options: quiet,
       });
     } catch {
-      t = await mod.pipeline("automatic-speech-recognition", id, { dtype: "q8", device: "wasm" });
+      t = await mod.pipeline("automatic-speech-recognition", id, {
+        dtype: "q8",
+        device: "wasm",
+        session_options: quiet,
+      });
     }
     whisperReady = true;
     return t;
