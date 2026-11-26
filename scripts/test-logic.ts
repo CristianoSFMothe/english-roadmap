@@ -10,7 +10,7 @@ import { sayPhrase, pronKey, pronounce, PRON_STYLE, PRON_EXAMPLES } from "../lib
 import { isDailyQuota, nextModel } from "../lib/gemini-errors.ts";
 import { describeDbError, poolOptions } from "../lib/db-config.ts";
 import { canGenerateMore, looksEnglish, MAX_IMPROVEMENTS, MAX_PARAGRAFOS, mergeImprovements, normalizeAnswer, normalizeImprovements, normalizeLessonOutline, normalizeQuestions, normalizeResult, normalizeStudy } from "../lib/lesson-normalize.ts";
-import { CHAT_CONTEXT, outlineDays, parseWeekParam, partIndexForDate, validateQuestion } from "../lib/lesson-parts.ts";
+import { CHAT_CONTEXT, generateStep, outlineDays, parseWeekParam, partIndexForDate, validateQuestion } from "../lib/lesson-parts.ts";
 import { normalizePronMap, pronBatches, pronSystemPrompt, pronUserPrompt, shouldStoreShared, splitGeneratable } from "../lib/pron-prompt.ts";
 import { gradeSystemPrompt, improveSystemPrompt, improveUserPrompt, lessonSystemPrompt, ORDEM, STUDY_LIMITS, TOTAL_QUESTOES, outlineUserPrompt, partSystemPrompt, partUserPrompt, partAndQuestionsUserPrompt, questionsUserPrompt, chatSystemPrompt, chatUserPrompt, CHAT_CONTEXT_PROMPT } from "../lib/lesson-prompt.ts";
 import type { Study } from "../lib/lesson-prompt.ts";
@@ -778,6 +778,13 @@ check("parte e chat levam o mesmo estilo de PRON_STYLE", () => {
     const falta = PRON_STYLE.split("\n").find((r) => !s.includes(r));
     assert(!falta, "regra fora do prompt: " + falta);
   }
+});
+
+check("generateStep decide o que gerar", () => {
+  assert(generateStep({ lessonHasQuestions: true, hasWeekLesson: false, hasPart: false }) === "existing", "existe");
+  assert(generateStep({ lessonHasQuestions: false, hasWeekLesson: false, hasPart: false }) === "needsOutline", "sem roteiro");
+  assert(generateStep({ lessonHasQuestions: false, hasWeekLesson: true, hasPart: true }) === "questionsOnly", "parte pronta");
+  assert(generateStep({ lessonHasQuestions: false, hasWeekLesson: true, hasPart: false }) === "partAndQuestions", "sem parte");
 });
 
 console.log(failures === 0 ? "\nTodos os testes passaram." : `\n${failures} falha(s).`);

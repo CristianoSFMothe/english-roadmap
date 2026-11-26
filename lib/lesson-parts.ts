@@ -1,5 +1,6 @@
 // Regras das Lições sem imports em tempo de execução: o `npm test` carrega este arquivo
 // direto, sem bundler.
+import type { Study } from "./lesson-prompt";
 
 /** Uma lição da semana tem uma parte por dia, de segunda a sábado. */
 export const PARTS = 6;
@@ -47,4 +48,24 @@ export function parseWeekParam(v: string, weekNs: number[]): number | null {
   if (!/^\d+$/.test(v)) return null;
   const n = Number(v);
   return weekNs.includes(n) ? n : null;
+}
+
+/** A lição da semana como as telas recebem: roteiro, partes geradas e conversas. */
+export type WeekLessonView = {
+  id: string;
+  weekN: number;
+  topic: string;
+  intro: string;
+  parts: OutlinePart[];
+  content: Record<number, Study>;
+  chats: Record<number, ChatMessage[]>;
+};
+
+export type GenerateStep = "existing" | "needsOutline" | "questionsOnly" | "partAndQuestions";
+
+/** O que o Estudo do dia precisa gerar, conforme o que já existe no banco. */
+export function generateStep(s: { lessonHasQuestions: boolean; hasWeekLesson: boolean; hasPart: boolean }): GenerateStep {
+  if (s.lessonHasQuestions) return "existing";
+  if (!s.hasWeekLesson) return "needsOutline";
+  return s.hasPart ? "questionsOnly" : "partAndQuestions";
 }
