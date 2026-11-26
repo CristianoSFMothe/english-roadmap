@@ -3,7 +3,7 @@ import { buildWeeks } from "../lib/weeks.ts";
 import { systemPrompt, outlineMessage, weekMessage } from "../lib/prompt.ts";
 import { sampleProfile, clampProfile } from "../lib/profile.ts";
 import { numberToWords, cleanWords, CATEGORIES } from "../lib/vocabulary.ts";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import type { RawWeek } from "../lib/weeks.ts";
 import { VERBS, thirdPerson, findVerb, ingForm, ptGerund, ptConditional, buildTense, TENSES, statNotice, buildExamples, shortAnswers } from "../lib/verbs.ts";
 import { sayPhrase, pronKey, pronounce, PRON_STYLE, PRON_EXAMPLES } from "../lib/pronunciation.ts";
@@ -661,6 +661,15 @@ check("migração inicial liga RLS em todas as tabelas", () => {
   for (const t of TABELAS)
     if (!new RegExp(`ALTER TABLE "(public"\\.")?${t}" ENABLE ROW LEVEL SECURITY`, "i").test(migracao))
       throw new Error(`sem RLS: ${t}`);
+});
+
+check("alguma migração liga RLS na tabela de controle do Prisma", () => {
+  const dir = new URL("../prisma/migrations/", import.meta.url);
+  const todas = readdirSync(dir)
+    .filter((d) => /^\d{4}_/.test(d))
+    .map((d) => readFileSync(new URL(`${d}/migration.sql`, dir), "utf8"))
+    .join("\n");
+  if (!/ALTER TABLE "_prisma_migrations" ENABLE ROW LEVEL SECURITY/.test(todas)) throw new Error("sem RLS");
 });
 
 check("lição única por dia e lição da semana única por plano", () => {
