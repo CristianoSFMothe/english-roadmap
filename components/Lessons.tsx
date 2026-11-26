@@ -85,6 +85,9 @@ export default function Lessons({
     hora: "19:00",
   });
   const [lembreteOcupado, setLembreteOcupado] = useState(false);
+  // O erro e o aviso do lembrete ficam na própria seção, no fim da página: no topo da
+  // lição ninguém via a mensagem depois de clicar em "Criar lembrete".
+  const [avisoLembrete, setAvisoLembrete] = useState<{ tipo: "ok" | "erro"; texto: string } | null>(null);
 
   const carregar = useCallback(async () => {
     if (!signedIn) return;
@@ -232,7 +235,7 @@ export default function Lessons({
 
   const alternarLembrete = async (remove: boolean, hora?: string) => {
     setLembreteOcupado(true);
-    setErro("");
+    setAvisoLembrete(null);
     try {
       const res = await fetch("/api/calendar/reminder", {
         method: "POST",
@@ -242,8 +245,14 @@ export default function Lessons({
       const json = (await res.json()) as { ativo?: boolean; hora?: string; error?: string };
       if (!res.ok) throw new Error(json.error ?? "Falha no lembrete.");
       setLembrete({ ativo: Boolean(json.ativo), hora: json.hora ?? lembrete.hora });
+      setAvisoLembrete({
+        tipo: "ok",
+        texto: json.ativo
+          ? `Lembrete salvo na sua Google Agenda: todo dia às ${json.hora ?? lembrete.hora}.`
+          : "Lembrete removido da sua Google Agenda.",
+      });
     } catch (e) {
-      setErro(e instanceof Error ? e.message : "Falha no lembrete.");
+      setAvisoLembrete({ tipo: "erro", texto: e instanceof Error ? e.message : "Falha no lembrete." });
     } finally {
       setLembreteOcupado(false);
     }
@@ -528,7 +537,14 @@ export default function Lessons({
             </button>
           )}
         </div>
-        {lembrete.ativo && <p className="lesson-note">Ativo às {lembrete.hora}, todos os dias.</p>}
+        {avisoLembrete && (
+          <p className={avisoLembrete.tipo === "erro" ? "lesson-error" : "lesson-note"} role="status">
+            {avisoLembrete.texto}
+          </p>
+        )}
+        {lembrete.ativo && !avisoLembrete && (
+          <p className="lesson-note">Ativo às {lembrete.hora}, todos os dias.</p>
+        )}
       </section>
 
       {(data?.history?.length ?? 0) > 0 && (
