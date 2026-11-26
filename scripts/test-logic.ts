@@ -11,7 +11,7 @@ import { isDailyQuota, nextModel } from "../lib/gemini-errors.ts";
 import { describeDbError, poolOptions } from "../lib/db-config.ts";
 import { canGenerateMore, looksEnglish, MAX_IMPROVEMENTS, MAX_PARAGRAFOS, mergeImprovements, normalizeAnswer, normalizeImprovements, normalizeLessonOutline, normalizeQuestions, normalizeResult, normalizeStudy } from "../lib/lesson-normalize.ts";
 import { weekRequest } from "../lib/licoes-client.ts";
-import { CHAT_CONTEXT, generateStep, outlineDays, parseWeekParam, partIndexForDate, validateQuestion } from "../lib/lesson-parts.ts";
+import { CHAT_CONTEXT, generateStep, todayInSaoPaulo, outlineDays, parseWeekParam, partIndexForDate, validateQuestion } from "../lib/lesson-parts.ts";
 import { normalizePronMap, pronBatches, pronSystemPrompt, pronUserPrompt, shouldStoreShared, splitGeneratable } from "../lib/pron-prompt.ts";
 import { gradeSystemPrompt, improveSystemPrompt, improveUserPrompt, lessonSystemPrompt, ORDEM, STUDY_LIMITS, TOTAL_QUESTOES, outlineUserPrompt, partSystemPrompt, partUserPrompt, partAndQuestionsUserPrompt, questionsUserPrompt, chatSystemPrompt, chatUserPrompt, CHAT_CONTEXT_PROMPT } from "../lib/lesson-prompt.ts";
 import type { Study } from "../lib/lesson-prompt.ts";
@@ -793,6 +793,11 @@ check("weekRequest manda dias, gramática e até 25 palavras", () => {
   const r = weekRequest(w);
   assert(r.weekN === w.n && r.dias.length === w.days.length && r.dias[0].focus === w.days[0].focus && r.dias[0].label === w.days[0].label, JSON.stringify(r.dias));
   assert(r.gramatica === w.grammar.topic && r.tema === w.theme && r.vocabulario.length > 0 && r.vocabulario.length <= 25, JSON.stringify(r).slice(0, 200));
+});
+
+check("hoje em São Paulo vira o dia certo perto da meia-noite", () => {
+  assert(todayInSaoPaulo(new Date("2026-11-26T02:00:00Z")) === "2026-11-25", "23h em SP ainda é dia 25");
+  assert(todayInSaoPaulo(new Date("2026-11-26T03:30:00Z")) === "2026-11-26", "00h30 em SP já é dia 26");
 });
 
 console.log(failures === 0 ? "\nTodos os testes passaram." : `\n${failures} falha(s).`);

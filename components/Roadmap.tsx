@@ -209,6 +209,9 @@ export default function Roadmap({
               <Link className="btn small primary" href="/estudo-diario">
                 Estudo do dia
               </Link>
+              <Link className="btn small" href="/licoes">
+                Lições
+              </Link>
               <Link className="btn small" href="/preferencias">
                 Preferências
               </Link>
@@ -392,6 +395,9 @@ export default function Roadmap({
                   {week.grammar.tip}
                 </p>
               )}
+              <Link className="btn small licao-grammar-link" href={`/licoes/${week.n}`}>
+                Estudar a lição completa →
+              </Link>
             </section>
 
             <section className="card">

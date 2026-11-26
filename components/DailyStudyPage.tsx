@@ -29,6 +29,9 @@ export default function DailyStudyPage({
               <strong>Estudo do dia</strong>
             </div>
             <div className="head-actions">
+              <Link className="btn small" href="/licoes">
+                Lições
+              </Link>
               <Link className="btn small" href="/vocabulario">
                 Vocabulário
               </Link>

@@ -69,3 +69,8 @@ export function generateStep(s: { lessonHasQuestions: boolean; hasWeekLesson: bo
   if (!s.hasWeekLesson) return "needsOutline";
   return s.hasPart ? "questionsOnly" : "partAndQuestions";
 }
+
+/** Data de hoje (AAAA-MM-DD) no fuso de São Paulo, também no navegador. */
+export function todayInSaoPaulo(now: Date = new Date()): string {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "America/Sao_Paulo" }).format(now);
+}
