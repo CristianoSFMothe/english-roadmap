@@ -244,6 +244,7 @@ export const CATEGORIES: RefCategory[] = [
           it("Sunday", "domingo", "sân-dei"),
           it("weekday", "dia útil", "uík-dei"),
           it("weekend", "fim de semana", "uí-kend"),
+          it("holiday", "feriado (no inglês britânico, também férias)", "rró-li-dei"),
         ],
       },
       {
