@@ -1,10 +1,9 @@
 import { NextResponse } from "next/server";
 import { allowedUser } from "@/lib/access";
 import { askGemini, resolveKey } from "@/lib/gemini";
-import { clampProfile, emptyProfile, type Profile } from "@/lib/profile";
-import { loadUserData } from "@/lib/server-data";
+import type { Profile } from "@/lib/profile";
+import { userProfile } from "@/lib/server-data";
 import {
-  assuntosRecentes,
   createLesson,
   errosRecentes,
   getLesson,
@@ -131,11 +130,6 @@ export async function POST(request: Request) {
   }
 }
 
-async function perfilDoUsuario(userId: string, enviado?: Profile): Promise<Profile> {
-  const salvo = (await loadUserData(userId)).profile;
-  return clampProfile(salvo ?? enviado ?? emptyProfile);
-}
-
 async function gerar(userId: string, body: Body, key: string) {
   const data = /^\d{4}-\d{2}-\d{2}$/.test(body.date ?? "") ? (body.date as string) : hojeSaoPaulo();
 
@@ -144,8 +138,8 @@ async function gerar(userId: string, body: Body, key: string) {
     return NextResponse.json({ lesson: existente, jaExistia: true });
   }
 
-  const profile = await perfilDoUsuario(userId, body.profile);
-  const [erros, assuntos] = await Promise.all([errosRecentes(userId), assuntosRecentes(userId)]);
+  const profile = await userProfile(userId, body.profile);
+  const erros = await errosRecentes(userId);
 
   const texto = await askGemini({
     key,
@@ -156,7 +150,6 @@ async function gerar(userId: string, body: Body, key: string) {
       gramatica: body.gramatica,
       vocabulario: body.vocabulario,
       errosRecentes: erros,
-      assuntosRecentes: assuntos,
       data,
     }),
     // Teoria, dicas e 5 questões numa resposta só.

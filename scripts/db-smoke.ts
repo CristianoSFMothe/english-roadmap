@@ -7,7 +7,6 @@ import { auth } from "../lib/auth";
 import { prisma } from "../lib/db";
 import type { Question, Study } from "../lib/lesson-prompt";
 import {
-  assuntosRecentes,
   createLesson,
   errosRecentes,
   getLesson,
@@ -31,6 +30,18 @@ import {
   saveVocab,
 } from "../lib/server-data";
 import { cleanWords, type MyWord } from "../lib/vocabulary";
+import type { LessonOutline } from "../lib/lesson-parts";
+import {
+  addChatPair,
+  chatHistory,
+  chatsByPart,
+  createWeekLesson,
+  getParts,
+  getWeekLesson,
+  getWeekLessonById,
+  listWeekLessons,
+  savePart,
+} from "../lib/week-lessons";
 
 let failures = 0;
 async function check(name: string, fn: () => unknown | Promise<unknown>) {
@@ -84,6 +95,11 @@ const errado: Result = {
 };
 const m1: Improvement = { en: "I'm from Brazil.", why: "informal", style: "informal" };
 const m2: Improvement = { en: "I come from Brazil.", why: "outra", style: "usual" };
+const roteiro: LessonOutline = {
+  topic: "To be",
+  intro: "Nesta semana você aprende o to be.",
+  parts: ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"].map((day, i) => ({ day, focus: `F${i}`, title: `Parte ${i + 1}`, goal: "g" })),
+};
 const palavra: MyWord = { id: "w1", en: "hello", pt: "olá", kind: "palavra", createdAt: stamp };
 
 async function main() {
@@ -157,7 +173,6 @@ async function main() {
     igual(l.date, "2026-11-25", "data no create");
     igual((await getLesson(id, "2026-11-25"))?.date, "2026-11-25", "data no get");
     igual(await getLesson(id, "2026-11-24"), null, "dia anterior vazio");
-    igual(await assuntosRecentes(id), ["Verbo to be"], "assuntos");
     igual((await pendentes(id)).map((x) => x.date), ["2026-11-25"], "pendente antes de responder");
   });
 
@@ -214,6 +229,57 @@ async function main() {
     igual(e?.startDate.toISOString().slice(0, 10), "2026-11-30", "start_date");
   });
 
+  let wlId = "";
+  await check("lição da semana: criar duas vezes devolve a mesma", async () => {
+    const a = await createWeekLesson({ userId: id, planId: `${id}-p2`, weekN: 1, level: "A1", theme: "Intro", outline: roteiro });
+    const b = await createWeekLesson({ userId: id, planId: `${id}-p2`, weekN: 1, level: "A1", theme: "Intro", outline: { ...roteiro, topic: "outro" } });
+    wlId = a.id;
+    igual(b.id, a.id, "id");
+    igual(b.topic, "To be", "vale a primeira");
+    igual((await getWeekLesson(id, `${id}-p2`, 1))?.outline.parts.length, 6, "roteiro");
+    igual(await getWeekLessonById("outra-pessoa", a.id), null, "de outra pessoa");
+    igual((await getWeekLessonById(id, a.id))?.id, a.id, "do dono");
+  });
+
+  await check("parte: vale a primeira gravada e entra na contagem", async () => {
+    const p1 = await savePart(wlId, 2, { ...estudo, topic: "Parte 3" });
+    const p2 = await savePart(wlId, 2, { ...estudo, topic: "outra" });
+    igual(p1.topic, "Parte 3", "primeira");
+    igual(p2.topic, "Parte 3", "segunda devolve a salva");
+    igual(Object.keys(await getParts(wlId)), ["2"], "partes");
+    igual(await listWeekLessons(id, `${id}-p2`), [{ weekN: 1, topic: "To be", parts: 1 }], "lista");
+  });
+
+  await check("lição do dia aponta para a parte e lê a teoria dela", async () => {
+    const l = await createLesson({ userId: id, date: "2026-11-26", level: "A1", weekN: 1, questions: [q1], study: null, weekLessonId: wlId, partIdx: 2 });
+    igual(l.study?.topic, "Parte 3", "study no create");
+    igual(l.weekTopic, "To be", "assunto da semana");
+    igual((await getLesson(id, "2026-11-26"))?.partIdx, 2, "partIdx");
+    const r = await prisma.lesson.findFirst({ where: { id: l.id }, select: { study: true } });
+    igual(r?.study, null, "study não é copiado");
+    igual((await pendentes(id)).find((x) => x.id === l.id)?.study?.topic, "Parte 3", "pendentes com a teoria");
+    const depois = await saveAnswer({ userId: id, lessonId: l.id, questionId: "q1", answer: "I am", result: errado, totalQuestoes: 5 });
+    igual(depois?.study?.topic, "Parte 3", "saveAnswer devolve com a teoria");
+    igual(depois?.weekLessonId, wlId, "saveAnswer devolve a parte");
+  });
+
+  await check("lição antiga continua com o próprio study e sem parte", async () => {
+    const antiga = await getLesson(id, "2026-11-25");
+    igual(antiga?.study?.topic, "Verbo to be", "study próprio");
+    igual(antiga?.weekLessonId, null, "sem parte");
+    igual(antiga?.weekTopic, null, "sem assunto da semana");
+  });
+
+  await check("chat: par salvo, id em string e histórico por parte", async () => {
+    const par = await addChatPair({ userId: id, weekLessonId: wlId, partIdx: 2, question: "Por que am?", answer: "Porque é I." });
+    igual(par.map((m) => m.role), ["aluno", "professor"], "papéis");
+    igual(typeof par[0].id, "string", "id string");
+    JSON.stringify(par);
+    igual((await chatHistory(id, wlId, 2)).map((m) => m.text), ["Por que am?", "Porque é I."], "histórico");
+    igual(await chatHistory("outra-pessoa", wlId, 2), [], "chat de outra pessoa");
+    igual(Object.keys(await chatsByPart(id, wlId)), ["2"], "por parte");
+  });
+
   await check("apagar o usuário apaga tudo dele", async () => {
     await prisma.user.delete({ where: { id } });
     const restos = await Promise.all([
@@ -225,8 +291,10 @@ async function main() {
       prisma.calendarExport.count({ where: { userId: id } }),
       prisma.account.count({ where: { userId: id } }),
       prisma.session.count({ where: { userId: id } }),
+      prisma.weekLesson.count({ where: { userId: id } }),
+      prisma.lessonChat.count({ where: { userId: id } }),
     ]);
-    igual(restos, [0, 0, 0, 0, 0, 0, 0, 0], "linhas que sobraram");
+    igual(restos, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "linhas que sobraram");
   });
 }
 

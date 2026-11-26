@@ -1,7 +1,7 @@
 import { prisma } from "./db";
 import type { Prisma } from "./generated/prisma/client";
 import type { RawWeek } from "./weeks";
-import type { Profile } from "./profile";
+import { clampProfile, emptyProfile, type Profile } from "./profile";
 import { cleanWords, type MyWord } from "./vocabulary";
 
 export type StoredPlan = {
@@ -210,4 +210,10 @@ export async function googleGrant(userId: string) {
     calendar: Boolean(conta?.scope?.includes("calendar.events")),
     offline: Boolean(conta?.refreshToken),
   };
+}
+
+/** O perfil salvo na conta, ou o enviado pelo navegador, dentro dos limites. */
+export async function userProfile(userId: string, enviado?: Profile): Promise<Profile> {
+  const salvo = (await loadUserData(userId)).profile;
+  return clampProfile(salvo ?? enviado ?? emptyProfile);
 }

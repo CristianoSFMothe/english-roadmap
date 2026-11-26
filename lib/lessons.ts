@@ -32,8 +32,16 @@ export type Lesson = {
   level: string;
   weekN: number | null;
   questions: Question[];
-  /** Teoria e dicas; null nas lições criadas antes do Estudo do dia. */
+  /**
+   * Teoria e dicas; null nas lições criadas antes do Estudo do dia. Nas lições ligadas a
+   * uma parte da lição da semana, vem da parte (não é copiada).
+   */
   study: Study | null;
+  /** A lição da semana e a parte de onde vem a teoria; null nas lições antigas. */
+  weekLessonId: string | null;
+  partIdx: number | null;
+  /** Assunto da lição da semana (ex.: "Verbo to be"), quando há parte. */
+  weekTopic: string | null;
   answers: Record<string, string>;
   results: Record<string, Result>;
   completedAt: string | null;
@@ -60,6 +68,8 @@ type LessonRecord = {
   answers: unknown;
   results: unknown;
   completedAt: Date | null;
+  weekLessonId: string | null;
+  partIdx: number | null;
 };
 
 /** Linha de `app_lesson` devolvida pelo SQL escrito à mão (`returning`). */
@@ -73,6 +83,8 @@ type RawRow = {
   answers: unknown;
   results: unknown;
   completed_at: Date | null;
+  week_lesson_id: string | null;
+  part_idx: number | null;
 };
 
 const doRaw = (r: RawRow): LessonRecord => ({
@@ -85,6 +97,8 @@ const doRaw = (r: RawRow): LessonRecord => ({
   answers: r.answers,
   results: r.results,
   completedAt: r.completed_at,
+  weekLessonId: r.week_lesson_id,
+  partIdx: r.part_idx,
 });
 
 /**
@@ -104,7 +118,39 @@ const paraLesson = (r: LessonRecord): Lesson => ({
   answers: (r.answers as Record<string, string>) ?? {},
   results: (r.results as Record<string, Result>) ?? {},
   completedAt: r.completedAt ? new Date(r.completedAt).toISOString() : null,
+  weekLessonId: r.weekLessonId ?? null,
+  partIdx: r.partIdx ?? null,
+  weekTopic: null,
 });
+
+/**
+ * Uma fonte só para a teoria: as lições ligadas a uma parte leem o `study` da parte e o
+ * assunto da lição da semana (duas consultas para todas as lições juntas).
+ */
+async function comTeoria(records: LessonRecord[]): Promise<Lesson[]> {
+  const lessons = records.map(paraLesson);
+  const ligadas = lessons.filter((l) => l.weekLessonId && l.partIdx !== null);
+  if (!ligadas.length) return lessons;
+
+  const ids = [...new Set(ligadas.map((l) => l.weekLessonId as string))];
+  const [partes, semanas] = await Promise.all([
+    prisma.lessonPart.findMany({
+      where: { OR: ligadas.map((l) => ({ weekLessonId: l.weekLessonId as string, idx: l.partIdx as number })) },
+      select: { weekLessonId: true, idx: true, content: true },
+    }),
+    prisma.weekLesson.findMany({ where: { id: { in: ids } }, select: { id: true, topic: true } }),
+  ]);
+  const parte = new Map(partes.map((p) => [`${p.weekLessonId}:${p.idx}`, p.content as Study]));
+  const assunto = new Map(semanas.map((w) => [w.id, w.topic]));
+  for (const l of ligadas) {
+    l.study = parte.get(`${l.weekLessonId}:${l.partIdx}`) ?? l.study;
+    l.weekTopic = assunto.get(l.weekLessonId as string) ?? null;
+  }
+  return lessons;
+}
+
+const umaComTeoria = async (r: LessonRecord | null | undefined): Promise<Lesson | null> =>
+  r ? (await comTeoria([r]))[0] : null;
 
 const json = (v: unknown) => v as Prisma.InputJsonValue;
 
@@ -112,7 +158,7 @@ export async function getLesson(userId: string, date: string): Promise<Lesson | 
   const r = await prisma.lesson.findUnique({
     where: { userId_lessonDate: { userId, lessonDate: paraData(date) } },
   });
-  return r ? paraLesson(r) : null;
+  return umaComTeoria(r);
 }
 
 export async function createLesson(args: {
@@ -121,8 +167,13 @@ export async function createLesson(args: {
   level: string;
   weekN: number | null;
   questions: Question[];
-  study: Study;
+  /** null quando a teoria vem da parte da lição da semana. */
+  study: Study | null;
+  weekLessonId?: string | null;
+  partIdx?: number | null;
 }): Promise<Lesson> {
+  const study = args.study ? json(args.study) : Prisma.DbNull;
+  const parte = { weekLessonId: args.weekLessonId ?? null, partIdx: args.partIdx ?? null };
   const r = await prisma.lesson.upsert({
     where: { userId_lessonDate: { userId: args.userId, lessonDate: paraData(args.date) } },
     create: {
@@ -132,24 +183,12 @@ export async function createLesson(args: {
       level: args.level,
       weekN: args.weekN,
       questions: json(args.questions),
-      study: json(args.study),
+      study,
+      ...parte,
     },
-    update: { questions: json(args.questions), study: json(args.study) },
+    update: { questions: json(args.questions), study, ...parte },
   });
-  return paraLesson(r);
-}
-
-/** Assuntos (study.topic) das últimas lições, do mais novo para o mais antigo. */
-export async function assuntosRecentes(userId: string, limite = 7): Promise<string[]> {
-  const rows = await prisma.lesson.findMany({
-    where: { userId, NOT: { study: { equals: Prisma.DbNull } } },
-    orderBy: { lessonDate: "desc" },
-    take: limite,
-    select: { study: true },
-  });
-  return rows
-    .map((r) => String((r.study as { topic?: unknown } | null)?.topic ?? "").trim())
-    .filter(Boolean);
+  return (await comTeoria([r]))[0];
 }
 
 /** Lições abertas: criadas e não concluídas, da mais antiga para a mais nova. */
@@ -159,7 +198,7 @@ export async function pendentes(userId: string, limite = 14): Promise<Lesson[]> 
     orderBy: { lessonDate: "asc" },
     take: limite,
   });
-  return rows.map(paraLesson);
+  return comTeoria(rows);
 }
 
 /** Últimos dias, para mostrar o que foi feito e o que ficou para trás. */
@@ -210,8 +249,8 @@ export async function saveAnswer(args: {
           else null
         end
     where user_id = ${args.userId} and id = ${args.lessonId}
-    returning id, lesson_date, level, week_n, questions, study, answers, results, completed_at`;
-  return rows[0] ? paraLesson(doRaw(rows[0])) : null;
+    returning id, lesson_date, level, week_n, questions, study, answers, results, completed_at, week_lesson_id, part_idx`;
+  return umaComTeoria(rows[0] ? doRaw(rows[0]) : null);
 }
 
 /**
@@ -231,8 +270,8 @@ export async function setImprovements(args: {
           array[${args.questionId}::text, 'moreGenerated'], 'true'::jsonb, true)
     where user_id = ${args.userId} and id = ${args.lessonId} and results ? ${args.questionId}::text
       and coalesce((results->${args.questionId}::text->>'moreGenerated')::boolean, false) = false
-    returning id, lesson_date, level, week_n, questions, study, answers, results, completed_at`;
-  return rows[0] ? paraLesson(doRaw(rows[0])) : null;
+    returning id, lesson_date, level, week_n, questions, study, answers, results, completed_at, week_lesson_id, part_idx`;
+  return umaComTeoria(rows[0] ? doRaw(rows[0]) : null);
 }
 
 /** Frases que a pessoa errou nos últimos dias, para a IA cobrar de novo. */
