@@ -1,4 +1,5 @@
-import { pool } from "./db";
+import { prisma } from "./db";
+import type { Prisma } from "./generated/prisma/client";
 import type { RawWeek } from "./weeks";
 import type { Profile } from "./profile";
 import { cleanWords, type MyWord } from "./vocabulary";
@@ -25,84 +26,91 @@ export type UserData = {
 
 export async function loadUserData(userId: string): Promise<UserData> {
   const [perfil, plano, progresso] = await Promise.all([
-    pool.query<{ data: Profile }>("select data from app_profile where user_id = $1", [userId]),
-    pool.query<{ id: string; created_at: Date; profile: Profile; weeks: RawWeek[] }>(
-      "select id, created_at, profile, weeks from app_plan where user_id = $1 and is_active order by created_at desc limit 1",
-      [userId],
-    ),
-    pool.query<{
-      plan_id: string;
-      done: Record<string, boolean>;
-      known: Record<string, boolean>;
-      notes: Record<string, string>;
-      current_week: number;
-    }>(
-      "select plan_id, done, known, notes, current_week from app_progress where user_id = $1",
-      [userId],
-    ),
+    prisma.profile.findUnique({ where: { userId }, select: { data: true } }),
+    prisma.plan.findFirst({
+      where: { userId, isActive: true },
+      orderBy: { createdAt: "desc" },
+      select: { id: true, createdAt: true, profile: true, weeks: true },
+    }),
+    prisma.progress.findMany({
+      where: { userId },
+      select: { planId: true, done: true, known: true, notes: true, currentWeek: true },
+    }),
   ]);
 
   const progress: Record<string, StoredProgress> = {};
-  for (const row of progresso.rows) {
-    progress[row.plan_id] = {
-      done: row.done ?? {},
-      known: row.known ?? {},
-      notes: row.notes ?? {},
-      currentWeek: row.current_week ?? 1,
+  for (const row of progresso) {
+    progress[row.planId] = {
+      done: (row.done as Record<string, boolean>) ?? {},
+      known: (row.known as Record<string, boolean>) ?? {},
+      notes: (row.notes as Record<string, string>) ?? {},
+      currentWeek: row.currentWeek ?? 1,
     };
   }
 
-  const p = plano.rows[0];
   return {
-    profile: perfil.rows[0]?.data ?? null,
-    plan: p
-      ? { id: p.id, createdAt: new Date(p.created_at).getTime(), profile: p.profile, weeks: p.weeks }
+    profile: (perfil?.data as Profile | undefined) ?? null,
+    plan: plano
+      ? {
+          id: plano.id,
+          createdAt: plano.createdAt.getTime(),
+          profile: plano.profile as Profile,
+          weeks: plano.weeks as RawWeek[],
+        }
       : null,
     progress,
   };
 }
 
+/** Os JSONs do app viram `InputJsonValue` do Prisma (o formato já é JSON puro). */
+const json = (v: unknown) => v as Prisma.InputJsonValue;
+
 export async function saveProfile(userId: string, profile: Profile) {
-  await pool.query(
-    `insert into app_profile (user_id, data, updated_at) values ($1, $2, now())
-     on conflict (user_id) do update set data = excluded.data, updated_at = now()`,
-    [userId, JSON.stringify(profile)],
-  );
+  await prisma.profile.upsert({
+    where: { userId },
+    create: { userId, data: json(profile) },
+    update: { data: json(profile), updatedAt: new Date() },
+  });
 }
 
 export async function savePlan(userId: string, plan: StoredPlan) {
-  await pool.query("update app_plan set is_active = false where user_id = $1 and id <> $2", [
-    userId,
-    plan.id,
+  await prisma.$transaction([
+    prisma.plan.updateMany({
+      where: { userId, id: { not: plan.id } },
+      data: { isActive: false },
+    }),
+    prisma.plan.upsert({
+      where: { id: plan.id },
+      create: {
+        id: plan.id,
+        userId,
+        createdAt: new Date(plan.createdAt),
+        profile: json(plan.profile),
+        weeks: json(plan.weeks),
+        isActive: true,
+      },
+      update: { profile: json(plan.profile), weeks: json(plan.weeks), isActive: true },
+    }),
   ]);
-  await pool.query(
-    `insert into app_plan (id, user_id, created_at, profile, weeks, is_active)
-     values ($1, $2, to_timestamp($3 / 1000.0), $4, $5, true)
-     on conflict (id) do update set profile = excluded.profile, weeks = excluded.weeks, is_active = true`,
-    [plan.id, userId, plan.createdAt, JSON.stringify(plan.profile), JSON.stringify(plan.weeks)],
-  );
 }
 
 export async function clearActivePlan(userId: string) {
-  await pool.query("update app_plan set is_active = false where user_id = $1", [userId]);
+  await prisma.plan.updateMany({ where: { userId }, data: { isActive: false } });
 }
 
 export async function saveProgress(userId: string, planId: string, progress: StoredProgress) {
-  await pool.query(
-    `insert into app_progress (user_id, plan_id, done, known, notes, current_week, updated_at)
-     values ($1, $2, $3, $4, $5, $6, now())
-     on conflict (user_id, plan_id) do update set
-       done = excluded.done, known = excluded.known, notes = excluded.notes,
-       current_week = excluded.current_week, updated_at = now()`,
-    [
-      userId,
-      planId,
-      JSON.stringify(progress.done ?? {}),
-      JSON.stringify(progress.known ?? {}),
-      JSON.stringify(progress.notes ?? {}),
-      progress.currentWeek ?? 1,
-    ],
-  );
+  const dados = {
+    done: json(progress.done ?? {}),
+    known: json(progress.known ?? {}),
+    notes: json(progress.notes ?? {}),
+    currentWeek: progress.currentWeek ?? 1,
+    updatedAt: new Date(),
+  };
+  await prisma.progress.upsert({
+    where: { userId_planId: { userId, planId } },
+    create: { userId, planId, ...dados },
+    update: dados,
+  });
 }
 
 export async function recordCalendarExport(args: {
@@ -113,35 +121,26 @@ export async function recordCalendarExport(args: {
   eventCount: number;
   startDate: string;
 }) {
-  await pool.query(
-    `insert into app_calendar_export (id, user_id, plan_id, calendar_id, calendar_name, event_count, start_date)
-     values ($1, $2, $3, $4, $5, $6, $7)`,
-    [
-      `exp-${Date.now()}`,
-      args.userId,
-      args.planId,
-      args.calendarId,
-      args.calendarName,
-      args.eventCount,
-      args.startDate,
-    ],
-  );
+  await prisma.calendarExport.create({
+    data: {
+      id: `exp-${Date.now()}`,
+      userId: args.userId,
+      planId: args.planId,
+      calendarId: args.calendarId,
+      calendarName: args.calendarName,
+      eventCount: args.eventCount,
+      // Coluna `date`: meia-noite UTC, para não virar o dia anterior no fuso de São Paulo.
+      startDate: new Date(`${args.startDate}T00:00:00Z`),
+    },
+  });
 }
 
 /** Token do Google guardado pelo Better Auth, renovado quando já expirou. */
 export async function googleAccessToken(userId: string): Promise<string> {
-  const { rows } = await pool.query<{
-    accessToken: string | null;
-    refreshToken: string | null;
-    accessTokenExpiresAt: Date | null;
-    scope: string | null;
-  }>(
-    `select "accessToken", "refreshToken", "accessTokenExpiresAt", "scope"
-     from "account" where "userId" = $1 and "providerId" = 'google' limit 1`,
-    [userId],
-  );
-
-  const conta = rows[0];
+  const conta = await prisma.account.findFirst({
+    where: { userId, providerId: "google" },
+    select: { accessToken: true, refreshToken: true, accessTokenExpiresAt: true, scope: true },
+  });
   if (!conta) throw new Error("Nenhuma conta Google conectada.");
 
   const margem = 60_000;
@@ -173,11 +172,14 @@ export async function googleAccessToken(userId: string): Promise<string> {
   }
 
   const data = (await res.json()) as { access_token: string; expires_in: number };
-  await pool.query(
-    `update "account" set "accessToken" = $1, "accessTokenExpiresAt" = $2, "updatedAt" = now()
-     where "userId" = $3 and "providerId" = 'google'`,
-    [data.access_token, new Date(Date.now() + data.expires_in * 1000), userId],
-  );
+  await prisma.account.updateMany({
+    where: { userId, providerId: "google" },
+    data: {
+      accessToken: data.access_token,
+      accessTokenExpiresAt: new Date(Date.now() + data.expires_in * 1000),
+      updatedAt: new Date(),
+    },
+  });
   return data.access_token;
 }
 
@@ -185,29 +187,24 @@ export async function googleAccessToken(userId: string): Promise<string> {
 export { cleanWords };
 
 export async function loadVocab(userId: string): Promise<MyWord[] | null> {
-  const r = await pool.query<{ words: unknown }>(
-    "select words from app_vocab where user_id = $1",
-    [userId],
-  );
-  return r.rows[0] ? cleanWords(r.rows[0].words) : null;
+  const r = await prisma.vocab.findUnique({ where: { userId }, select: { words: true } });
+  return r ? cleanWords(r.words) : null;
 }
 
 export async function saveVocab(userId: string, words: MyWord[]) {
-  await pool.query(
-    `insert into app_vocab (user_id, words, updated_at) values ($1, $2, now())
-     on conflict (user_id) do update set words = excluded.words, updated_at = now()`,
-    [userId, JSON.stringify(words)],
-  );
+  await prisma.vocab.upsert({
+    where: { userId },
+    create: { userId, words: json(words) },
+    update: { words: json(words), updatedAt: new Date() },
+  });
 }
 
 /** O que a conta Google autorizou: serve para a página de preferências mostrar o estado. */
 export async function googleGrant(userId: string) {
-  const { rows } = await pool.query<{ scope: string | null; refreshToken: string | null }>(
-    `select "scope", "refreshToken" from "account"
-     where "userId" = $1 and "providerId" = 'google' limit 1`,
-    [userId],
-  );
-  const conta = rows[0];
+  const conta = await prisma.account.findFirst({
+    where: { userId, providerId: "google" },
+    select: { scope: true, refreshToken: true },
+  });
   return {
     connected: Boolean(conta),
     calendar: Boolean(conta?.scope?.includes("calendar.events")),

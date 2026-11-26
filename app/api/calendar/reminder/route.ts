@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { allowedUser } from "@/lib/access";
 import { authConfigured } from "@/lib/auth";
-import { pool } from "@/lib/db";
+import { prisma } from "@/lib/db";
 import { googleAccessToken } from "@/lib/server-data";
 import { TOTAL_QUESTOES } from "@/lib/lesson-prompt";
 
@@ -15,11 +15,11 @@ type Body = { time?: string; minutesBefore?: number; remove?: boolean };
 type Guardado = { calendar_id: string; event_id: string; reminder_time: string };
 
 async function lembreteSalvo(userId: string): Promise<Guardado | null> {
-  const { rows } = await pool.query<Guardado>(
-    "select calendar_id, event_id, reminder_time from app_reminder where user_id = $1",
-    [userId],
-  );
-  return rows[0] ?? null;
+  const r = await prisma.reminder.findUnique({
+    where: { userId },
+    select: { calendarId: true, eventId: true, reminderTime: true },
+  });
+  return r ? { calendar_id: r.calendarId, event_id: r.eventId, reminder_time: r.reminderTime } : null;
 }
 
 async function google(token: string, url: string, init?: RequestInit) {
@@ -89,7 +89,7 @@ export async function POST(request: Request) {
           `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(salvo.calendar_id)}/events/${encodeURIComponent(salvo.event_id)}`,
           { method: "DELETE" },
         ).catch(() => null);
-        await pool.query("delete from app_reminder where user_id = $1", [user.id]);
+        await prisma.reminder.deleteMany({ where: { userId: user.id } });
       }
       return NextResponse.json({ ativo: false });
     }
@@ -139,14 +139,12 @@ export async function POST(request: Request) {
       eventId = criado.id;
     }
 
-    await pool.query(
-      `insert into app_reminder (user_id, calendar_id, event_id, reminder_time, updated_at)
-       values ($1, $2, $3, $4, now())
-       on conflict (user_id) do update set
-         calendar_id = excluded.calendar_id, event_id = excluded.event_id,
-         reminder_time = excluded.reminder_time, updated_at = now()`,
-      [user.id, calendarId, eventId, hora],
-    );
+    const lembrete = { calendarId, eventId, reminderTime: hora, updatedAt: new Date() };
+    await prisma.reminder.upsert({
+      where: { userId: user.id },
+      create: { userId: user.id, ...lembrete },
+      update: lembrete,
+    });
 
     return NextResponse.json({ ativo: true, hora });
   } catch (error) {
