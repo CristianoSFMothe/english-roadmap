@@ -14,12 +14,15 @@ export default function TeacherChat({
   initial,
   apiKey,
   accessCode,
+  onMessages,
 }: {
   weekLessonId: string;
   partIdx: number;
   initial: ChatMessage[];
   apiKey: string;
   accessCode: string;
+  /** Avisa quem guarda a conversa, para ela não sumir ao trocar de parte e voltar. */
+  onMessages?: (novas: ChatMessage[]) => void;
 }) {
   const [mensagens, setMensagens] = useState<ChatMessage[]>(initial);
   const [texto, setTexto] = useState("");
@@ -59,6 +62,7 @@ export default function TeacherChat({
         accessCode: accessCode || undefined,
       });
       setMensagens((m) => [...m, ...r.messages]);
+      onMessages?.(r.messages);
       setTexto("");
     } catch (e) {
       // O texto continua no campo para tentar de novo.

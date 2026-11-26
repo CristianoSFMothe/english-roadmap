@@ -74,3 +74,14 @@ export function generateStep(s: { lessonHasQuestions: boolean; hasWeekLesson: bo
 export function todayInSaoPaulo(now: Date = new Date()): string {
   return new Intl.DateTimeFormat("en-CA", { timeZone: "America/Sao_Paulo" }).format(now);
 }
+
+/** Junta mensagens novas à conversa de uma parte, sem repetir id e sem mudar o objeto antigo. */
+export function appendChat(
+  chats: Record<number, ChatMessage[]>,
+  partIdx: number,
+  novas: ChatMessage[],
+): Record<number, ChatMessage[]> {
+  const atuais = chats[partIdx] ?? [];
+  const ids = new Set(atuais.map((m) => m.id));
+  return { ...chats, [partIdx]: [...atuais, ...novas.filter((m) => !ids.has(m.id))] };
+}

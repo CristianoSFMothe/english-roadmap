@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { GeneratedPlan } from "@/components/Generator";
 import { useSession } from "./auth-client";
 import { buildWeeks, type RawWeek, type Week } from "./content";
+import { startPlanPull, type RemotePlan } from "./plan-pull";
 import { usePersistentState } from "./storage";
-
-type Remote = { plan: GeneratedPlan | null; weekN: number | null };
 
 export type PlanContext = {
   plan: GeneratedPlan | null;
@@ -36,34 +35,19 @@ export function usePlanContext(sample: RawWeek[], authEnabled: boolean): PlanCon
 
   const { data: session, isPending } = useSession();
   const userId = authEnabled ? (session?.user?.id ?? null) : null;
-  const [remote, setRemote] = useState<Remote | null>(null);
+  const [remote, setRemote] = useState<RemotePlan | null>(null);
   const [pronto, setPronto] = useState(false);
-  const pulled = useRef<string | null>(null);
 
   useEffect(() => {
-    if (!userId || pulled.current === userId) return;
-    pulled.current = userId;
-    let cancelado = false;
-    (async () => {
-      try {
-        const res = await fetch("/api/data");
-        const data = (await res.json()) as {
-          signedIn?: boolean;
-          plan?: GeneratedPlan | null;
-          progress?: Record<string, { currentWeek?: number }>;
-        };
-        if (cancelado || !data.signedIn) return;
-        const id = data.plan?.id ?? "sample";
-        setRemote({ plan: data.plan ?? null, weekN: data.progress?.[id]?.currentWeek ?? null });
-      } catch {
-        /* sem rede: segue com o que está no navegador */
-      } finally {
-        if (!cancelado) setPronto(true);
-      }
-    })();
-    return () => {
-      cancelado = true;
-    };
+    if (!userId) return;
+    return startPlanPull(
+      userId,
+      async () => (await fetch("/api/data")).json(),
+      ({ remote: r, ready }) => {
+        if (r) setRemote(r);
+        setPronto(ready);
+      },
+    );
   }, [userId]);
 
   const plan = remote?.plan ?? localPlan;

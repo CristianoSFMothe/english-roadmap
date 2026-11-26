@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type { RawWeek } from "@/lib/content";
 import type { Study } from "@/lib/lesson-prompt";
 import {
+  appendChat,
   PARTS,
   parseWeekParam,
   partIndexForDate,
@@ -232,6 +233,11 @@ export default function WeekLessonPage({
                   weekLessonId={view.id}
                   partIdx={aberta}
                   initial={view.chats[aberta] ?? []}
+                  onMessages={(novas) =>
+                    setView((v) =>
+                      v && v.id === view.id ? { ...v, chats: appendChat(v.chats, aberta, novas) } : v,
+                    )
+                  }
                   apiKey={apiKey}
                   accessCode={accessCode}
                 />

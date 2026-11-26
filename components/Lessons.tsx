@@ -11,7 +11,7 @@ import { Pron, PronListButton } from "./Pron";
 import { Speak } from "./SpeechButtons";
 import StudySections from "./StudySections";
 import TeacherChat from "./TeacherChat";
-import { PARTS, partIndexForDate, type ChatMessage, type WeekLessonView } from "@/lib/lesson-parts";
+import { appendChat, PARTS, partIndexForDate, type ChatMessage, type WeekLessonView } from "@/lib/lesson-parts";
 import { LicoesError, postJson, postLicoes, weekRequest } from "@/lib/licoes-client";
 
 type HistItem = { date: string; completed: boolean; total: number; answered: number; correct: number };
@@ -368,6 +368,11 @@ export default function Lessons({
                 weekLessonId={ativa.weekLessonId}
                 partIdx={ativa.partIdx}
                 initial={chat?.lessonId === ativa.id ? chat.messages : []}
+                onMessages={(novas) =>
+                  setChat((c) =>
+                    c && c.lessonId === ativa.id ? { ...c, messages: appendChat({ 0: c.messages }, 0, novas)[0] } : c,
+                  )
+                }
                 apiKey={apiKey}
                 accessCode={accessCode}
               />
