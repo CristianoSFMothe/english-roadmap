@@ -577,5 +577,42 @@ check("limite diario gratuito troca para o modelo reserva uma vez", () => {
   if (nextModel("gemini-3.8-flash", "") !== null) throw new Error("sem reserva");
 });
 
+// ---------- Migração inicial do Prisma ----------
+
+const migracao = (() => {
+  try {
+    return readFileSync(new URL("../prisma/migrations/0001_init/migration.sql", import.meta.url), "utf8");
+  } catch {
+    return "";
+  }
+})();
+
+const TABELAS = ["user", "session", "account", "verification", "app_profile", "app_plan",
+  "app_progress", "app_calendar_export", "app_lesson", "app_reminder", "app_vocab",
+  "app_pron", "app_week_lesson", "app_lesson_part", "app_lesson_chat"];
+
+check("migração inicial cria as 15 tabelas", () => {
+  for (const t of TABELAS)
+    if (!migracao.includes(`CREATE TABLE "${t}"`) && !migracao.includes(`CREATE TABLE "public"."${t}"`))
+      throw new Error(`falta ${t}`);
+});
+
+check("migração inicial liga RLS em todas as tabelas", () => {
+  for (const t of TABELAS)
+    if (!new RegExp(`ALTER TABLE "(public"\\.")?${t}" ENABLE ROW LEVEL SECURITY`, "i").test(migracao))
+      throw new Error(`sem RLS: ${t}`);
+});
+
+check("lição única por dia e lição da semana única por plano", () => {
+  if (!/UNIQUE INDEX[^;]*"app_lesson"[^;]*\("user_id", "lesson_date"\)/.test(migracao)) throw new Error("app_lesson");
+  if (!/UNIQUE INDEX[^;]*"app_week_lesson"[^;]*\("user_id", "plan_id", "week_n"\)/.test(migracao))
+    throw new Error("app_week_lesson");
+});
+
+check("índices em ordem decrescente de hoje continuam", () => {
+  if (!/"app_plan"[^;]*\("user_id", "created_at" DESC\)/.test(migracao)) throw new Error("app_plan");
+  if (!/"app_lesson"[^;]*\("user_id", "lesson_date" DESC\)/.test(migracao)) throw new Error("app_lesson");
+});
+
 console.log(failures === 0 ? "\nTodos os testes passaram." : `\n${failures} falha(s).`);
 process.exit(failures === 0 ? 0 : 1);
