@@ -10,9 +10,11 @@ import { sayPhrase, pronKey, pronounce, PRON_STYLE, PRON_EXAMPLES } from "../lib
 import { isDailyQuota, nextModel } from "../lib/gemini-errors.ts";
 import { describeDbError, poolOptions } from "../lib/db-config.ts";
 import { canGenerateMore, looksEnglish, MAX_IMPROVEMENTS, MAX_PARAGRAFOS, mergeImprovements, normalizeAnswer, normalizeImprovements, normalizeLessonOutline, normalizeQuestions, normalizeResult, normalizeStudy } from "../lib/lesson-normalize.ts";
-import { outlineDays, parseWeekParam, partIndexForDate, validateQuestion } from "../lib/lesson-parts.ts";
+import { CHAT_CONTEXT, outlineDays, parseWeekParam, partIndexForDate, validateQuestion } from "../lib/lesson-parts.ts";
 import { normalizePronMap, pronBatches, pronSystemPrompt, pronUserPrompt, shouldStoreShared, splitGeneratable } from "../lib/pron-prompt.ts";
-import { gradeSystemPrompt, improveSystemPrompt, improveUserPrompt, lessonSystemPrompt, lessonUserPrompt, ORDEM, STUDY_LIMITS, TOTAL_QUESTOES } from "../lib/lesson-prompt.ts";
+import { gradeSystemPrompt, improveSystemPrompt, improveUserPrompt, lessonSystemPrompt, ORDEM, STUDY_LIMITS, TOTAL_QUESTOES, outlineUserPrompt, partSystemPrompt, partUserPrompt, partAndQuestionsUserPrompt, questionsUserPrompt, chatSystemPrompt, chatUserPrompt, CHAT_CONTEXT_PROMPT } from "../lib/lesson-prompt.ts";
+import type { Study } from "../lib/lesson-prompt.ts";
+import type { LessonOutline } from "../lib/lesson-parts.ts";
 
 let failures = 0;
 const check = (name: string, fn: () => void) => {
@@ -159,9 +161,6 @@ check("prompt da licao pede 5 questoes e cita o tema da semana", () => {
   const s = lessonSystemPrompt(p);
   if (!s.includes("A1")) throw new Error("nivel ausente");
   if (!s.includes("ESCREVENDO")) throw new Error("regra de escrita ausente");
-  const u = lessonUserPrompt({ level: "A1", tema: "Daily routine", gramatica: "present simple", data: "2026-10-17" });
-  if (!u.includes("5 questões")) throw new Error("quantidade ausente");
-  if (!u.includes("Daily routine")) throw new Error("tema ausente");
 });
 
 
@@ -445,10 +444,6 @@ check("questoes saem do objeto novo", () => {
 check("prompt da licao pede teoria ligada as questoes", () => {
   const s = lessonSystemPrompt(sampleProfile);
   if (!/teoria/i.test(s) || !/jarg/i.test(s)) throw new Error("regras da teoria");
-  const u = lessonUserPrompt({ level: "A1", data: "2026-11-23", gramatica: "to be", assuntosRecentes: ["To be afirmativo", "To be negativo"] });
-  if (!u.includes('"study"') || !u.includes('"questions"')) throw new Error("formato");
-  if (!u.includes("To be negativo") || !/não repita/i.test(u)) throw new Error("assuntos recentes");
-  if (!u.includes('"pron"')) throw new Error("pronuncia nos exemplos");
 });
 
 check("prompt da licao leva o mesmo estilo de PRON_STYLE", () => {
@@ -743,6 +738,46 @@ check("normalizeAnswer aceita resposta e recusa vazio", () => {
   let threw = false;
   try { normalizeAnswer({ answer: "" }); } catch { threw = true; }
   assert(threw, "vazio");
+});
+
+const ROTEIRO: LessonOutline = { topic: "To be", intro: "i", parts: DIAS6.map((d, i) => ({ ...d, title: `Título ${i + 1}`, goal: "g" })) };
+const PARTE: Study = { topic: "Título 3", goal: "g", explanation: ["p"], examples: [], tips: [] };
+check("roteiro pede 6 partes com os dias e focos do plano", () => {
+  const u = outlineUserPrompt({ level: "A1", weekN: 1, gramatica: "to be", dias: DIAS6 });
+  assert(/6 partes/.test(u) && u.includes("Sáb") && u.includes("F5") && u.includes("to be"), u);
+});
+check("parte leva o roteiro inteiro e marca qual escrever", () => {
+  const u = partUserPrompt({ outline: ROTEIRO, idx: 2 });
+  assert(u.includes("Título 2") && u.includes("Título 3") && u.includes("Título 4") && /parte 3/i.test(u), u);
+  assert(/"dialogue"/.test(u) && /"practice"/.test(u) && /"pron"/.test(u), "formato novo");
+});
+check("parte + questões substitui o assunto livre", () => {
+  const u = partAndQuestionsUserPrompt({ outline: ROTEIRO, idx: 0, data: "2026-11-23", errosRecentes: ["Use am com I."] });
+  assert(u.includes("Título 1") && u.includes("Use am com I.") && /"questions"/.test(u) && /"study"/.test(u) && !/Assuntos dos últimos dias/.test(u), u);
+  assert(u.includes(`${TOTAL_QUESTOES} questões`) && /"pron"/.test(u), "quantidade e pronúncia");
+});
+check("só questões parte da parte pronta", () => {
+  const u = questionsUserPrompt({ part: PARTE, outline: ROTEIRO, idx: 2, data: "2026-11-25" });
+  assert(u.includes("Título 3") && /"questions"/.test(u) && !/"study"/.test(u), u);
+});
+check("chat leva só as últimas 12 mensagens e a pergunta", () => {
+  const history = Array.from({ length: 15 }, (_, i) => ({ id: String(i), role: (i % 2 ? "professor" : "aluno") as "aluno" | "professor", text: `msg${i}.`, createdAt: "" }));
+  const u = chatUserPrompt({ outline: ROTEIRO, idx: 2, part: PARTE, history, question: "Por que am?" });
+  assert(!u.includes("msg2.") && u.includes("msg3.") && u.includes("msg14.") && u.includes("Por que am?") && u.includes("Título 3"), u);
+  assert(CHAT_CONTEXT_PROMPT === CHAT_CONTEXT, "contexto do chat igual nos dois arquivos");
+});
+check("professor do chat responde em JSON, curto e em português", () => {
+  const s = chatSystemPrompt(sampleProfile);
+  assert(/"answer"/.test(s) && /150 palavras/.test(s) && /português/.test(s), s);
+});
+check("teoria fala com o aluno (você) no Estudo do dia e na lição", () => {
+  assert(/você/.test(partSystemPrompt(sampleProfile)) && /você/.test(lessonSystemPrompt(sampleProfile)), "tom");
+});
+check("parte e chat levam o mesmo estilo de PRON_STYLE", () => {
+  for (const s of [partSystemPrompt(sampleProfile), chatSystemPrompt(sampleProfile)]) {
+    const falta = PRON_STYLE.split("\n").find((r) => !s.includes(r));
+    assert(!falta, "regra fora do prompt: " + falta);
+  }
 });
 
 console.log(failures === 0 ? "\nTodos os testes passaram." : `\n${failures} falha(s).`);
