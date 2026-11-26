@@ -3,14 +3,20 @@ import { buildWeeks } from "../lib/weeks.ts";
 import { systemPrompt, outlineMessage, weekMessage } from "../lib/prompt.ts";
 import { sampleProfile, clampProfile } from "../lib/profile.ts";
 import { numberToWords, cleanWords, CATEGORIES } from "../lib/vocabulary.ts";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import type { RawWeek } from "../lib/weeks.ts";
 import { VERBS, thirdPerson, findVerb, ingForm, ptGerund, ptConditional, buildTense, TENSES, statNotice, buildExamples, shortAnswers } from "../lib/verbs.ts";
 import { sayPhrase, pronKey, pronounce, PRON_STYLE, PRON_EXAMPLES } from "../lib/pronunciation.ts";
 import { isDailyQuota, nextModel } from "../lib/gemini-errors.ts";
-import { canGenerateMore, looksEnglish, MAX_IMPROVEMENTS, mergeImprovements, normalizeImprovements, normalizeQuestions, normalizeResult, normalizeStudy } from "../lib/lesson-normalize.ts";
+import { describeDbError, poolOptions } from "../lib/db-config.ts";
+import { canGenerateMore, looksEnglish, MAX_IMPROVEMENTS, MAX_PARAGRAFOS, mergeImprovements, normalizeAnswer, normalizeImprovements, normalizeLessonOutline, normalizeQuestions, normalizeResult, normalizeStudy } from "../lib/lesson-normalize.ts";
+import { weekRequest } from "../lib/licoes-client.ts";
+import { startPlanPull } from "../lib/plan-pull.ts";
+import { appendChat, CHAT_CONTEXT, generateStep, todayInSaoPaulo, outlineDays, parseWeekParam, partIndexForDate, validateQuestion } from "../lib/lesson-parts.ts";
 import { normalizePronMap, pronBatches, pronSystemPrompt, pronUserPrompt, shouldStoreShared, splitGeneratable } from "../lib/pron-prompt.ts";
-import { gradeSystemPrompt, improveSystemPrompt, improveUserPrompt, lessonSystemPrompt, lessonUserPrompt, ORDEM, TOTAL_QUESTOES } from "../lib/lesson-prompt.ts";
+import { gradeSystemPrompt, improveSystemPrompt, improveUserPrompt, lessonSystemPrompt, ORDEM, STUDY_LIMITS, TOTAL_QUESTOES, outlineUserPrompt, partSystemPrompt, partUserPrompt, partAndQuestionsUserPrompt, questionsUserPrompt, chatSystemPrompt, chatUserPrompt, CHAT_CONTEXT_PROMPT } from "../lib/lesson-prompt.ts";
+import type { Study } from "../lib/lesson-prompt.ts";
+import type { LessonOutline } from "../lib/lesson-parts.ts";
 
 let failures = 0;
 const check = (name: string, fn: () => void) => {
@@ -157,9 +163,6 @@ check("prompt da licao pede 5 questoes e cita o tema da semana", () => {
   const s = lessonSystemPrompt(p);
   if (!s.includes("A1")) throw new Error("nivel ausente");
   if (!s.includes("ESCREVENDO")) throw new Error("regra de escrita ausente");
-  const u = lessonUserPrompt({ level: "A1", tema: "Daily routine", gramatica: "present simple", data: "2026-10-17" });
-  if (!u.includes("5 questões")) throw new Error("quantidade ausente");
-  if (!u.includes("Daily routine")) throw new Error("tema ausente");
 });
 
 
@@ -443,10 +446,6 @@ check("questoes saem do objeto novo", () => {
 check("prompt da licao pede teoria ligada as questoes", () => {
   const s = lessonSystemPrompt(sampleProfile);
   if (!/teoria/i.test(s) || !/jarg/i.test(s)) throw new Error("regras da teoria");
-  const u = lessonUserPrompt({ level: "A1", data: "2026-11-23", gramatica: "to be", assuntosRecentes: ["To be afirmativo", "To be negativo"] });
-  if (!u.includes('"study"') || !u.includes('"questions"')) throw new Error("formato");
-  if (!u.includes("To be negativo") || !/não repita/i.test(u)) throw new Error("assuntos recentes");
-  if (!u.includes('"pron"')) throw new Error("pronuncia nos exemplos");
 });
 
 check("prompt da licao leva o mesmo estilo de PRON_STYLE", () => {
@@ -576,6 +575,263 @@ check("limite diario gratuito troca para o modelo reserva uma vez", () => {
   if (nextModel("gemini-3.5-flash", "gemini-3.5-flash") !== null) throw new Error("reserva igual ao principal");
   if (nextModel("gemini-3.8-flash", "") !== null) throw new Error("sem reserva");
 });
+
+// ---------- Conexão com o banco ----------
+
+check("poolOptions: sslmode da URL manda", () => {
+  const a = poolOptions("postgresql://u:p@db.exemplo.com:5432/x?sslmode=disable");
+  if (a.ssl !== false) throw new Error("disable devia desligar TLS");
+  const b = poolOptions("postgresql://u:p@localhost:5432/x?sslmode=require");
+  if (!b.ssl) throw new Error("require devia ligar TLS mesmo em localhost");
+  if (b.connectionString?.includes("sslmode")) throw new Error("sslmode devia sair da URL");
+});
+
+check("poolOptions: sem sslmode, TLS só fora de localhost", () => {
+  const sup = poolOptions("postgresql://u:p@aws-1-sa-east-1.pooler.supabase.com:6543/postgres");
+  if (!sup.ssl || sup.ssl.rejectUnauthorized !== false) throw new Error("supabase sem TLS");
+  if (poolOptions("postgresql://u:p@127.0.0.1:5432/x").ssl) throw new Error("local com TLS");
+  if (sup.max !== 3 || sup.connectionTimeoutMillis !== 15_000 || sup.idleTimeoutMillis !== 10_000)
+    throw new Error("limites do pool");
+});
+
+check("poolOptions: sem URL não lança", () => {
+  if (poolOptions(undefined).connectionString !== undefined) throw new Error("url inventada");
+});
+
+check("describeDbError acha o código do pg dentro do erro do Prisma", () => {
+  const embrulhado = { message: "Driver adapter error", cause: { cause: { code: "28P01" } } };
+  if (describeDbError(embrulhado) !== "senha incorreta na connection string") throw new Error(describeDbError(embrulhado));
+  if (describeDbError({ cause: { code: "3D000" } }) !== "banco inexistente na connection string") throw new Error("3D000");
+  if (describeDbError({ code: "ENOTFOUND" }) !== "host da connection string não resolve") throw new Error("ENOTFOUND");
+  if (!describeDbError(new Error("x".repeat(500))).startsWith("falha ao conectar: ")) throw new Error("genérico");
+  if (describeDbError(new Error("x".repeat(500))).length > 140) throw new Error("mensagem longa demais");
+});
+
+check("describeDbError entende o erro real do Prisma 7 (P2010 com driverAdapterError)", () => {
+  const real = Object.assign(new Error("Raw query failed. Code: `28P01`."), {
+    code: "P2010",
+    meta: {
+      driverAdapterError: {
+        name: "DriverAdapterError",
+        cause: { originalCode: "28P01", originalMessage: "password authentication failed", kind: "AuthenticationFailed" },
+      },
+    },
+  });
+  if (describeDbError(real) !== "senha incorreta na connection string") throw new Error(describeDbError(real));
+  const semCodigo = Object.assign(new Error("x"), {
+    code: "P2010",
+    meta: { driverAdapterError: { cause: { originalMessage: "Connection terminated due to connection timeout" } } },
+  });
+  if (!describeDbError(semCodigo).startsWith("tempo esgotado")) throw new Error(describeDbError(semCodigo));
+});
+
+check("describeDbError usa o kind do adaptador quando não há código do pg", () => {
+  const comKind = (kind: string) =>
+    Object.assign(new Error(""), { code: "P2010", meta: { driverAdapterError: { cause: { kind, host: "h" } } } });
+  if (describeDbError(comKind("DatabaseNotReachable")) !== "host da connection string não resolve ou não responde")
+    throw new Error(describeDbError(comKind("DatabaseNotReachable")));
+  if (describeDbError(comKind("DatabaseDoesNotExist")) !== "banco inexistente na connection string") throw new Error("db");
+  if (!describeDbError(comKind("SocketTimeout")).startsWith("tempo esgotado")) throw new Error("timeout");
+  if (describeDbError(comKind("TlsConnectionError")) !== "problema de certificado TLS") throw new Error("tls");
+});
+
+// ---------- Migração inicial do Prisma ----------
+
+const migracao = (() => {
+  try {
+    return readFileSync(new URL("../prisma/migrations/0001_init/migration.sql", import.meta.url), "utf8");
+  } catch {
+    return "";
+  }
+})();
+
+const TABELAS = ["user", "session", "account", "verification", "app_profile", "app_plan",
+  "app_progress", "app_calendar_export", "app_lesson", "app_reminder", "app_vocab",
+  "app_pron", "app_week_lesson", "app_lesson_part", "app_lesson_chat"];
+
+check("migração inicial cria as 15 tabelas", () => {
+  for (const t of TABELAS)
+    if (!migracao.includes(`CREATE TABLE "${t}"`) && !migracao.includes(`CREATE TABLE "public"."${t}"`))
+      throw new Error(`falta ${t}`);
+});
+
+check("migração inicial liga RLS em todas as tabelas", () => {
+  for (const t of TABELAS)
+    if (!new RegExp(`ALTER TABLE "(public"\\.")?${t}" ENABLE ROW LEVEL SECURITY`, "i").test(migracao))
+      throw new Error(`sem RLS: ${t}`);
+});
+
+check("alguma migração liga RLS na tabela de controle do Prisma", () => {
+  const dir = new URL("../prisma/migrations/", import.meta.url);
+  const todas = readdirSync(dir)
+    .filter((d) => /^\d{4}_/.test(d))
+    .map((d) => readFileSync(new URL(`${d}/migration.sql`, dir), "utf8"))
+    .join("\n");
+  if (!/ALTER TABLE "_prisma_migrations" ENABLE ROW LEVEL SECURITY/.test(todas)) throw new Error("sem RLS");
+});
+
+check("lição única por dia e lição da semana única por plano", () => {
+  if (!/UNIQUE INDEX[^;]*"app_lesson"[^;]*\("user_id", "lesson_date"\)/.test(migracao)) throw new Error("app_lesson");
+  if (!/UNIQUE INDEX[^;]*"app_week_lesson"[^;]*\("user_id", "plan_id", "week_n"\)/.test(migracao))
+    throw new Error("app_week_lesson");
+});
+
+check("índices em ordem decrescente de hoje continuam", () => {
+  if (!/"app_plan"[^;]*\("user_id", "created_at" DESC\)/.test(migracao)) throw new Error("app_plan");
+  if (!/"app_lesson"[^;]*\("user_id", "lesson_date" DESC\)/.test(migracao)) throw new Error("app_lesson");
+});
+
+// ---------- Lições ----------
+
+const assert = (c: unknown, m: string) => {
+  if (!c) throw new Error(m);
+};
+
+check("parte do dia: segunda 0, sábado 5, domingo 5", () => {
+  assert(partIndexForDate("2026-11-23") === 0, "segunda");
+  assert(partIndexForDate("2026-11-25") === 2, "quarta");
+  assert(partIndexForDate("2026-11-28") === 5, "sábado");
+  assert(partIndexForDate("2026-11-29") === 5, "domingo");
+});
+check("outlineDays completa com Revisão e corta em 6", () => {
+  const d = outlineDays([{ label: "Seg", focus: "Base" }, { label: "Ter", focus: "Trabalho" }]);
+  assert(d.length === 6 && d[1].focus === "Trabalho" && d[5].focus === "Revisão", JSON.stringify(d));
+  assert(outlineDays(Array.from({ length: 7 }, (_, i) => ({ label: `D${i}`, focus: "f" }))).length === 6, "7 → 6");
+});
+check("validateQuestion recusa vazia e longa", () => {
+  assert(validateQuestion("   ") !== null, "vazia");
+  assert(validateQuestion("x".repeat(1001)) !== null, "1001");
+  assert(validateQuestion("x".repeat(1000)) === null, "1000");
+  assert(validateQuestion("Por que I am?") === null, "válida");
+});
+check("parseWeekParam só aceita semana do plano", () => {
+  assert(parseWeekParam("2", [1, 2, 3]) === 2, "2");
+  for (const v of ["abc", "0", "99", "2.5", ""]) assert(parseWeekParam(v, [1, 2, 3]) === null, v);
+});
+const DIAS6 = outlineDays(["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"].map((label, i) => ({ label, focus: `F${i}` })));
+const parteBruta = (i: number) => ({ title: `T${i}`, goal: `G${i}`, day: "X", focus: "da IA" });
+check("roteiro completo: day/focus vêm do plano", () => {
+  const o = normalizeLessonOutline({ topic: "To be", intro: "Oi", parts: [0, 1, 2, 3, 4, 5].map(parteBruta) }, DIAS6);
+  assert(o.parts.length === 6 && o.parts[0].focus === "F0" && o.parts[5].day === "Sáb" && o.parts[2].title === "T2", JSON.stringify(o));
+});
+check("roteiro com chaves em português e 7 partes vira 6", () => {
+  const o = normalizeLessonOutline({ roteiro: { assunto: "A", introducao: "I", partes: [0, 1, 2, 3, 4, 5, 6].map((i) => ({ titulo: `T${i}`, objetivo: "g" })) } }, DIAS6);
+  assert(o.topic === "A" && o.intro === "I" && o.parts.length === 6, JSON.stringify(o));
+});
+check("roteiro com 4 partes é erro", () => {
+  let msg = "";
+  try { normalizeLessonOutline({ topic: "A", parts: [0, 1, 2, 3].map(parteBruta) }, DIAS6); } catch (e) { msg = (e as Error).message; }
+  assert(msg === "A IA não devolveu o roteiro completo. Tente de novo.", msg);
+});
+check("normalizeStudy lê diálogo e prática e descarta fala sem en", () => {
+  const s = normalizeStudy({ study: { topic: "T", explanation: ["a"], dialogo: [{ quem: "Ana", ingles: "Hi", traducao: "Oi" }, { who: "B", pt: "sem en" }], pratica: "Diga seu nome" } });
+  assert(s.dialogue?.length === 1 && s.dialogue[0].who === "Ana" && s.dialogue[0].en === "Hi", JSON.stringify(s.dialogue));
+  assert(s.practice?.[0] === "Diga seu nome", JSON.stringify(s.practice));
+});
+check("normalizeStudy aceita até 6 parágrafos e omite diálogo vazio", () => {
+  const s = normalizeStudy({ study: { topic: "T", explanation: ["1", "2", "3", "4", "5", "6", "7"] } });
+  assert(s.explanation.length === 6 && !("dialogue" in s) && !("practice" in s), JSON.stringify(s));
+});
+check("limite de parágrafos do normalizador igual ao do prompt", () => {
+  assert(MAX_PARAGRAFOS === STUDY_LIMITS.explanation, `${MAX_PARAGRAFOS} ≠ ${STUDY_LIMITS.explanation}`);
+});
+check("normalizeAnswer aceita resposta e recusa vazio", () => {
+  assert(normalizeAnswer({ resposta: " Use am. " }) === "Use am.", "resposta");
+  let threw = false;
+  try { normalizeAnswer({ answer: "" }); } catch { threw = true; }
+  assert(threw, "vazio");
+});
+
+const ROTEIRO: LessonOutline = { topic: "To be", intro: "i", parts: DIAS6.map((d, i) => ({ ...d, title: `Título ${i + 1}`, goal: "g" })) };
+const PARTE: Study = { topic: "Título 3", goal: "g", explanation: ["p"], examples: [], tips: [] };
+check("roteiro pede 6 partes com os dias e focos do plano", () => {
+  const u = outlineUserPrompt({ level: "A1", weekN: 1, gramatica: "to be", dias: DIAS6 });
+  assert(/6 partes/.test(u) && u.includes("Sáb") && u.includes("F5") && u.includes("to be"), u);
+});
+check("parte leva o roteiro inteiro e marca qual escrever", () => {
+  const u = partUserPrompt({ outline: ROTEIRO, idx: 2 });
+  assert(u.includes("Título 2") && u.includes("Título 3") && u.includes("Título 4") && /parte 3/i.test(u), u);
+  assert(/"dialogue"/.test(u) && /"practice"/.test(u) && /"pron"/.test(u), "formato novo");
+});
+check("parte + questões substitui o assunto livre", () => {
+  const u = partAndQuestionsUserPrompt({ outline: ROTEIRO, idx: 0, data: "2026-11-23", errosRecentes: ["Use am com I."] });
+  assert(u.includes("Título 1") && u.includes("Use am com I.") && /"questions"/.test(u) && /"study"/.test(u) && !/Assuntos dos últimos dias/.test(u), u);
+  assert(u.includes(`${TOTAL_QUESTOES} questões`) && /"pron"/.test(u), "quantidade e pronúncia");
+});
+check("só questões parte da parte pronta", () => {
+  const u = questionsUserPrompt({ part: PARTE, outline: ROTEIRO, idx: 2, data: "2026-11-25" });
+  assert(u.includes("Título 3") && /"questions"/.test(u) && !/"study"/.test(u), u);
+});
+check("chat leva só as últimas 12 mensagens e a pergunta", () => {
+  const history = Array.from({ length: 15 }, (_, i) => ({ id: String(i), role: (i % 2 ? "professor" : "aluno") as "aluno" | "professor", text: `msg${i}.`, createdAt: "" }));
+  const u = chatUserPrompt({ outline: ROTEIRO, idx: 2, part: PARTE, history, question: "Por que am?" });
+  assert(!u.includes("msg2.") && u.includes("msg3.") && u.includes("msg14.") && u.includes("Por que am?") && u.includes("Título 3"), u);
+  assert(CHAT_CONTEXT_PROMPT === CHAT_CONTEXT, "contexto do chat igual nos dois arquivos");
+});
+check("professor do chat responde em JSON, curto e em português", () => {
+  const s = chatSystemPrompt(sampleProfile);
+  assert(/"answer"/.test(s) && /150 palavras/.test(s) && /português/.test(s), s);
+});
+check("teoria fala com o aluno (você) no Estudo do dia e na lição", () => {
+  assert(/você/.test(partSystemPrompt(sampleProfile)) && /você/.test(lessonSystemPrompt(sampleProfile)), "tom");
+});
+check("parte e chat levam o mesmo estilo de PRON_STYLE", () => {
+  for (const s of [partSystemPrompt(sampleProfile), chatSystemPrompt(sampleProfile)]) {
+    const falta = PRON_STYLE.split("\n").find((r) => !s.includes(r));
+    assert(!falta, "regra fora do prompt: " + falta);
+  }
+});
+
+check("generateStep decide o que gerar", () => {
+  assert(generateStep({ lessonHasQuestions: true, hasWeekLesson: false, hasPart: false }) === "existing", "existe");
+  assert(generateStep({ lessonHasQuestions: false, hasWeekLesson: false, hasPart: false }) === "needsOutline", "sem roteiro");
+  assert(generateStep({ lessonHasQuestions: false, hasWeekLesson: true, hasPart: true }) === "questionsOnly", "parte pronta");
+  assert(generateStep({ lessonHasQuestions: false, hasWeekLesson: true, hasPart: false }) === "partAndQuestions", "sem parte");
+});
+
+check("weekRequest manda dias, gramática e até 25 palavras", () => {
+  const w = buildWeeks(sampleRaw)[0];
+  const r = weekRequest(w);
+  assert(r.weekN === w.n && r.dias.length === w.days.length && r.dias[0].focus === w.days[0].focus && r.dias[0].label === w.days[0].label, JSON.stringify(r.dias));
+  assert(r.gramatica === w.grammar.topic && r.tema === w.theme && r.vocabulario.length > 0 && r.vocabulario.length <= 25, JSON.stringify(r).slice(0, 200));
+});
+
+check("hoje em São Paulo vira o dia certo perto da meia-noite", () => {
+  assert(todayInSaoPaulo(new Date("2026-11-26T02:00:00Z")) === "2026-11-25", "23h em SP ainda é dia 25");
+  assert(todayInSaoPaulo(new Date("2026-11-26T03:30:00Z")) === "2026-11-26", "00h30 em SP já é dia 26");
+});
+
+check("conversa enviada fica na parte ao trocar de parte e voltar", () => {
+  const msg = (id: string) => ({ id, role: "aluno" as const, text: id, createdAt: "2026-11-25T12:00:00Z" });
+  const antes = { 0: [msg("1")], 2: [msg("9")] };
+  const depois = appendChat(antes, 0, [msg("2"), msg("3")]);
+  assert(depois[0].map((m) => m.id).join(",") === "1,2,3", "parte 0 ganha as novas");
+  assert(depois[2].length === 1, "outra parte intacta");
+  assert(antes[0].length === 1, "não muda o objeto antigo");
+  assert(appendChat(depois, 0, [msg("3")])[0].length === 3, "não duplica id repetido");
+  assert(appendChat({}, 4, [msg("5")])[4].length === 1, "parte sem conversa começa uma");
+});
+
+await (async () => {
+  // Strict Mode monta, desmonta e monta de novo: o plano da conta tem que chegar mesmo assim.
+  const nome = "plano da conta chega mesmo com o efeito montado duas vezes (Strict Mode)";
+  try {
+    const chamadas: { ready: boolean; weekN: number | null }[] = [];
+    const buscar = async () => ({ signedIn: true, plan: null, progress: { sample: { currentWeek: 3 } } });
+    const aplicar = (r: { remote: { weekN: number | null } | null; ready: boolean }) =>
+      chamadas.push({ ready: r.ready, weekN: r.remote?.weekN ?? null });
+    const parar1 = startPlanPull("u1", buscar, aplicar);
+    parar1();
+    startPlanPull("u1", buscar, aplicar);
+    await new Promise((r) => setTimeout(r, 10));
+    assert(chamadas.length === 1, `uma resposta aplicada (veio ${chamadas.length})`);
+    assert(chamadas[0]?.ready === true && chamadas[0]?.weekN === 3, "pronto e semana 3");
+    console.log(`ok - ${nome}`);
+  } catch (e) {
+    failures++;
+    console.log(`FALHA - ${nome}: ${e instanceof Error ? e.message : e}`);
+  }
+})();
 
 console.log(failures === 0 ? "\nTodos os testes passaram." : `\n${failures} falha(s).`);
 process.exit(failures === 0 ? 0 : 1);

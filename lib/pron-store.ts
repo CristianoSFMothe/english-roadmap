@@ -1,4 +1,4 @@
-import { databaseConfigured, pool } from "./db";
+import { databaseConfigured, prisma } from "./db";
 
 /**
  * Tabela compartilhada `app_pron` (texto normalizado → pronúncia). Sem banco, ou com
@@ -7,10 +7,10 @@ import { databaseConfigured, pool } from "./db";
 export async function getStoredPron(keys: string[]): Promise<Record<string, string>> {
   if (!databaseConfigured || keys.length === 0) return {};
   try {
-    const { rows } = await pool.query<{ text: string; say: string }>(
-      "select text, say from app_pron where text = any($1::text[])",
-      [keys],
-    );
+    const rows = await prisma.pron.findMany({
+      where: { text: { in: keys } },
+      select: { text: true, say: true },
+    });
     return Object.fromEntries(rows.map((r) => [r.text, r.say]));
   } catch (error) {
     console.error("app_pron: leitura falhou", error);
@@ -22,12 +22,11 @@ export async function saveStoredPron(map: Record<string, string>): Promise<void>
   const entries = Object.entries(map);
   if (!databaseConfigured || entries.length === 0) return;
   try {
-    await pool.query(
-      `insert into app_pron (text, say)
-       select * from unnest($1::text[], $2::text[])
-       on conflict (text) do nothing`,
-      [entries.map(([k]) => k), entries.map(([, v]) => v)],
-    );
+    // A primeira pronúncia salva fica; repetidas são ignoradas.
+    await prisma.pron.createMany({
+      data: entries.map(([text, say]) => ({ text, say })),
+      skipDuplicates: true,
+    });
   } catch (error) {
     console.error("app_pron: gravação falhou", error);
   }

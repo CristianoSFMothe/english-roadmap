@@ -2464,3 +2464,274 @@ a.btn {
   color: var(--faint);
   margin: 0 0 10px;
 }
+
+/* ---------- Lições (aula da semana, partes e chat do professor) ---------- */
+
+.licao-index {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.licao-index li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+
+.licao-index li.licao-current {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.licao-index p {
+  margin: 2px 0 0;
+  font-size: 13px;
+}
+
+.licao-badge {
+  margin-left: 8px;
+  font-size: 12px;
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+
+.licao-intro {
+  font-size: 14.5px;
+  line-height: 1.6;
+  margin: 4px 0 12px;
+}
+
+.licao-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0 14px;
+}
+
+.licao-parts {
+  list-style: none;
+  margin: 0 0 8px;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.licao-part-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.licao-open .licao-part-btn {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.licao-num {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.licao-part-text {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+}
+
+.licao-part-text small {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.licao-ready {
+  color: var(--accent-ink);
+  font-size: 12.5px;
+  white-space: nowrap;
+}
+
+.licao-part-head {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 6px 12px;
+  margin: 14px 0 0;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.licao-part-head a {
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 13px;
+}
+
+.licao-dialogue,
+.licao-practice {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.licao-dialogue li {
+  display: grid;
+  gap: 2px;
+}
+
+.licao-who {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent-ink);
+}
+
+.licao-practice li::before {
+  content: "→ ";
+  color: var(--accent);
+}
+
+.licao-msgs {
+  list-style: none;
+  margin: 8px 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.licao-msg {
+  max-width: 92%;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  justify-self: end;
+}
+
+.licao-msg-teacher {
+  justify-self: start;
+  background: var(--accent-soft);
+  border-color: transparent;
+}
+
+.licao-msg p {
+  margin: 2px 0 0;
+  white-space: pre-wrap;
+}
+
+.licao-msg-who {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.licao-ask {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  margin-top: 8px;
+}
+
+.licao-ask textarea {
+  flex: 1;
+  min-width: 0;
+  resize: vertical;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+
+.licao-hint {
+  margin: 4px 0 0;
+  font-size: 12px;
+}
+
+.licao-grammar-link {
+  margin-top: 10px;
+  display: inline-flex;
+}
+
+@media (max-width: 640px) {
+  .licao-ask {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .licao-index li {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* ---------- Páginas legais (privacidade e termos) ---------- */
+
+.legal {
+  max-width: 760px;
+  line-height: 1.65;
+  font-size: 15px;
+}
+
+.legal h1 {
+  font-family: var(--font-display);
+  font-size: 26px;
+  margin: 4px 0 12px;
+}
+
+.legal h2 {
+  font-family: var(--font-display);
+  font-size: 18px;
+  margin: 24px 0 8px;
+}
+
+.legal h3 {
+  font-size: 15px;
+  margin: 16px 0 6px;
+}
+
+.legal ul {
+  padding-left: 20px;
+  display: grid;
+  gap: 6px;
+}
+
+.legal-links,
+.footer-legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  font-size: 13px;
+}
+
+.legal-links {
+  margin-top: 28px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}

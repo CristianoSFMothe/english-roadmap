@@ -570,6 +570,9 @@ export default function PreferencesPage() {
               <Link className="btn small" href="/estudo-diario">
                 Estudo do dia
               </Link>
+              <Link className="btn small" href="/licoes">
+                Lições
+              </Link>
               <Link className="btn small" href="/vocabulario">
                 Vocabulário
               </Link>

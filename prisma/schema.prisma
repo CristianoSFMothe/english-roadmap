@@ -1,0 +1,241 @@
+// Esquema do banco (Supabase/Postgres). Os nomes de tabelas e colunas são os mesmos de
+// antes do Prisma: as do Better Auth em camelCase e as do app em snake_case.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ---------- Login (Better Auth) ----------
+
+model User {
+  id            String   @id
+  name          String
+  email         String   @unique
+  emailVerified Boolean  @default(false)
+  image         String?
+  createdAt     DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt     DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+
+  sessions        Session[]
+  accounts        Account[]
+  profile         Profile?
+  plans           Plan[]
+  progress        Progress[]
+  calendarExports CalendarExport[]
+  lessons         Lesson[]
+  reminder        Reminder?
+  vocab           Vocab?
+  weekLessons     WeekLesson[]
+  lessonChats     LessonChat[]
+
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime @db.Timestamptz(6)
+  token     String   @unique
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime? @db.Timestamptz(6)
+  refreshTokenExpiresAt DateTime? @db.Timestamptz(6)
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt             DateTime  @default(now()) @updatedAt @db.Timestamptz(6)
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime @db.Timestamptz(6)
+  createdAt  DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt  DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+// ---------- App ----------
+
+model Profile {
+  userId    String   @id @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  data      Json     @db.JsonB
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  @@map("app_profile")
+}
+
+model Plan {
+  id        String   @id
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  profile   Json     @db.JsonB
+  weeks     Json     @db.JsonB
+  isActive  Boolean  @default(true) @map("is_active")
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@map("app_plan")
+}
+
+model Progress {
+  userId      String   @map("user_id")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planId      String   @map("plan_id")
+  done        Json     @default("{}") @db.JsonB
+  known       Json     @default("{}") @db.JsonB
+  notes       Json     @default("{}") @db.JsonB
+  anki        Json     @default("{}") @db.JsonB
+  currentWeek Int      @default(1) @map("current_week")
+  updatedAt   DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  @@id([userId, planId])
+  @@map("app_progress")
+}
+
+model CalendarExport {
+  id           String   @id
+  userId       String   @map("user_id")
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planId       String   @map("plan_id")
+  calendarId   String   @map("calendar_id")
+  calendarName String?  @map("calendar_name")
+  eventCount   Int      @default(0) @map("event_count")
+  startDate    DateTime @map("start_date") @db.Date
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@map("app_calendar_export")
+}
+
+model Lesson {
+  id           String      @id
+  userId       String      @map("user_id")
+  user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lessonDate   DateTime    @map("lesson_date") @db.Date
+  level        String      @default("A1")
+  weekN        Int?        @map("week_n")
+  questions    Json        @db.JsonB
+  answers      Json        @default("{}") @db.JsonB
+  results      Json        @default("{}") @db.JsonB
+  completedAt  DateTime?   @map("completed_at") @db.Timestamptz(6)
+  createdAt    DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  /// Teoria e dicas das lições antigas; as novas apontam para uma parte da lição da semana.
+  study        Json?       @db.JsonB
+  weekLessonId String?     @map("week_lesson_id")
+  weekLesson   WeekLesson? @relation(fields: [weekLessonId], references: [id], onDelete: SetNull)
+  partIdx      Int?        @map("part_idx")
+
+  @@unique([userId, lessonDate])
+  @@index([userId, lessonDate(sort: Desc)])
+  @@index([userId, completedAt])
+  @@map("app_lesson")
+}
+
+model Reminder {
+  userId       String   @id @map("user_id")
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  calendarId   String   @default("primary") @map("calendar_id")
+  eventId      String   @map("event_id")
+  reminderTime String   @default("19:00") @map("reminder_time")
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  @@map("app_reminder")
+}
+
+model Vocab {
+  userId    String   @id @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  words     Json     @default("[]") @db.JsonB
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  @@map("app_vocab")
+}
+
+/// Pronúncias compartilhadas por todos (texto normalizado → pronúncia).
+model Pron {
+  text      String   @id
+  say       String
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@map("app_pron")
+}
+
+// ---------- Lições (docs/superpowers/specs/2026-11-25-licoes-design.md) ----------
+
+model WeekLesson {
+  id        String   @id
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planId    String   @map("plan_id")
+  weekN     Int      @map("week_n")
+  level     String
+  topic     String
+  theme     String?
+  outline   Json     @db.JsonB
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  parts   LessonPart[]
+  chats   LessonChat[]
+  lessons Lesson[]
+
+  @@unique([userId, planId, weekN])
+  @@map("app_week_lesson")
+}
+
+model LessonPart {
+  weekLessonId String     @map("week_lesson_id")
+  weekLesson   WeekLesson @relation(fields: [weekLessonId], references: [id], onDelete: Cascade)
+  idx          Int
+  content      Json       @db.JsonB
+  createdAt    DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@id([weekLessonId, idx])
+  @@map("app_lesson_part")
+}
+
+model LessonChat {
+  id           BigInt     @id @default(autoincrement())
+  userId       String     @map("user_id")
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  weekLessonId String     @map("week_lesson_id")
+  weekLesson   WeekLesson @relation(fields: [weekLessonId], references: [id], onDelete: Cascade)
+  partIdx      Int        @map("part_idx")
+  /// "aluno" ou "professor".
+  role         String
+  text         String
+  createdAt    DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@index([weekLessonId, partIdx, createdAt])
+  @@map("app_lesson_chat")
+}

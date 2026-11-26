@@ -577,6 +577,9 @@ export default function VocabularyPage({
               <Link className="btn small" href="/estudo-diario">
                 Estudo do dia
               </Link>
+              <Link className="btn small" href="/licoes">
+                Lições
+              </Link>
               <Link className="btn small" href="/preferencias">
                 Preferências
               </Link>

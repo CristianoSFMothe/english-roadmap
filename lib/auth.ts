@@ -1,5 +1,6 @@
 import { betterAuth } from "better-auth";
-import { pool } from "./db";
+import { prismaAdapter } from "better-auth/adapters/prisma";
+import { prisma } from "./db";
 import { siteUrl } from "./site";
 
 /** Escopos pedidos ao Google: identificação e criação de eventos na agenda. */
@@ -17,7 +18,7 @@ export const authConfigured = Boolean(
 );
 
 export const auth = betterAuth({
-  database: pool,
+  database: prismaAdapter(prisma, { provider: "postgresql" }),
   secret: process.env.BETTER_AUTH_SECRET ?? "chave-de-desenvolvimento-trocar",
   baseURL: siteUrl(),
   trustedOrigins: [siteUrl()],

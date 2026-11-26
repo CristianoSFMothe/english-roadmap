@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Question } from "@/lib/lesson-prompt";
 import type { ImprovementStyle, Lesson, Result } from "@/lib/lessons";
@@ -9,6 +10,9 @@ import { Check } from "./Roadmap";
 import { Pron, PronListButton } from "./Pron";
 import { Speak } from "./SpeechButtons";
 import StudySections from "./StudySections";
+import TeacherChat from "./TeacherChat";
+import { appendChat, PARTS, partIndexForDate, type ChatMessage, type WeekLessonView } from "@/lib/lesson-parts";
+import { LicoesError, postJson, postLicoes, weekRequest } from "@/lib/licoes-client";
 
 type HistItem = { date: string; completed: boolean; total: number; answered: number; correct: number };
 
@@ -51,11 +55,13 @@ function dataCurta(iso: string) {
 
 export default function Lessons({
   week,
+  planId,
   apiKey,
   accessCode,
   signedIn,
 }: {
   week: Week | null;
+  planId: string;
   apiKey: string;
   accessCode: string;
   signedIn: boolean;
@@ -71,11 +77,17 @@ export default function Lessons({
   // mandaria dois pedidos (duas chamadas ao Gemini).
   const pedindoMais = useRef(false);
   const [erro, setErro] = useState("");
+  const [etapa, setEtapa] = useState<"" | "roteiro" | "estudo">("");
+  /** Conversa da parte da lição ativa, carregada da lição da semana. */
+  const [chat, setChat] = useState<{ lessonId: string; messages: ChatMessage[] } | null>(null);
   const [lembrete, setLembrete] = useState<{ ativo: boolean; hora: string }>({
     ativo: false,
     hora: "19:00",
   });
   const [lembreteOcupado, setLembreteOcupado] = useState(false);
+  // O erro e o aviso do lembrete ficam na própria seção, no fim da página: no topo da
+  // lição ninguém via a mensagem depois de clicar em "Criar lembrete".
+  const [avisoLembrete, setAvisoLembrete] = useState<{ tipo: "ok" | "erro"; texto: string } | null>(null);
 
   const carregar = useCallback(async () => {
     if (!signedIn) return;
@@ -104,25 +116,31 @@ export default function Lessons({
   }, [signedIn]);
 
   const gerar = async (date?: string) => {
+    if (!week) return;
     setCarregando(true);
     setErro("");
+    const pedido = {
+      action: "generate",
+      planId,
+      date,
+      ...weekRequest(week),
+      apiKey: apiKey || undefined,
+      accessCode: accessCode || undefined,
+    };
     try {
-      const res = await fetch("/api/lesson", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          action: "generate",
-          date,
-          weekN: week?.n,
-          tema: week?.theme,
-          gramatica: week?.grammar?.topic,
-          vocabulario: week?.cards?.slice(0, 25).map((c) => c.en),
-          apiKey: apiKey || undefined,
-          accessCode: accessCode || undefined,
-        }),
-      });
-      const json = (await res.json()) as { lesson?: Lesson; error?: string };
-      if (!res.ok || !json.lesson) throw new Error(json.error ?? "Falha ao gerar a lição.");
+      setEtapa("estudo");
+      let json: { lesson?: Lesson };
+      try {
+        json = await postJson<{ lesson?: Lesson }>("/api/lesson", pedido);
+      } catch (e) {
+        if (!(e instanceof LicoesError && e.needsOutline)) throw e;
+        // Primeiro o roteiro da semana (uma requisição), depois o estudo (outra).
+        setEtapa("roteiro");
+        await postLicoes({ ...pedido, action: "outline" });
+        setEtapa("estudo");
+        json = await postJson<{ lesson?: Lesson }>("/api/lesson", pedido);
+      }
+      if (!json.lesson) throw new Error("Falha ao gerar a lição.");
       setAtiva(json.lesson);
       setRespostas({});
       await carregar();
@@ -130,8 +148,28 @@ export default function Lessons({
       setErro(e instanceof Error ? e.message : "Falha ao gerar a lição.");
     } finally {
       setCarregando(false);
+      setEtapa("");
     }
   };
+
+  // A conversa da parte: a mesma da página da lição da semana.
+  useEffect(() => {
+    if (!ativa?.weekLessonId || ativa.partIdx === null) return;
+    if (chat?.lessonId === ativa.id) return;
+    const { id, weekLessonId, partIdx } = ativa;
+    let cancelado = false;
+    void fetch(`/api/licoes?id=${encodeURIComponent(weekLessonId)}`, { cache: "no-store" })
+      .then((r) => r.json())
+      .then((j: { lesson?: WeekLessonView | null }) => {
+        if (!cancelado) setChat({ lessonId: id, messages: j.lesson?.chats?.[partIdx] ?? [] });
+      })
+      .catch(() => {
+        if (!cancelado) setChat({ lessonId: id, messages: [] });
+      });
+    return () => {
+      cancelado = true;
+    };
+  }, [ativa, chat?.lessonId]);
 
   /** Mais 3 respostas (informal, formal e mais usual), somadas às que já existem. */
   const maisRespostas = async (q: Question) => {
@@ -197,7 +235,7 @@ export default function Lessons({
 
   const alternarLembrete = async (remove: boolean, hora?: string) => {
     setLembreteOcupado(true);
-    setErro("");
+    setAvisoLembrete(null);
     try {
       const res = await fetch("/api/calendar/reminder", {
         method: "POST",
@@ -207,8 +245,14 @@ export default function Lessons({
       const json = (await res.json()) as { ativo?: boolean; hora?: string; error?: string };
       if (!res.ok) throw new Error(json.error ?? "Falha no lembrete.");
       setLembrete({ ativo: Boolean(json.ativo), hora: json.hora ?? lembrete.hora });
+      setAvisoLembrete({
+        tipo: "ok",
+        texto: json.ativo
+          ? `Lembrete salvo na sua Google Agenda: todo dia às ${json.hora ?? lembrete.hora}.`
+          : "Lembrete removido da sua Google Agenda.",
+      });
     } catch (e) {
-      setErro(e instanceof Error ? e.message : "Falha no lembrete.");
+      setAvisoLembrete({ tipo: "erro", texto: e instanceof Error ? e.message : "Falha no lembrete." });
     } finally {
       setLembreteOcupado(false);
     }
@@ -272,15 +316,23 @@ export default function Lessons({
 
         {!ativa && (
           <div className="lesson-start">
-            <p>
-              Hoje você recebe uma explicação, dicas e 5 exercícios sobre um assunto
-              {week ? ` da semana ${week.n}` : " do seu nível"}.
-            </p>
-            <button className="btn primary" onClick={() => void gerar()} disabled={carregando}>
+            {week && hoje ? (
+              <p>
+                Hoje: parte {partIndexForDate(hoje) + 1} de {PARTS} da lição de{" "}
+                <em>{week.grammar?.topic || week.theme}</em>, com 5 exercícios.
+              </p>
+            ) : (
+              <p>Hoje você recebe uma parte da lição da semana, com explicação, dicas e 5 exercícios.</p>
+            )}
+            <button className="btn primary" onClick={() => void gerar()} disabled={carregando || !week}>
               {carregando ? "Gerando…" : "Gerar o estudo de hoje"}
             </button>
             {carregando && (
-              <p className="faint">Preparando teoria, dicas e exercícios… pode levar até um minuto.</p>
+              <p className="faint">
+                {etapa === "roteiro"
+                  ? "Preparando o roteiro da lição da semana…"
+                  : "Preparando a aula e os exercícios… pode levar até um minuto."}
+              </p>
             )}
           </div>
         )}
@@ -307,7 +359,33 @@ export default function Lessons({
               )}
             </div>
 
+            {ativa.weekLessonId && ativa.partIdx !== null && (
+              <p className="licao-part-head">
+                <span>
+                  Parte {ativa.partIdx + 1} de {PARTS}
+                  {ativa.weekN ? ` · Semana ${ativa.weekN}` : ""}
+                  {ativa.weekTopic ? ` · ${ativa.weekTopic}` : ""}
+                </span>
+                {ativa.weekN && <Link href={`/licoes/${ativa.weekN}`}>Ver a lição completa →</Link>}
+              </p>
+            )}
+
             <StudySections study={ativa.study ?? null} />
+
+            {ativa.weekLessonId && ativa.partIdx !== null && ativa.study && (
+              <TeacherChat
+                weekLessonId={ativa.weekLessonId}
+                partIdx={ativa.partIdx}
+                initial={chat?.lessonId === ativa.id ? chat.messages : []}
+                onMessages={(novas) =>
+                  setChat((c) =>
+                    c && c.lessonId === ativa.id ? { ...c, messages: appendChat({ 0: c.messages }, 0, novas)[0] } : c,
+                  )
+                }
+                apiKey={apiKey}
+                accessCode={accessCode}
+              />
+            )}
 
             <h2 className="study-exercises">Exercícios</h2>
             <ol className="lesson-list">
@@ -459,7 +537,14 @@ export default function Lessons({
             </button>
           )}
         </div>
-        {lembrete.ativo && <p className="lesson-note">Ativo às {lembrete.hora}, todos os dias.</p>}
+        {avisoLembrete && (
+          <p className={avisoLembrete.tipo === "erro" ? "lesson-error" : "lesson-note"} role="status">
+            {avisoLembrete.texto}
+          </p>
+        )}
+        {lembrete.ativo && !avisoLembrete && (
+          <p className="lesson-note">Ativo às {lembrete.hora}, todos os dias.</p>
+        )}
       </section>
 
       {(data?.history?.length ?? 0) > 0 && (

@@ -1,10 +1,9 @@
 import { NextResponse } from "next/server";
 import { allowedUser } from "@/lib/access";
 import { askGemini, resolveKey } from "@/lib/gemini";
-import { clampProfile, emptyProfile, type Profile } from "@/lib/profile";
-import { loadUserData } from "@/lib/server-data";
+import type { Profile } from "@/lib/profile";
+import { userProfile } from "@/lib/server-data";
 import {
-  assuntosRecentes,
   createLesson,
   errosRecentes,
   getLesson,
@@ -21,8 +20,9 @@ import {
   improveSystemPrompt,
   improveUserPrompt,
   lessonSystemPrompt,
-  lessonUserPrompt,
   ORDEM,
+  partAndQuestionsUserPrompt,
+  questionsUserPrompt,
   TOTAL_QUESTOES,
 } from "@/lib/lesson-prompt";
 import {
@@ -34,6 +34,8 @@ import {
   normalizeStudy,
 } from "@/lib/lesson-normalize";
 import { extractJson } from "@/lib/normalize";
+import { generateStep, partIndexForDate } from "@/lib/lesson-parts";
+import { getPart, getWeekLesson, savePart } from "@/lib/week-lessons";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -93,6 +95,7 @@ export async function GET() {
 
 type Body = {
   action?: "generate" | "answer" | "improve";
+  planId?: string;
   date?: string;
   weekN?: number;
   tema?: string;
@@ -131,53 +134,78 @@ export async function POST(request: Request) {
   }
 }
 
-async function perfilDoUsuario(userId: string, enviado?: Profile): Promise<Profile> {
-  const salvo = (await loadUserData(userId)).profile;
-  return clampProfile(salvo ?? enviado ?? emptyProfile);
-}
-
+/**
+ * Estudo do dia: a parte da lição da semana do dia da semana da data (domingo repete a
+ * parte 6) e 5 questões sobre ela. Sem roteiro da semana, pede ao cliente para gerá-lo
+ * antes (409), para nenhuma requisição passar dos 60 s.
+ */
 async function gerar(userId: string, body: Body, key: string) {
   const data = /^\d{4}-\d{2}-\d{2}$/.test(body.date ?? "") ? (body.date as string) : hojeSaoPaulo();
+  const weekN = typeof body.weekN === "number" && Number.isInteger(body.weekN) ? body.weekN : null;
+  if (!weekN || weekN < 1) return fail("Semana do plano não informada.", 400);
+  const planId = typeof body.planId === "string" && body.planId.trim() ? body.planId.trim() : "sample";
+  const idx = partIndexForDate(data);
 
   const existente = await getLesson(userId, data);
-  if (existente && existente.questions.length) {
-    return NextResponse.json({ lesson: existente, jaExistia: true });
-  }
-
-  const profile = await perfilDoUsuario(userId, body.profile);
-  const [erros, assuntos] = await Promise.all([errosRecentes(userId), assuntosRecentes(userId)]);
-
-  const texto = await askGemini({
-    key,
-    system: lessonSystemPrompt(profile),
-    user: lessonUserPrompt({
-      level: profile.level,
-      tema: body.tema,
-      gramatica: body.gramatica,
-      vocabulario: body.vocabulario,
-      errosRecentes: erros,
-      assuntosRecentes: assuntos,
-      data,
-    }),
-    // Teoria, dicas e 5 questões numa resposta só.
-    maxTokens: 12000,
-    temperature: 0.9,
+  const semana = existente?.questions.length ? null : await getWeekLesson(userId, planId, weekN);
+  const pronta = semana ? await getPart(semana.id, idx) : null;
+  const passo = generateStep({
+    lessonHasQuestions: Boolean(existente?.questions.length),
+    hasWeekLesson: Boolean(semana),
+    hasPart: Boolean(pronta),
   });
 
-  const bruto = extractJson(texto);
-  // A teoria primeiro: sem ela (resposta no formato antigo), nada é salvo.
-  const study = normalizeStudy(bruto);
-  const questions = normalizeQuestions(bruto, ORDEM);
+  if (passo === "existing") return NextResponse.json({ lesson: existente, jaExistia: true });
+  if (passo === "needsOutline" || !semana) {
+    return NextResponse.json(
+      { needsOutline: true, error: "A lição da semana ainda não foi preparada." },
+      { status: 409 },
+    );
+  }
+
+  const profile = await userProfile(userId, body.profile);
+  const erros = await errosRecentes(userId);
+  const comum = { outline: semana.outline, idx, vocabulario: body.vocabulario, errosRecentes: erros, data };
+
+  let parte = pronta;
+  let questions;
+  if (passo === "questionsOnly" && pronta) {
+    const texto = await askGemini({
+      key,
+      system: lessonSystemPrompt(profile),
+      user: questionsUserPrompt({ ...comum, part: pronta }),
+      maxTokens: 4000,
+      temperature: 0.9,
+    });
+    questions = normalizeQuestions(extractJson(texto), ORDEM);
+  } else {
+    const texto = await askGemini({
+      key,
+      system: lessonSystemPrompt(profile),
+      user: partAndQuestionsUserPrompt(comum),
+      // A parte da aula e as 5 questões numa resposta só.
+      maxTokens: 12000,
+      temperature: 0.9,
+    });
+    const bruto = extractJson(texto);
+    // A teoria primeiro: sem ela, nada é salvo.
+    const study = normalizeStudy(bruto);
+    questions = normalizeQuestions(bruto, ORDEM);
+    // Se outra aba gravou a parte antes, vale a dela: as duas telas mostram a mesma.
+    parte = await savePart(semana.id, idx, study);
+  }
+
   const lesson = await createLesson({
     userId,
     date: data,
     level: profile.level,
-    weekN: typeof body.weekN === "number" ? body.weekN : null,
+    weekN,
     questions,
-    study,
+    study: null,
+    weekLessonId: semana.id,
+    partIdx: idx,
   });
-
-  return NextResponse.json({ lesson, jaExistia: false });
+  return NextResponse.json({ lesson: { ...lesson, study: lesson.study ?? parte }, jaExistia: false });
 }
 
 /** A lição do pedido: a do dia informado ou uma das abertas dos últimos 30 dias. */
