@@ -8,6 +8,7 @@ import type { RawWeek } from "../lib/weeks.ts";
 import { VERBS, thirdPerson, findVerb, ingForm, ptGerund, ptConditional, buildTense, TENSES, statNotice, buildExamples, shortAnswers } from "../lib/verbs.ts";
 import { sayPhrase, pronKey, pronounce, PRON_STYLE, PRON_EXAMPLES } from "../lib/pronunciation.ts";
 import { isDailyQuota, nextModel } from "../lib/gemini-errors.ts";
+import { describeDbError, poolOptions } from "../lib/db-config.ts";
 import { canGenerateMore, looksEnglish, MAX_IMPROVEMENTS, mergeImprovements, normalizeImprovements, normalizeQuestions, normalizeResult, normalizeStudy } from "../lib/lesson-normalize.ts";
 import { normalizePronMap, pronBatches, pronSystemPrompt, pronUserPrompt, shouldStoreShared, splitGeneratable } from "../lib/pron-prompt.ts";
 import { gradeSystemPrompt, improveSystemPrompt, improveUserPrompt, lessonSystemPrompt, lessonUserPrompt, ORDEM, TOTAL_QUESTOES } from "../lib/lesson-prompt.ts";
@@ -575,6 +576,65 @@ check("limite diario gratuito troca para o modelo reserva uma vez", () => {
   if (nextModel("gemini-3.8-flash", "gemini-3.5-flash") !== "gemini-3.5-flash") throw new Error("reserva");
   if (nextModel("gemini-3.5-flash", "gemini-3.5-flash") !== null) throw new Error("reserva igual ao principal");
   if (nextModel("gemini-3.8-flash", "") !== null) throw new Error("sem reserva");
+});
+
+// ---------- Conexão com o banco ----------
+
+check("poolOptions: sslmode da URL manda", () => {
+  const a = poolOptions("postgresql://u:p@db.exemplo.com:5432/x?sslmode=disable");
+  if (a.ssl !== false) throw new Error("disable devia desligar TLS");
+  const b = poolOptions("postgresql://u:p@localhost:5432/x?sslmode=require");
+  if (!b.ssl) throw new Error("require devia ligar TLS mesmo em localhost");
+  if (b.connectionString?.includes("sslmode")) throw new Error("sslmode devia sair da URL");
+});
+
+check("poolOptions: sem sslmode, TLS só fora de localhost", () => {
+  const sup = poolOptions("postgresql://u:p@aws-1-sa-east-1.pooler.supabase.com:6543/postgres");
+  if (!sup.ssl || sup.ssl.rejectUnauthorized !== false) throw new Error("supabase sem TLS");
+  if (poolOptions("postgresql://u:p@127.0.0.1:5432/x").ssl) throw new Error("local com TLS");
+  if (sup.max !== 3 || sup.connectionTimeoutMillis !== 15_000 || sup.idleTimeoutMillis !== 10_000)
+    throw new Error("limites do pool");
+});
+
+check("poolOptions: sem URL não lança", () => {
+  if (poolOptions(undefined).connectionString !== undefined) throw new Error("url inventada");
+});
+
+check("describeDbError acha o código do pg dentro do erro do Prisma", () => {
+  const embrulhado = { message: "Driver adapter error", cause: { cause: { code: "28P01" } } };
+  if (describeDbError(embrulhado) !== "senha incorreta na connection string") throw new Error(describeDbError(embrulhado));
+  if (describeDbError({ cause: { code: "3D000" } }) !== "banco inexistente na connection string") throw new Error("3D000");
+  if (describeDbError({ code: "ENOTFOUND" }) !== "host da connection string não resolve") throw new Error("ENOTFOUND");
+  if (!describeDbError(new Error("x".repeat(500))).startsWith("falha ao conectar: ")) throw new Error("genérico");
+  if (describeDbError(new Error("x".repeat(500))).length > 140) throw new Error("mensagem longa demais");
+});
+
+check("describeDbError entende o erro real do Prisma 7 (P2010 com driverAdapterError)", () => {
+  const real = Object.assign(new Error("Raw query failed. Code: `28P01`."), {
+    code: "P2010",
+    meta: {
+      driverAdapterError: {
+        name: "DriverAdapterError",
+        cause: { originalCode: "28P01", originalMessage: "password authentication failed", kind: "AuthenticationFailed" },
+      },
+    },
+  });
+  if (describeDbError(real) !== "senha incorreta na connection string") throw new Error(describeDbError(real));
+  const semCodigo = Object.assign(new Error("x"), {
+    code: "P2010",
+    meta: { driverAdapterError: { cause: { originalMessage: "Connection terminated due to connection timeout" } } },
+  });
+  if (!describeDbError(semCodigo).startsWith("tempo esgotado")) throw new Error(describeDbError(semCodigo));
+});
+
+check("describeDbError usa o kind do adaptador quando não há código do pg", () => {
+  const comKind = (kind: string) =>
+    Object.assign(new Error(""), { code: "P2010", meta: { driverAdapterError: { cause: { kind, host: "h" } } } });
+  if (describeDbError(comKind("DatabaseNotReachable")) !== "host da connection string não resolve ou não responde")
+    throw new Error(describeDbError(comKind("DatabaseNotReachable")));
+  if (describeDbError(comKind("DatabaseDoesNotExist")) !== "banco inexistente na connection string") throw new Error("db");
+  if (!describeDbError(comKind("SocketTimeout")).startsWith("tempo esgotado")) throw new Error("timeout");
+  if (describeDbError(comKind("TlsConnectionError")) !== "problema de certificado TLS") throw new Error("tls");
 });
 
 // ---------- Migração inicial do Prisma ----------
