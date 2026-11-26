@@ -530,6 +530,10 @@ export default function Roadmap({
               </button>
             </span>
           )}
+          <span className="footer-legal">
+            <Link href="/privacidade">Política de privacidade</Link>
+            <Link href="/termos">Termos de uso</Link>
+          </span>
         </footer>
       </main>
 

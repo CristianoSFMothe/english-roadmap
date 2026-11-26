@@ -2690,3 +2690,48 @@ a.btn {
     align-items: flex-start;
   }
 }
+
+/* ---------- Páginas legais (privacidade e termos) ---------- */
+
+.legal {
+  max-width: 760px;
+  line-height: 1.65;
+  font-size: 15px;
+}
+
+.legal h1 {
+  font-family: var(--font-display);
+  font-size: 26px;
+  margin: 4px 0 12px;
+}
+
+.legal h2 {
+  font-family: var(--font-display);
+  font-size: 18px;
+  margin: 24px 0 8px;
+}
+
+.legal h3 {
+  font-size: 15px;
+  margin: 16px 0 6px;
+}
+
+.legal ul {
+  padding-left: 20px;
+  display: grid;
+  gap: 6px;
+}
+
+.legal-links,
+.footer-legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  font-size: 13px;
+}
+
+.legal-links {
+  margin-top: 28px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
