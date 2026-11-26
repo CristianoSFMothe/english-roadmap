@@ -9,9 +9,10 @@ import { VERBS, thirdPerson, findVerb, ingForm, ptGerund, ptConditional, buildTe
 import { sayPhrase, pronKey, pronounce, PRON_STYLE, PRON_EXAMPLES } from "../lib/pronunciation.ts";
 import { isDailyQuota, nextModel } from "../lib/gemini-errors.ts";
 import { describeDbError, poolOptions } from "../lib/db-config.ts";
-import { canGenerateMore, looksEnglish, MAX_IMPROVEMENTS, mergeImprovements, normalizeImprovements, normalizeQuestions, normalizeResult, normalizeStudy } from "../lib/lesson-normalize.ts";
+import { canGenerateMore, looksEnglish, MAX_IMPROVEMENTS, MAX_PARAGRAFOS, mergeImprovements, normalizeAnswer, normalizeImprovements, normalizeLessonOutline, normalizeQuestions, normalizeResult, normalizeStudy } from "../lib/lesson-normalize.ts";
+import { outlineDays, parseWeekParam, partIndexForDate, validateQuestion } from "../lib/lesson-parts.ts";
 import { normalizePronMap, pronBatches, pronSystemPrompt, pronUserPrompt, shouldStoreShared, splitGeneratable } from "../lib/pron-prompt.ts";
-import { gradeSystemPrompt, improveSystemPrompt, improveUserPrompt, lessonSystemPrompt, lessonUserPrompt, ORDEM, TOTAL_QUESTOES } from "../lib/lesson-prompt.ts";
+import { gradeSystemPrompt, improveSystemPrompt, improveUserPrompt, lessonSystemPrompt, lessonUserPrompt, ORDEM, STUDY_LIMITS, TOTAL_QUESTOES } from "../lib/lesson-prompt.ts";
 
 let failures = 0;
 const check = (name: string, fn: () => void) => {
@@ -681,6 +682,67 @@ check("lição única por dia e lição da semana única por plano", () => {
 check("índices em ordem decrescente de hoje continuam", () => {
   if (!/"app_plan"[^;]*\("user_id", "created_at" DESC\)/.test(migracao)) throw new Error("app_plan");
   if (!/"app_lesson"[^;]*\("user_id", "lesson_date" DESC\)/.test(migracao)) throw new Error("app_lesson");
+});
+
+// ---------- Lições ----------
+
+const assert = (c: unknown, m: string) => {
+  if (!c) throw new Error(m);
+};
+
+check("parte do dia: segunda 0, sábado 5, domingo 5", () => {
+  assert(partIndexForDate("2026-11-23") === 0, "segunda");
+  assert(partIndexForDate("2026-11-25") === 2, "quarta");
+  assert(partIndexForDate("2026-11-28") === 5, "sábado");
+  assert(partIndexForDate("2026-11-29") === 5, "domingo");
+});
+check("outlineDays completa com Revisão e corta em 6", () => {
+  const d = outlineDays([{ label: "Seg", focus: "Base" }, { label: "Ter", focus: "Trabalho" }]);
+  assert(d.length === 6 && d[1].focus === "Trabalho" && d[5].focus === "Revisão", JSON.stringify(d));
+  assert(outlineDays(Array.from({ length: 7 }, (_, i) => ({ label: `D${i}`, focus: "f" }))).length === 6, "7 → 6");
+});
+check("validateQuestion recusa vazia e longa", () => {
+  assert(validateQuestion("   ") !== null, "vazia");
+  assert(validateQuestion("x".repeat(1001)) !== null, "1001");
+  assert(validateQuestion("x".repeat(1000)) === null, "1000");
+  assert(validateQuestion("Por que I am?") === null, "válida");
+});
+check("parseWeekParam só aceita semana do plano", () => {
+  assert(parseWeekParam("2", [1, 2, 3]) === 2, "2");
+  for (const v of ["abc", "0", "99", "2.5", ""]) assert(parseWeekParam(v, [1, 2, 3]) === null, v);
+});
+const DIAS6 = outlineDays(["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"].map((label, i) => ({ label, focus: `F${i}` })));
+const parteBruta = (i: number) => ({ title: `T${i}`, goal: `G${i}`, day: "X", focus: "da IA" });
+check("roteiro completo: day/focus vêm do plano", () => {
+  const o = normalizeLessonOutline({ topic: "To be", intro: "Oi", parts: [0, 1, 2, 3, 4, 5].map(parteBruta) }, DIAS6);
+  assert(o.parts.length === 6 && o.parts[0].focus === "F0" && o.parts[5].day === "Sáb" && o.parts[2].title === "T2", JSON.stringify(o));
+});
+check("roteiro com chaves em português e 7 partes vira 6", () => {
+  const o = normalizeLessonOutline({ roteiro: { assunto: "A", introducao: "I", partes: [0, 1, 2, 3, 4, 5, 6].map((i) => ({ titulo: `T${i}`, objetivo: "g" })) } }, DIAS6);
+  assert(o.topic === "A" && o.intro === "I" && o.parts.length === 6, JSON.stringify(o));
+});
+check("roteiro com 4 partes é erro", () => {
+  let msg = "";
+  try { normalizeLessonOutline({ topic: "A", parts: [0, 1, 2, 3].map(parteBruta) }, DIAS6); } catch (e) { msg = (e as Error).message; }
+  assert(msg === "A IA não devolveu o roteiro completo. Tente de novo.", msg);
+});
+check("normalizeStudy lê diálogo e prática e descarta fala sem en", () => {
+  const s = normalizeStudy({ study: { topic: "T", explanation: ["a"], dialogo: [{ quem: "Ana", ingles: "Hi", traducao: "Oi" }, { who: "B", pt: "sem en" }], pratica: "Diga seu nome" } });
+  assert(s.dialogue?.length === 1 && s.dialogue[0].who === "Ana" && s.dialogue[0].en === "Hi", JSON.stringify(s.dialogue));
+  assert(s.practice?.[0] === "Diga seu nome", JSON.stringify(s.practice));
+});
+check("normalizeStudy aceita até 6 parágrafos e omite diálogo vazio", () => {
+  const s = normalizeStudy({ study: { topic: "T", explanation: ["1", "2", "3", "4", "5", "6", "7"] } });
+  assert(s.explanation.length === 6 && !("dialogue" in s) && !("practice" in s), JSON.stringify(s));
+});
+check("limite de parágrafos do normalizador igual ao do prompt", () => {
+  assert(MAX_PARAGRAFOS === STUDY_LIMITS.explanation, `${MAX_PARAGRAFOS} ≠ ${STUDY_LIMITS.explanation}`);
+});
+check("normalizeAnswer aceita resposta e recusa vazio", () => {
+  assert(normalizeAnswer({ resposta: " Use am. " }) === "Use am.", "resposta");
+  let threw = false;
+  try { normalizeAnswer({ answer: "" }); } catch { threw = true; }
+  assert(threw, "vazio");
 });
 
 console.log(failures === 0 ? "\nTodos os testes passaram." : `\n${failures} falha(s).`);

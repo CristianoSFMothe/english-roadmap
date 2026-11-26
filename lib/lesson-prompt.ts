@@ -5,6 +5,8 @@ export type Difficulty = "facil" | "media" | "dificil";
 /** Teoria e dicas do estudo do dia, geradas junto com as questões. */
 export type StudyExample = { en: string; pt: string; pron?: string };
 export type StudyTip = { text: string; wrong?: string; right?: string };
+/** Uma fala do diálogo da parte: quem fala, o inglês, a tradução e a pronúncia. */
+export type StudyLine = { who: string; en: string; pt: string; pron?: string };
 export type Study = {
   topic: string;
   goal: string;
@@ -12,10 +14,14 @@ export type Study = {
   pattern?: string;
   examples: StudyExample[];
   tips: StudyTip[];
+  /** Diálogo curto usando a parte numa situação real (só nas Lições). */
+  dialogue?: StudyLine[];
+  /** Atividades rápidas sem correção: falar, anotar, repetir. */
+  practice?: string[];
 };
 
 /** Limites da teoria (também vão para o prompt). */
-export const STUDY_LIMITS = { explanation: 4, examples: 5, tips: 4 };
+export const STUDY_LIMITS = { explanation: 6, examples: 5, tips: 4, dialogue: 8, practice: 3 };
 
 export type Question = {
   id: string;
@@ -144,7 +150,7 @@ Responda com um objeto JSON nesta forma exata:
   "study": {
     "topic": "o assunto do dia, curto, em português (ex.: To be na negativa)",
     "goal": "o que a pessoa vai conseguir fazer hoje, uma frase",
-    "explanation": ["de 2 a ${STUDY_LIMITS.explanation} parágrafos curtos em português"],
+    "explanation": ["de 3 a ${STUDY_LIMITS.explanation} parágrafos curtos em português"],
     "pattern": "a fórmula da frase, ex.: pessoa + am/is/are + not + resto",
     "examples": [
       { "en": "frase em inglês", "pt": "tradução", "pron": "pronúncia aproximada" }
