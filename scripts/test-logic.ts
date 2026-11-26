@@ -10,6 +10,7 @@ import { sayPhrase, pronKey, pronounce, PRON_STYLE, PRON_EXAMPLES } from "../lib
 import { isDailyQuota, nextModel } from "../lib/gemini-errors.ts";
 import { describeDbError, poolOptions } from "../lib/db-config.ts";
 import { canGenerateMore, looksEnglish, MAX_IMPROVEMENTS, MAX_PARAGRAFOS, mergeImprovements, normalizeAnswer, normalizeImprovements, normalizeLessonOutline, normalizeQuestions, normalizeResult, normalizeStudy } from "../lib/lesson-normalize.ts";
+import { weekRequest } from "../lib/licoes-client.ts";
 import { CHAT_CONTEXT, generateStep, outlineDays, parseWeekParam, partIndexForDate, validateQuestion } from "../lib/lesson-parts.ts";
 import { normalizePronMap, pronBatches, pronSystemPrompt, pronUserPrompt, shouldStoreShared, splitGeneratable } from "../lib/pron-prompt.ts";
 import { gradeSystemPrompt, improveSystemPrompt, improveUserPrompt, lessonSystemPrompt, ORDEM, STUDY_LIMITS, TOTAL_QUESTOES, outlineUserPrompt, partSystemPrompt, partUserPrompt, partAndQuestionsUserPrompt, questionsUserPrompt, chatSystemPrompt, chatUserPrompt, CHAT_CONTEXT_PROMPT } from "../lib/lesson-prompt.ts";
@@ -785,6 +786,13 @@ check("generateStep decide o que gerar", () => {
   assert(generateStep({ lessonHasQuestions: false, hasWeekLesson: false, hasPart: false }) === "needsOutline", "sem roteiro");
   assert(generateStep({ lessonHasQuestions: false, hasWeekLesson: true, hasPart: true }) === "questionsOnly", "parte pronta");
   assert(generateStep({ lessonHasQuestions: false, hasWeekLesson: true, hasPart: false }) === "partAndQuestions", "sem parte");
+});
+
+check("weekRequest manda dias, gramática e até 25 palavras", () => {
+  const w = buildWeeks(sampleRaw)[0];
+  const r = weekRequest(w);
+  assert(r.weekN === w.n && r.dias.length === w.days.length && r.dias[0].focus === w.days[0].focus && r.dias[0].label === w.days[0].label, JSON.stringify(r.dias));
+  assert(r.gramatica === w.grammar.topic && r.tema === w.theme && r.vocabulario.length > 0 && r.vocabulario.length <= 25, JSON.stringify(r).slice(0, 200));
 });
 
 console.log(failures === 0 ? "\nTodos os testes passaram." : `\n${failures} falha(s).`);

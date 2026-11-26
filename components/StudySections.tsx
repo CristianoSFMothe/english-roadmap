@@ -67,6 +67,38 @@ export default function StudySections({ study }: { study: Study | null }) {
           </ul>
         </section>
       )}
+
+      {study.dialogue && study.dialogue.length > 0 && (
+        <section className="study-block" aria-labelledby="study-dialogue">
+          <span className="study-kicker">Diálogo</span>
+          <h2 id="study-dialogue">Na prática</h2>
+          <ul className="licao-dialogue">
+            {study.dialogue.map((f, i) => (
+              <li key={`${i}-${f.en}`}>
+                {f.who && <span className="licao-who">{f.who}</span>}
+                <span className="study-en">
+                  <span className="en">{f.en}</span>
+                  <Speak text={f.en} showIpa={false} />
+                </span>
+                <Pron text={f.en} explicit={f.pron} />
+                {f.pt && <span className="study-pt">{f.pt}</span>}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {study.practice && study.practice.length > 0 && (
+        <section className="study-block" aria-labelledby="study-practice">
+          <span className="study-kicker">Pratique agora</span>
+          <h2 id="study-practice">Sem correção, só para fixar</h2>
+          <ul className="licao-practice">
+            {study.practice.map((p) => (
+              <li key={p}>{p}</li>
+            ))}
+          </ul>
+        </section>
+      )}
     </>
   );
 }

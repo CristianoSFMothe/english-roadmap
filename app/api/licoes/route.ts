@@ -56,8 +56,14 @@ export async function GET(request: Request) {
   const url = new URL(request.url);
   const planId = planIdDe(url.searchParams.get("planId"));
   const week = url.searchParams.get("week");
+  const id = url.searchParams.get("id");
 
   try {
+    // Pelo id: o Estudo do dia acha a lição da parte mesmo se o plano mudou depois.
+    if (id) {
+      const w = await getWeekLessonById(user.id, id);
+      return NextResponse.json({ signedIn: true, lesson: w ? await paraView(user.id, w) : null });
+    }
     if (week === null) {
       return NextResponse.json({ signedIn: true, lessons: await listWeekLessons(user.id, planId) });
     }
