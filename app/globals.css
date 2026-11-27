@@ -2012,6 +2012,28 @@ a.btn {
   background: var(--warn-soft);
 }
 
+button.lesson-hist-day {
+  text-align: left;
+}
+
+button.lesson-hist-day:hover {
+  border-color: var(--line-strong);
+}
+
+.lesson-hist-day[aria-pressed="true"] {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.lesson-hist-more {
+  margin-top: 10px;
+}
+
+.lesson-date.readonly {
+  background: var(--accent-soft);
+  color: var(--muted);
+}
+
 /* verbos conjugados */
 
 .verb-pick {

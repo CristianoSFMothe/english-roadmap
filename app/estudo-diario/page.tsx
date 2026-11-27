@@ -10,6 +10,12 @@ export const metadata: Metadata = {
   alternates: { canonical: "/estudo-diario" },
 };
 
-export default function Page() {
-  return <DailyStudyPage sample={sampleRawWeeks} authEnabled={authConfigured} />;
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<{ data?: string | string[] }>;
+}) {
+  const { data } = await searchParams;
+  const dataInicial = (Array.isArray(data) ? data[0] : data) ?? null;
+  return <DailyStudyPage sample={sampleRawWeeks} authEnabled={authConfigured} dataInicial={dataInicial} />;
 }
