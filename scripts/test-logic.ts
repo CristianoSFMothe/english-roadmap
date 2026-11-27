@@ -12,7 +12,7 @@ import { describeDbError, poolOptions } from "../lib/db-config.ts";
 import { canGenerateMore, looksEnglish, MAX_IMPROVEMENTS, MAX_PARAGRAFOS, mergeImprovements, normalizeAnswer, normalizeImprovements, normalizeLessonOutline, normalizeQuestions, normalizeResult, normalizeStudy } from "../lib/lesson-normalize.ts";
 import { weekRequest } from "../lib/licoes-client.ts";
 import { startPlanPull } from "../lib/plan-pull.ts";
-import { appendChat, CHAT_CONTEXT, generateStep, todayInSaoPaulo, outlineDays, parseWeekParam, partIndexForDate, validateQuestion } from "../lib/lesson-parts.ts";
+import { appendChat, CHAT_CONTEXT, generateStep, hasMoreHistory, HISTORY_PAGE, isReadOnlyLesson, todayInSaoPaulo, outlineDays, parseDateParam, parseWeekParam, partIndexForDate, validateQuestion } from "../lib/lesson-parts.ts";
 import { normalizePronMap, pronBatches, pronSystemPrompt, pronUserPrompt, shouldStoreShared, splitGeneratable } from "../lib/pron-prompt.ts";
 import { gradeSystemPrompt, improveSystemPrompt, improveUserPrompt, lessonSystemPrompt, ORDEM, STUDY_LIMITS, TOTAL_QUESTOES, outlineUserPrompt, partSystemPrompt, partUserPrompt, partAndQuestionsUserPrompt, questionsUserPrompt, chatSystemPrompt, chatUserPrompt, CHAT_CONTEXT_PROMPT } from "../lib/lesson-prompt.ts";
 import type { Study } from "../lib/lesson-prompt.ts";
@@ -707,6 +707,22 @@ check("validateQuestion recusa vazia e longa", () => {
 check("parseWeekParam só aceita semana do plano", () => {
   assert(parseWeekParam("2", [1, 2, 3]) === 2, "2");
   for (const v of ["abc", "0", "99", "2.5", ""]) assert(parseWeekParam(v, [1, 2, 3]) === null, v);
+});
+check("parseDateParam aceita só data real", () => {
+  assert(parseDateParam("2026-11-24") === "2026-11-24", "válida");
+  assert(parseDateParam("2028-02-29") === "2028-02-29", "bissexto");
+  for (const v of ["2026-02-30", "2026-13-01", "abc", "", "2026-1-5", " 2026-11-24", null, undefined])
+    assert(parseDateParam(v) === null, String(v));
+});
+check("só leitura: dia passado concluído", () => {
+  const hoje = "2026-11-26";
+  assert(isReadOnlyLesson({ date: "2026-11-24", completedAt: "2026-11-24T22:00:00Z" }, hoje), "passado concluído");
+  assert(!isReadOnlyLesson({ date: "2026-11-24", completedAt: null }, hoje), "passado pendente");
+  assert(!isReadOnlyLesson({ date: hoje, completedAt: "2026-11-26T10:00:00Z" }, hoje), "hoje concluído");
+});
+check("hasMoreHistory com página cheia", () => {
+  assert(HISTORY_PAGE === 14, "14");
+  assert(hasMoreHistory(14) && !hasMoreHistory(13) && !hasMoreHistory(0), "limites");
 });
 const DIAS6 = outlineDays(["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"].map((label, i) => ({ label, focus: `F${i}` })));
 const parteBruta = (i: number) => ({ title: `T${i}`, goal: `G${i}`, day: "X", focus: "da IA" });

@@ -50,6 +50,26 @@ export function parseWeekParam(v: string, weekNs: number[]): number | null {
   return weekNs.includes(n) ? n : null;
 }
 
+/** `?data=` do Estudo do dia: só uma data real no formato AAAA-MM-DD. */
+export function parseDateParam(v: string | null | undefined): string | null {
+  if (typeof v !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(v)) return null;
+  const d = new Date(`${v}T12:00:00Z`);
+  return !Number.isNaN(d.getTime()) && d.toISOString().slice(0, 10) === v ? v : null;
+}
+
+/** Dia passado concluído abre só para leitura; hoje e os pendentes continuam respondíveis. */
+export function isReadOnlyLesson(lesson: { date: string; completedAt: string | null }, today: string): boolean {
+  return lesson.date < today && lesson.completedAt !== null;
+}
+
+/** Dias por página em "Últimos dias". */
+export const HISTORY_PAGE = 14;
+
+/** Página cheia: pode haver dias mais antigos. */
+export function hasMoreHistory(pageLength: number): boolean {
+  return pageLength >= HISTORY_PAGE;
+}
+
 /** A lição da semana como as telas recebem: roteiro, partes geradas e conversas. */
 export type WeekLessonView = {
   id: string;
