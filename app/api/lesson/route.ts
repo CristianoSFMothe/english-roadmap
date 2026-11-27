@@ -34,7 +34,7 @@ import {
   normalizeStudy,
 } from "@/lib/lesson-normalize";
 import { extractJson } from "@/lib/normalize";
-import { generateStep, partIndexForDate } from "@/lib/lesson-parts";
+import { generateStep, HISTORY_PAGE, parseDateParam, partIndexForDate } from "@/lib/lesson-parts";
 import { getPart, getWeekLesson, savePart } from "@/lib/week-lessons";
 
 export const runtime = "nodejs";
@@ -58,18 +58,34 @@ function diasSemLicao(datasComLicao: string[], hoje: string, dias = 14): string[
   return faltantes;
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   const user = await allowedUser();
   if (!user) {
-    return NextResponse.json({ signedIn: false, today: null, pending: [], history: [] });
+    return NextResponse.json({ signedIn: false, today: null, lesson: null, pending: [], history: [] });
   }
 
+  const params = new URL(request.url).searchParams;
   try {
     const hoje = hojeSaoPaulo();
+
+    // Um dia só, para rever (ou para abrir pelo ?data= do endereço).
+    if (params.has("data")) {
+      const data = parseDateParam(params.get("data"));
+      const lesson = data ? await getLesson(user.id, data) : null;
+      return NextResponse.json({ signedIn: true, date: hoje, lesson });
+    }
+
+    // Próxima página de "Últimos dias".
+    if (params.has("antes")) {
+      const antes = parseDateParam(params.get("antes"));
+      if (!antes) return fail("Data inválida.", 400);
+      return NextResponse.json({ signedIn: true, history: await historico(user.id, HISTORY_PAGE, antes) });
+    }
+
     const [today, pending, history] = await Promise.all([
       getLesson(user.id, hoje),
       pendentes(user.id),
-      historico(user.id, 14),
+      historico(user.id, HISTORY_PAGE),
     ]);
 
     const primeira = history.length ? history[history.length - 1].date : hoje;
