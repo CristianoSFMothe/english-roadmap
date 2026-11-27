@@ -1537,6 +1537,11 @@ a.btn {
   font-size: 13.5px;
 }
 
+/* Botão "Abrir o estudo do dia": respiro entre o texto de cima e a linha de baixo. */
+.lesson-empty .btn {
+  margin: 14px 0 18px;
+}
+
 .lesson-error {
   margin: 10px 0;
   padding: 10px 12px;
