@@ -15,6 +15,7 @@ export default function TeacherChat({
   apiKey,
   accessCode,
   onMessages,
+  readOnly = false,
 }: {
   weekLessonId: string;
   partIdx: number;
@@ -23,6 +24,8 @@ export default function TeacherChat({
   accessCode: string;
   /** Avisa quem guarda a conversa, para ela não sumir ao trocar de parte e voltar. */
   onMessages?: (novas: ChatMessage[]) => void;
+  /** Dia revisto: mostra a conversa, sem o campo de perguntar. */
+  readOnly?: boolean;
 }) {
   const [mensagens, setMensagens] = useState<ChatMessage[]>(initial);
   const [texto, setTexto] = useState("");
@@ -81,7 +84,11 @@ export default function TeacherChat({
       <h2 id={`chat-${partIdx}`}>Pergunte ao professor</h2>
 
       {mensagens.length === 0 && !esperando && (
-        <p className="faint">Ficou alguma dúvida sobre esta parte? Escreva aqui, em português mesmo.</p>
+        <p className="faint">
+          {readOnly
+            ? "Nenhuma dúvida foi enviada nesta parte."
+            : "Ficou alguma dúvida sobre esta parte? Escreva aqui, em português mesmo."}
+        </p>
       )}
 
       {mensagens.length > 0 && (
@@ -98,35 +105,39 @@ export default function TeacherChat({
       {esperando && <p className="faint">O professor está escrevendo…</p>}
       {erro && <p className="lesson-error">{erro}</p>}
 
-      <div className="licao-ask">
-        <textarea
-          value={texto}
-          onChange={(e) => setTexto(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
-              e.preventDefault();
-              void enviar();
-            }
-          }}
-          rows={2}
-          placeholder="Ex.: por que é “I am” e não “I is”?"
-          aria-label="Sua dúvida para o professor"
-          disabled={esperando}
-        />
-        <button
-          className="btn primary"
-          onClick={() => void enviar()}
-          disabled={esperando || longa || !texto.trim()}
-        >
-          {esperando ? "Enviando…" : "Enviar"}
-        </button>
-      </div>
-      {texto.length > 900 && (
-        <p className={longa ? "lesson-error" : "faint"}>
-          {texto.length}/{MAX_QUESTION} caracteres
-        </p>
+      {!readOnly && (
+        <>
+          <div className="licao-ask">
+            <textarea
+              value={texto}
+              onChange={(e) => setTexto(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
+                  e.preventDefault();
+                  void enviar();
+                }
+              }}
+              rows={2}
+              placeholder="Ex.: por que é “I am” e não “I is”?"
+              aria-label="Sua dúvida para o professor"
+              disabled={esperando}
+            />
+            <button
+              className="btn primary"
+              onClick={() => void enviar()}
+              disabled={esperando || longa || !texto.trim()}
+            >
+              {esperando ? "Enviando…" : "Enviar"}
+            </button>
+          </div>
+          {texto.length > 900 && (
+            <p className={longa ? "lesson-error" : "faint"}>
+              {texto.length}/{MAX_QUESTION} caracteres
+            </p>
+          )}
+          <p className="faint licao-hint">Enter envia · Shift+Enter quebra a linha</p>
+        </>
       )}
-      <p className="faint licao-hint">Enter envia · Shift+Enter quebra a linha</p>
     </section>
   );
 }

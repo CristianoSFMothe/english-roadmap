@@ -202,7 +202,8 @@ export async function pendentes(userId: string, limite = 14): Promise<Lesson[]> 
 }
 
 /** Últimos dias, para mostrar o que foi feito e o que ficou para trás. */
-export async function historico(userId: string, dias = 7) {
+export async function historico(userId: string, dias = 7, antes?: string) {
+  const filtro = antes ? Prisma.sql`and lesson_date < ${antes}::date` : Prisma.empty;
   const rows = await prisma.$queryRaw<
     {
       lesson_date: Date;
@@ -216,7 +217,7 @@ export async function historico(userId: string, dias = 7) {
            (select count(*) from jsonb_object_keys(results)) as respondidas,
            (select count(*) from jsonb_each(results) r where (r.value->>'correct')::boolean) as acertos
     from app_lesson
-    where user_id = ${userId}
+    where user_id = ${userId} ${filtro}
     order by lesson_date desc
     limit ${dias}`;
   return rows.map((r) => ({

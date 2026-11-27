@@ -13,9 +13,12 @@ import Lessons from "./Lessons";
 export default function DailyStudyPage({
   sample,
   authEnabled,
+  dataInicial = null,
 }: {
   sample: RawWeek[];
   authEnabled: boolean;
+  /** `?data=` do endereço, ainda sem validar. */
+  dataInicial?: string | null;
 }) {
   const { week, planId, apiKey, accessCode, userId } = usePlanContext(sample, authEnabled);
 
@@ -59,6 +62,7 @@ export default function DailyStudyPage({
           apiKey={apiKey}
           accessCode={accessCode}
           signedIn={Boolean(userId)}
+          dataInicial={dataInicial}
         />
       </main>
     </>

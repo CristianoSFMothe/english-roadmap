@@ -11,7 +11,16 @@ import { Pron, PronListButton } from "./Pron";
 import { Speak } from "./SpeechButtons";
 import StudySections from "./StudySections";
 import TeacherChat from "./TeacherChat";
-import { appendChat, PARTS, partIndexForDate, type ChatMessage, type WeekLessonView } from "@/lib/lesson-parts";
+import {
+  appendChat,
+  hasMoreHistory,
+  isReadOnlyLesson,
+  parseDateParam,
+  PARTS,
+  partIndexForDate,
+  type ChatMessage,
+  type WeekLessonView,
+} from "@/lib/lesson-parts";
 import { LicoesError, postJson, postLicoes, weekRequest } from "@/lib/licoes-client";
 
 type HistItem = { date: string; completed: boolean; total: number; answered: number; correct: number };
@@ -21,6 +30,8 @@ type Payload = {
   date?: string;
   total?: number;
   today?: Lesson | null;
+  /** Resposta do `?data=`: o dia pedido. */
+  lesson?: Lesson | null;
   pending?: Lesson[];
   missing?: string[];
   history?: HistItem[];
@@ -59,12 +70,15 @@ export default function Lessons({
   apiKey,
   accessCode,
   signedIn,
+  dataInicial = null,
 }: {
   week: Week | null;
   planId: string;
   apiKey: string;
   accessCode: string;
   signedIn: boolean;
+  /** `?data=` do endereço, ainda sem validar: abre esse dia ao carregar. */
+  dataInicial?: string | null;
 }) {
   const [data, setData] = useState<Payload | null>(null);
   const [ativa, setAtiva] = useState<Lesson | null>(null);
@@ -88,6 +102,17 @@ export default function Lessons({
   // O erro e o aviso do lembrete ficam na própria seção, no fim da página: no topo da
   // lição ninguém via a mensagem depois de clicar em "Criar lembrete".
   const [avisoLembrete, setAvisoLembrete] = useState<{ tipo: "ok" | "erro"; texto: string } | null>(null);
+  /** Aviso de dia sem estudo salvo (ou data inválida no endereço). */
+  const [aviso, setAviso] = useState("");
+  // Cada dia aberto ganha um número: a resposta de um pedido antigo (cliques rápidos em
+  // dois dias) não sobrescreve o dia aberto depois.
+  const pedidoDia = useRef(0);
+  const dataInicialUsada = useRef(false);
+  /** Páginas de "Últimos dias" além da primeira. */
+  const [anteriores, setAnteriores] = useState<HistItem[]>([]);
+  /** null: decide pela primeira página. */
+  const [temMais, setTemMais] = useState<boolean | null>(null);
+  const [buscandoMais, setBuscandoMais] = useState(false);
 
   const carregar = useCallback(async () => {
     if (!signedIn) return;
@@ -141,14 +166,90 @@ export default function Lessons({
         json = await postJson<{ lesson?: Lesson }>("/api/lesson", pedido);
       }
       if (!json.lesson) throw new Error("Falha ao gerar a lição.");
-      setAtiva(json.lesson);
-      setRespostas({});
+      mostrar(json.lesson);
+      // Um dia novo empurra a primeira página: recomeça a lista dos dias anteriores.
+      setAnteriores([]);
+      setTemMais(null);
       await carregar();
     } catch (e) {
       setErro(e instanceof Error ? e.message : "Falha ao gerar a lição.");
     } finally {
       setCarregando(false);
       setEtapa("");
+    }
+  };
+
+  /** Põe (ou tira) o `?data=` do endereço, sem recarregar a página. */
+  const endereco = (date: string | null) => {
+    const url = new URL(window.location.href);
+    if (date) url.searchParams.set("data", date);
+    else url.searchParams.delete("data");
+    window.history.replaceState(null, "", url.toString());
+  };
+
+  /** Abre uma lição já carregada; o endereço só leva `?data=` quando não é hoje. */
+  const mostrar = (lesson: Lesson) => {
+    pedidoDia.current += 1;
+    setAtiva(lesson);
+    setRespostas({});
+    setAviso("");
+    endereco(lesson.date === data?.date ? null : lesson.date);
+  };
+
+  /** Volta para o estudo de hoje (ou para o botão de gerar, se ainda não existe). */
+  const voltarParaHoje = (avisoTexto = "") => {
+    pedidoDia.current += 1;
+    setAtiva(data?.today ?? null);
+    setRespostas({});
+    setAviso(avisoTexto);
+    endereco(null);
+  };
+
+  /** Busca e abre o estudo salvo de uma data. */
+  const abrirDia = async (date: string) => {
+    const meu = ++pedidoDia.current;
+    setAviso("");
+    try {
+      const res = await fetch(`/api/lesson?data=${encodeURIComponent(date)}`, { cache: "no-store" });
+      const json = (await res.json()) as Payload;
+      if (meu !== pedidoDia.current) return;
+      if (!res.ok) throw new Error(json.error);
+      if (json.lesson) mostrar(json.lesson);
+      else voltarParaHoje(`Não há estudo salvo em ${dataCurta(date)}.`);
+    } catch {
+      if (meu === pedidoDia.current) setAviso("Não consegui abrir esse dia.");
+    }
+  };
+
+  // O ?data= do endereço vale uma vez, quando a página carrega.
+  useEffect(() => {
+    if (!data?.date || dataInicial === null || dataInicialUsada.current) return;
+    dataInicialUsada.current = true;
+    const d = parseDateParam(dataInicial);
+    if (!d) voltarParaHoje("Não há estudo salvo nessa data.");
+    else if (d === data.date) endereco(null);
+    else void abrirDia(d);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data?.date, dataInicial]);
+
+  const historicoTodo = useMemo(() => [...(data?.history ?? []), ...anteriores], [data, anteriores]);
+  const mostrarMais = temMais ?? hasMoreHistory(data?.history?.length ?? 0);
+
+  const verAnteriores = async () => {
+    const maisAntigo = historicoTodo[historicoTodo.length - 1];
+    if (!maisAntigo || buscandoMais) return;
+    setBuscandoMais(true);
+    try {
+      const res = await fetch(`/api/lesson?antes=${maisAntigo.date}`, { cache: "no-store" });
+      const json = (await res.json()) as { history?: HistItem[]; error?: string };
+      if (!res.ok || !json.history) throw new Error(json.error ?? "");
+      const pagina = json.history;
+      setAnteriores((a) => [...a, ...pagina]);
+      setTemMais(hasMoreHistory(pagina.length));
+    } catch {
+      setErro("Não consegui carregar os dias anteriores.");
+    } finally {
+      setBuscandoMais(false);
     }
   };
 
@@ -193,6 +294,8 @@ export default function Lessons({
       const json = (await res.json()) as { lesson?: Lesson; error?: string };
       if (!res.ok || !json.lesson) throw new Error(json.error ?? "Não deu para gerar agora.");
       setAtiva(json.lesson);
+      // Atualiza o "hoje" guardado: "Voltar para hoje" mostra as respostas novas.
+      void carregar();
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Não deu para gerar agora.";
       setErroMelhoria((er) => ({ ...er, [q.id]: msg }));
@@ -270,9 +373,9 @@ export default function Lessons({
         <section className="lesson-empty">
           <h2>Estudo do dia</h2>
           <p>
-            Entre com sua conta Google (botão no alto da página) para receber todo dia uma
-            explicação curta em português, dicas para não errar e 5 exercícios. As respostas ficam
-            guardadas, e o que ficar para trás aparece para você terminar depois.
+            Entre com sua conta Google (botão no alto da página) para receber todo dia uma explicação curta em
+            português, dicas para não errar e 5 exercícios. As respostas ficam guardadas, e o que ficar para
+            trás aparece para você terminar depois.
           </p>
         </section>
       </div>
@@ -281,19 +384,25 @@ export default function Lessons({
 
   const hoje = data?.date ?? "";
   const respondidas = ativa ? Object.keys(ativa.results ?? {}).length : 0;
-  const acertos = ativa
-    ? Object.values(ativa.results ?? {}).filter((r) => r.correct).length
-    : 0;
+  const acertos = ativa ? Object.values(ativa.results ?? {}).filter((r) => r.correct).length : 0;
+  const somenteLeitura = ativa ? isReadOnlyLesson(ativa, hoje) : false;
 
   return (
     <div className="panel">
       <section>
         <div className="section-title">
           <h2>Estudo do dia</h2>
-          <span>Teoria, dicas e 5 exercícios: 2 fáceis, 2 médias e 1 difícil. Você escreve a resposta em inglês.</span>
+          <span>
+            Teoria, dicas e 5 exercícios: 2 fáceis, 2 médias e 1 difícil. Você escreve a resposta em inglês.
+          </span>
         </div>
 
         {erro && <p className="lesson-error">{erro}</p>}
+        {aviso && (
+          <p className="lesson-note" role="status">
+            {aviso}
+          </p>
+        )}
 
         {atrasadas.length > 0 && (
           <div className="lesson-backlog">
@@ -304,10 +413,12 @@ export default function Lessons({
                   key={date}
                   className="chip"
                   aria-pressed={ativa?.date === date}
-                  onClick={() => (lesson ? setAtiva(lesson) : void gerar(date))}
+                  onClick={() => (lesson ? mostrar(lesson) : void gerar(date))}
                 >
                   {dataCurta(date)}
-                  {lesson ? ` · ${Object.keys(lesson.results ?? {}).length}/${lesson.questions.length}` : " · gerar"}
+                  {lesson
+                    ? ` · ${Object.keys(lesson.results ?? {}).length}/${lesson.questions.length}`
+                    : " · gerar"}
                 </button>
               ))}
             </div>
@@ -340,8 +451,14 @@ export default function Lessons({
         {ativa && (
           <>
             <div className="lesson-head">
-              <span className={`lesson-date${ativa.date === hoje ? " today" : " late"}`}>
-                {ativa.date === hoje ? "Hoje" : `Atrasada · ${dataCurta(ativa.date)}`}
+              <span
+                className={`lesson-date${ativa.date === hoje ? " today" : somenteLeitura ? " readonly" : " late"}`}
+              >
+                {ativa.date === hoje
+                  ? "Hoje"
+                  : somenteLeitura
+                    ? `Só leitura · ${dataCurta(ativa.date)}`
+                    : `Atrasada · ${dataCurta(ativa.date)}`}
               </span>
               <span className="lesson-score">
                 {respondidas}/{ativa.questions.length} respondidas · {acertos}{" "}
@@ -353,8 +470,8 @@ export default function Lessons({
                 </span>
               )}
               {ativa.date !== hoje && (
-                <button className="btn" onClick={() => void gerar()} disabled={carregando}>
-                  Ir para hoje
+                <button className="btn" onClick={() => voltarParaHoje()} disabled={carregando}>
+                  Voltar para hoje
                 </button>
               )}
             </div>
@@ -379,11 +496,14 @@ export default function Lessons({
                 initial={chat?.lessonId === ativa.id ? chat.messages : []}
                 onMessages={(novas) =>
                   setChat((c) =>
-                    c && c.lessonId === ativa.id ? { ...c, messages: appendChat({ 0: c.messages }, 0, novas)[0] } : c,
+                    c && c.lessonId === ativa.id
+                      ? { ...c, messages: appendChat({ 0: c.messages }, 0, novas)[0] }
+                      : c,
                   )
                 }
                 apiKey={apiKey}
                 accessCode={accessCode}
+                readOnly={somenteLeitura}
               />
             )}
 
@@ -397,9 +517,13 @@ export default function Lessons({
                 return (
                   <li key={q.id} className={`lesson-q${r ? (r.correct ? " ok" : " bad") : ""}`}>
                     <div className="lesson-q-top">
-                      <span className={`lesson-tag ${q.difficulty}`}>{NIVEL[q.difficulty] ?? q.difficulty}</span>
+                      <span className={`lesson-tag ${q.difficulty}`}>
+                        {NIVEL[q.difficulty] ?? q.difficulty}
+                      </span>
                       <span className="lesson-type">{q.type}</span>
-                      <span className="lesson-n">{i + 1}/{ativa.questions.length}</span>
+                      <span className="lesson-n">
+                        {i + 1}/{ativa.questions.length}
+                      </span>
                     </div>
                     <p className="lesson-prompt">{q.prompt}</p>
                     {q.content &&
@@ -451,45 +575,45 @@ export default function Lessons({
                                   )}
                                   <EnLine text={m.en} noButton />
                                   {m.why && (
-                                    <span className="lesson-why">
-                                      {m.style ? `Dica: ${m.why}` : m.why}
-                                    </span>
+                                    <span className="lesson-why">{m.style ? `Dica: ${m.why}` : m.why}</span>
                                   )}
                                 </li>
                               ))}
                             </ol>
                           )}
-                          <div className="lesson-more">
-                            <button
-                              type="button"
-                              className="btn small"
-                              onClick={() => void maisRespostas(q)}
-                              disabled={melhorando !== null || !canGenerateMore(r)}
-                            >
-                              {melhorando === q.id
-                                ? "Gerando 3 respostas…"
-                                : canGenerateMore(r)
-                                  ? "Gerar 3 respostas"
-                                  : "3 respostas geradas"}
-                            </button>
-                            <span className="faint">
-                              {canGenerateMore(r)
-                                ? "informal, formal e mais usual, com dica de cada uma (uma vez por questão)"
-                                : "Já foram geradas as 3 respostas desta questão."}
-                            </span>
-                            {erroMelhoria[q.id] && (
-                              <span className="say-result bad">{erroMelhoria[q.id]}</span>
-                            )}
-                          </div>
+                          {!somenteLeitura && (
+                            <div className="lesson-more">
+                              <button
+                                type="button"
+                                className="btn small"
+                                onClick={() => void maisRespostas(q)}
+                                disabled={melhorando !== null || !canGenerateMore(r)}
+                              >
+                                {melhorando === q.id
+                                  ? "Gerando 3 respostas…"
+                                  : canGenerateMore(r)
+                                    ? "Gerar 3 respostas"
+                                    : "3 respostas geradas"}
+                              </button>
+                              <span className="faint">
+                                {canGenerateMore(r)
+                                  ? "informal, formal e mais usual, com dica de cada uma (uma vez por questão)"
+                                  : "Já foram geradas as 3 respostas desta questão."}
+                              </span>
+                              {erroMelhoria[q.id] && (
+                                <span className="say-result bad">{erroMelhoria[q.id]}</span>
+                              )}
+                            </div>
+                          )}
                         </div>
                       </div>
+                    ) : somenteLeitura ? (
+                      <p className="faint">Sem resposta.</p>
                     ) : (
                       <div className="lesson-answer">
                         <textarea
                           value={respostas[q.id] ?? ""}
-                          onChange={(e) =>
-                            setRespostas((prev) => ({ ...prev, [q.id]: e.target.value }))
-                          }
+                          onChange={(e) => setRespostas((prev) => ({ ...prev, [q.id]: e.target.value }))}
                           placeholder="Escreva em inglês…"
                           aria-label={`Resposta da questão ${i + 1}`}
                         />
@@ -547,20 +671,35 @@ export default function Lessons({
         )}
       </section>
 
-      {(data?.history?.length ?? 0) > 0 && (
+      {historicoTodo.length > 0 && (
         <section>
           <div className="section-title">
             <h2>Últimos dias</h2>
-            <span>O que foi concluído e o que ficou pela metade</span>
+            <span>Clique num dia para rever o estudo dele</span>
           </div>
           <div className="lesson-hist">
-            {data!.history!.map((h) => (
-              <span key={h.date} className={`lesson-hist-day${h.completed ? " ok" : " bad"}`}>
+            {historicoTodo.map((h) => (
+              <button
+                type="button"
+                key={h.date}
+                className={`lesson-hist-day${h.completed ? " ok" : " bad"}`}
+                aria-pressed={ativa?.date === h.date}
+                onClick={() => (h.date === hoje ? voltarParaHoje() : void abrirDia(h.date))}
+              >
                 <strong>{dataCurta(h.date)}</strong>
                 {h.completed ? `${h.correct}/${h.total} certas` : `${h.answered}/${h.total} feitas`}
-              </span>
+              </button>
             ))}
           </div>
+          {mostrarMais && (
+            <button
+              className="btn small lesson-hist-more"
+              onClick={() => void verAnteriores()}
+              disabled={buscandoMais}
+            >
+              {buscandoMais ? "Carregando…" : "Ver dias anteriores"}
+            </button>
+          )}
         </section>
       )}
     </div>
