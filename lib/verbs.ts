@@ -1452,8 +1452,9 @@ export const TENSES: TenseInfo[] = [
     when: [
       { text: "Presente: rotina, hábito ou algo que é sempre verdade.", ex: l("I work every day.", "Eu trabalho todos os dias.", "ái uârk é-vri dêi") },
       { text: "Passado: algo que começou e terminou, muitas vezes dizendo quando.", ex: l("I worked yesterday.", "Eu trabalhei ontem.", "ái uârkt iés-ter-dêi") },
-      { text: "Futuro com will: decisão tomada na hora, enquanto você fala.", ex: l("I will call you later.", "Eu te ligo mais tarde.", "ái uíl kól iú lêi-ter") },
-      { text: "Futuro com will: promessa, oferta de ajuda ou previsão.", ex: l("I will help you.", "Eu vou te ajudar.", "ái uíl rrélp iú") },
+      { text: "Futuro com will: decisão tomada na hora, enquanto você fala.", ex: l("The phone is ringing. I'll get it.", "O telefone está tocando. Eu atendo.", "dâ fôun íz rín-guing. áil guét ít") },
+      { text: "Futuro com will: promessa ou oferta de ajuda.", ex: l("I'll help you.", "Eu te ajudo.", "áil rrélp iú") },
+      { text: "Futuro com will: previsão, o que você acha que vai acontecer.", ex: l("It will be cold tomorrow.", "Vai fazer frio amanhã.", "ít uíl bí kôuld tu-mó-rou") },
     ],
     spelling: [
       "Presente com he, she, it: o verbo ganha -s (work → works, like → likes).",

@@ -341,7 +341,9 @@ check("exemplos e respostas completos em todo verbo e tempo", () => {
 
 check("todo tempo tem explicacao completa", () => {
   for (const t of TENSES) {
-    if (t.when.length < 2 || t.when.length > 4 || t.signals.length < 2 || t.mistakes.length < 2 || t.mistakes.length > 4) throw new Error(`${t.id}: quantidades`);
+    // O básico junta três tempos (presente, passado e futuro): cabe um item a mais.
+    const maxWhen = t.id === "basic" ? 5 : 4;
+    if (t.when.length < 2 || t.when.length > maxWhen || t.signals.length < 2 || t.mistakes.length < 2 || t.mistakes.length > 4) throw new Error(`${t.id}: quantidades`);
     const fixos = [...t.when.map((w) => w.ex), ...(t.endings ?? []).map((e) => e.ex)];
     if (fixos.some((l) => !l.en || !l.pt || !l.say)) throw new Error(`${t.id}: exemplo sem en/pt/say`);
     if (!t.spelling.length) throw new Error(`${t.id}: regras de escrita`);
